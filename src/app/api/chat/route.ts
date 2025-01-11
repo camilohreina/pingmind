@@ -5,7 +5,7 @@ import {NextResponse} from "next/server";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse> {
   console.log("Llegandooo");
 
   return NextResponse.json(
@@ -23,8 +23,4 @@ export async function POST(req: Request) {
     model: openai("gpt-4o"),
     messages,
   });
-
-  console.log(text);
-
-  return text;
 }
