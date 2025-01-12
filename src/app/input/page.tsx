@@ -18,7 +18,11 @@ export default function Chat() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({message: input}),
+        body: JSON.stringify({
+          message: input,
+          phone: "+573224354004",
+          timezone: "America/Bogota",
+        }),
       });
       const data = await res.json();
 
