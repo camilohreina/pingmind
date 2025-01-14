@@ -1,23 +1,19 @@
-"use client";
 import React from "react";
-import { BellRing, Workflow, RefreshCcwDot} from "lucide-react";
+import { BellRing, Workflow, RefreshCcwDot } from "lucide-react";
 import SpotlightCard from "./ui/spotlight-card";
-
-import {cn} from "@/lib/utils";
-import {fontHead} from "@/ui/fonts";
+import { cn } from "@/lib/utils";
+import { fontHead } from "@/ui/fonts";
 import { useTranslations } from "next-intl";
-
 
 interface FeatureInfo {
   id: string;
   title: string;
   text: string;
-  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; 
+  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
 
-
-const FEATURES_INFO = (): FeatureInfo[]  => {
-  const  t  = useTranslations("home_page");
+const FEATURES_INFO = (): FeatureInfo[] => {
+  const t = useTranslations("home_page");
 
   return [
     {
@@ -42,12 +38,10 @@ const FEATURES_INFO = (): FeatureInfo[]  => {
 };
 
 export default function Features() {
-
   const features = FEATURES_INFO();
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {features.map(({id, text, title, icon}) => (
-        
+      {features.map(({ id, text, title, icon }) => (
         <InfoFeatureCard key={id} icon={icon} text={text} title={title} />
       ))}
     </section>
@@ -60,7 +54,7 @@ type PropsInfoCard = {
   text: string;
 };
 
-function InfoFeatureCard({icon: Icon, title, text}: PropsInfoCard) {
+function InfoFeatureCard({ icon: Icon, title, text }: PropsInfoCard) {
   return (
     <SpotlightCard>
       <div className="6 flex flex-col items-start justify-start">

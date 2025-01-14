@@ -1,3 +1,4 @@
+'use client'
 import {useRef, useState, ReactNode} from "react";
 
 interface SpotlightCardProps {
