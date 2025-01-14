@@ -27,6 +27,19 @@ export default [
         {blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]},
       ],
       "no-console": "warn",
+      "no-restricted-imports": [
+        "error",
+        {
+          "name": "next/link",
+          "message": "Please use the `Link` component from `@/navigation` instead.",
+          importNames: ["link"]
+        },
+        {
+          "name": "next/navigation",
+          "message": "Please import from `@/navigation` instead.",
+          importNames: ["redirect", "permanentRedirect", "useRouter"]
+        },
+      ]
     },
   },
   // React configuration
@@ -85,6 +98,7 @@ export default [
         ...vercelStyleGuideTypescript.rules,
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-shadow": "off",
+        "@typescript-eslint/no": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/require-await": "off",
         "@typescript-eslint/no-floating-promises": "off",
@@ -95,6 +109,14 @@ export default [
             args: "after-used",
             ignoreRestSiblings: false,
             argsIgnorePattern: "^_.*?$",
+          },
+        ],
+        "react/no-unstable-nested-components": [
+          "off" | "warn" | "error",
+          {
+            allowAsProps: true | false,
+            customValidators: [] /* optional array of validators used for propTypes validation */,
+            propNamePattern: string,
           },
         ],
       },

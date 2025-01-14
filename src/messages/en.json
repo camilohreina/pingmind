@@ -1,0 +1,31 @@
+{
+  "home_page": {
+    "title": "Small<mark> reminders</mark>, big solutions.",
+    "features": {
+      "0": {
+        "title": "Timely Reminders",
+        "text": "Receive exact notifications at the right moment so you never forget your important tasks."
+      },
+      "1": {
+        "title": "Smart Automation",
+        "text": "Our AI saves your messages and turns them into reminders with no extra effort."
+      },
+      "2": {
+        "title": "WhatsApp Integration",
+        "text": "Everything happens in your favorite chat, with no need to download additional apps."
+      }
+    }
+  },
+  "login_page": {
+    "form": {
+      "title": "Login",
+      "subtitle": "Enter your WhatsApp phone and password to access your account.",
+      "phone_label": "Phone",
+      "phone_placeholder": "Enter your phone number including country code.",
+      "password_label": "Password",
+      "login_button": "Log in",
+      "signup_prompt": "New to pingmind?",
+      "signup_link": "Create an account"
+    }
+  }
+}

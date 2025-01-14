@@ -27,8 +27,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {PhoneInput} from "@/components/ui/phone-input";
+import { useTranslations } from "next-intl";
 
 export function LoginForm() {
+  const t = useTranslations("login_page.form");
   const router = useRouter();
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -58,10 +60,8 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        <CardDescription>
-          Enter your WhatsApp phone and password to access your account.
-        </CardDescription>
+        <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
+        <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
@@ -69,13 +69,13 @@ export function LoginForm() {
             <FormField
               control={form.control}
               name="phone"
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t("phone_label")}</FormLabel>
                   <FormControl>
                     <PhoneInput defaultCountry="CO" {...field} />
                   </FormControl>
-                  <FormDescription>Enter your phone number including country code.</FormDescription>
+                  <FormDescription>{t("phone_placeholder")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -83,9 +83,9 @@ export function LoginForm() {
             <FormField
               control={form.control}
               name="password"
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("password_label")}</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -98,14 +98,14 @@ export function LoginForm() {
             )}
 
             <Button className="w-full" disabled={form.formState.isSubmitting} type="submit">
-              {form.formState.isSubmitting ? "Logging in..." : "Log in"}
+              {form.formState.isSubmitting ? `${t("login_button")}...` : t("login_button")}
             </Button>
           </CardContent>
           <CardFooter>
             <div className="w-full text-center text-sm text-gray-400">
-              New to Pingmind?{" "}
+              {t("signup_prompt")}{" "}
               <Link className="underline" href="/signup">
-                Create an account
+                {t("signup_link")}
               </Link>
             </div>
           </CardFooter>

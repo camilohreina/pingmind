@@ -1,9 +1,11 @@
 import React from "react";
-
+import {useTranslations} from "next-intl";
 import {fontHead} from "@/ui/fonts";
 import {cn} from "@/lib/utils";
 
 export default function Title() {
+  const t = useTranslations("home_page");
+
   return (
     <h1
       className={cn(
@@ -11,8 +13,9 @@ export default function Title() {
         fontHead.className,
       )}
     >
-      Pequeños
-      <span className="text-purple-400"> recordatorios</span>, grandes soluciones.
+      {t.rich("title", {
+        mark: (chunks) => <span className="text-purple-400">{chunks}</span>,
+      })}
     </h1>
   );
 }

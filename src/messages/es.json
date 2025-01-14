@@ -1,0 +1,31 @@
+{
+  "home_page": {
+    "title": "Pequeños<mark> recordatorios</mark>, grandes soluciones.",
+    "features": {
+      "0": {
+        "title": "Recordatorios Puntuales",
+        "text": "Recibe notificaciones exactas en el momento indicado para que nunca olvides tus tareas importantes."
+      },
+      "1": {
+        "title": "Automatización Inteligente",
+        "text": "Nuestra IA guarda tus mensajes y los transforma en recordatorios sin esfuerzo adicional."
+      },
+      "2": {
+        "title": "Integración con WhatsApp",
+        "text": "Todo ocurre en tu chat favorito, sin necesidad de descargar más aplicaciones."
+      }
+    }
+  },
+  "login_page": {
+    "form": {
+      "title": "Iniciar sesión",
+      "subtitle": "Ingresa tu teléfono de WhatsApp y contraseña para acceder a tu cuenta.",
+      "phone_label": "Teléfono",
+      "phone_placeholder": "Introduce tu número de teléfono, incluido el código de país.",
+      "password_label": "Contraseña",
+      "login_button": "Iniciar sesión",
+      "signup_prompt": "¿Nuevo en pingmind?",
+      "signup_link": "Crea una cuenta"
+    }
+  }
+}
