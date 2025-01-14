@@ -30,16 +30,16 @@ export default [
       "no-restricted-imports": [
         "error",
         {
-          "name": "next/link",
-          "message": "Please use the `Link` component from `@/navigation` instead.",
-          importNames: ["link"]
+          name: "next/link",
+          message: "Please use the `Link` component from `@/navigation` instead.",
+          importNames: ["link"],
         },
         {
-          "name": "next/navigation",
-          "message": "Please import from `@/navigation` instead.",
-          importNames: ["redirect", "permanentRedirect", "useRouter"]
+          name: "next/navigation",
+          message: "Please import from `@/navigation` instead.",
+          importNames: ["redirect", "permanentRedirect", "useRouter"],
         },
-      ]
+      ],
     },
   },
   // React configuration
