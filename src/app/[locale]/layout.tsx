@@ -1,9 +1,10 @@
 import type {Metadata} from "next";
-
+import {routing} from '@/i18n/routing';
 import {NextIntlClientProvider} from "next-intl";
 import "./globals.css";
-import {getMessages} from "next-intl/server";
-import { Link } from "@/navigation";
+import {getMessages, setRequestLocale} from "next-intl/server";
+import { Link } from "@/i18n/routing";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "pingmind",
@@ -12,10 +13,20 @@ export const metadata: Metadata = {
 
 interface Props {
   children: React.ReactNode;
-  params: {locale: string};
+  params: Promise<{locale: string}>;
 }
 
-export default async function RootLayout({children, params: {locale}}: Props) {
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({locale}));
+}
+
+export default async function RootLayout({children, params}: Props) {
+  const {locale} = await params;
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
+  setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
