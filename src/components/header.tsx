@@ -81,8 +81,8 @@ export default function Header() {
               </Button> 
               */}
               <Button asChild className="rounded-xl" variant="secondary">
-                <Link className="text-base!" href="/signup">
-                  {t("signup")}
+                <Link className="text-base!" href="/login">
+                  {t("login")}
                   <ChevronRight className="ml-2 size-4 animate-pulse" />
                 </Link>
               </Button>
@@ -113,8 +113,8 @@ export default function Header() {
                     </Link>
                   </Button>
                   <Button asChild className="my-2 rounded-xl" variant="default">
-                    <Link className="w-full" href="/signup">
-                      {t("signup")}
+                    <Link className="w-full" href="/login">
+                      {t("login")}
                     </Link>
                   </Button>
                   {/* Opciones adicionales del menú */}
