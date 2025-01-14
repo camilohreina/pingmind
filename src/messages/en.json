@@ -1,6 +1,7 @@
 {
   "home_page": {
     "title": "Small<mark> reminders</mark>, big solutions.",
+    "badge_sale": "<strong>Pingmind</strong> comming soon!",
     "features": {
       "0": {
         "title": "Timely Reminders",
@@ -14,6 +15,16 @@
         "title": "WhatsApp Integration",
         "text": "Everything happens in your favorite chat, with no need to download additional apps."
       }
+    },
+    "header":{
+      "title": "PingMind",
+      "login": "Login",
+      "signup": "Get Started",
+      "menu_open": "Open side menu",
+      "services": "Services",
+      "how_it_works": "How it works",
+      "pricing": "Pricing",
+      "contact": "Contact"
     }
   },
   "login_page": {

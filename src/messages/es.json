@@ -1,6 +1,7 @@
 {
   "home_page": {
     "title": "Pequeños<mark> recordatorios</mark>, grandes soluciones.",
+    "badge_sale": "<strong>Pingmind</strong> ha llegado!",
     "features": {
       "0": {
         "title": "Recordatorios Puntuales",
@@ -14,6 +15,16 @@
         "title": "Integración con WhatsApp",
         "text": "Todo ocurre en tu chat favorito, sin necesidad de descargar más aplicaciones."
       }
+    },
+    "header":{
+      "title": "PingMind",
+      "login": "Iniciar sesión",
+      "signup": "Empezar",
+      "menu_open": "Abrir menú lateral",
+      "services": "Servicios",
+      "how_it_works": "Cómo funciona",
+      "pricing": "Precios",
+      "contact": "Contacto"
     }
   },
   "login_page": {
