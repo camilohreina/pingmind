@@ -1,10 +1,13 @@
 import  SignUpForm  from "./_components/signup-form"
+import Header from "@/components/header";
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <>
+      <Header />
+      <main className="flex min-h-screen items-center justify-center">
       <SignUpForm />
-    </div>
-  )
+      </main>
+    </>
+  );
 }
-

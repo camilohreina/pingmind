@@ -3,7 +3,6 @@
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter} from "next/navigation";
-import Link from "next/link";
 
 import {loginSchema, LoginFormData} from "../../lib/schemas";
 
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import {PhoneInput} from "@/components/ui/phone-input";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 export function LoginForm() {
   const t = useTranslations("login_page.form");

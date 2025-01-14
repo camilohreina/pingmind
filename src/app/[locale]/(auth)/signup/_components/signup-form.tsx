@@ -25,9 +25,12 @@ import {
 import { signUpSchema, SignUpFormData } from "../../lib/schemas";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 export default function SignUpForm() {
+  const t = useTranslations("signup_page.form");
   const router = useRouter();
+
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -40,26 +43,23 @@ export default function SignUpForm() {
 
   async function onSubmit(data: SignUpFormData) {
     try {
-      // Here you would typically call your API to create a new user
       console.log("Sign up attempt with:", data);
-
-      // Simulating a successful sign up
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
       router.push("/dashboard");
     } catch (err) {
       console.error("Sign up failed:", err);
       form.setError("root", {
         type: "manual",
-        message: "Sign up failed. Please try again.",
+        message: t("rootErrorMessage"),
       });
     }
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
-        <CardDescription>Create a new account to get started.</CardDescription>
+        <CardTitle className="text-2xl font-bold">{t("signUpTitle")}</CardTitle>
+        <CardDescription>{t("signUpDescription")}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -69,9 +69,9 @@ export default function SignUpForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t("nameLabel")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder={t("namePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,13 +82,11 @@ export default function SignUpForm() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t("phoneLabel")}</FormLabel>
                   <FormControl>
                     <PhoneInput defaultCountry="US" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Enter your phone number including country code.
-                  </FormDescription>
+                  <FormDescription>{t("phoneDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -98,14 +96,11 @@ export default function SignUpForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("passwordLabel")}</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Password must be at least 8 characters and include
-                    lowercase, uppercase, number, and special character.
-                  </FormDescription>
+                  <FormDescription>{t("passwordDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -118,14 +113,16 @@ export default function SignUpForm() {
               className="w-full"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "Signing up..." : "Sign Up"}
+              {form.formState.isSubmitting
+                ? t("submittingButton")
+                : t("submitButton")}
             </Button>
           </CardContent>
           <CardFooter>
             <div className="w-full text-center text-sm text-gray-400">
-              Already have an account?{" "}
+              {t("loginPrompt")}{" "}
               <Link className="underline" href="/login">
-                Log in
+                {t("loginLink")}
               </Link>
             </div>
           </CardFooter>

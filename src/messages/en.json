@@ -16,7 +16,7 @@
         "text": "Everything happens in your favorite chat, with no need to download additional apps."
       }
     },
-    "header":{
+    "header": {
       "title": "PingMind",
       "login": "Login",
       "signup": "Get Started",
@@ -37,6 +37,23 @@
       "login_button": "Log in",
       "signup_prompt": "New to pingmind?",
       "signup_link": "Create an account"
+    }
+  },
+  "signup_page": {
+    "form": {
+      "signUpTitle": "Sign Up",
+      "signUpDescription": "Create a new account to get started.",
+      "nameLabel": "Name",
+      "namePlaceholder": "John Doe",
+      "phoneLabel": "Phone",
+      "phoneDescription": "Enter your phone number including country code.",
+      "passwordLabel": "Password",
+      "passwordDescription": "Password must be at least 8 characters and include lowercase, uppercase, number, and special character.",
+      "submitButton": "Sign Up",
+      "submittingButton": "Signing up...",
+      "loginPrompt": "Already have an account?",
+      "loginLink": "Log in",
+      "rootErrorMessage": "Sign up failed. Please try again."
     }
   }
 }

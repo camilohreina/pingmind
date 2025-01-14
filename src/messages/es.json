@@ -16,7 +16,7 @@
         "text": "Todo ocurre en tu chat favorito, sin necesidad de descargar más aplicaciones."
       }
     },
-    "header":{
+    "header": {
       "title": "PingMind",
       "login": "Iniciar sesión",
       "signup": "Empezar",
@@ -37,6 +37,23 @@
       "login_button": "Iniciar sesión",
       "signup_prompt": "¿Nuevo en pingmind?",
       "signup_link": "Crea una cuenta"
+    }
+  },
+  "signup_page": {
+    "form": {
+      "signUpTitle": "Registrarse",
+      "signUpDescription": "Crea una nueva cuenta para comenzar.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Juan Pérez",
+      "phoneLabel": "Teléfono",
+      "phoneDescription": "Ingresa tu número de teléfono incluyendo el código de país.",
+      "passwordLabel": "Contraseña",
+      "passwordDescription": "La contraseña debe tener al menos 8 caracteres e incluir minúsculas, mayúsculas, números y un carácter especial.",
+      "submitButton": "Registrarse",
+      "submittingButton": "Registrándose...",
+      "loginPrompt": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión",
+      "rootErrorMessage": "El registro falló. Por favor, inténtalo de nuevo."
     }
   }
 }
