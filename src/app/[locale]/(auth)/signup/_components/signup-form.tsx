@@ -22,7 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { signUpSchema, SignUpFormData } from "../../lib/schemas";
+import { signUpSchema, SignUpFormData } from "@/schemas/auth.schema";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";

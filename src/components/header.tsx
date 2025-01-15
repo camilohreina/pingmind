@@ -36,9 +36,9 @@ export default function Header() {
         {/* Vista Desktop */}
         <div className="mx-auto hidden md:block">
           <div className="flex h-16 items-center justify-between sm:h-20">
-            <span className="flex items-center text-xl font-bold leading-[4rem]">
+            <Link href="/" className="flex items-center text-xl font-bold leading-[4rem]">
               {t("title")}
-            </span>
+            </Link>
             {/* Menú de navegación (opcional) */}
             {/* 
             <div className="flex items-baseline space-x-6">
