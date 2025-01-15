@@ -1,9 +1,9 @@
-import { ValidationDataError } from "@/lib/error";
+import { createUser } from "@/controllers/user.controller";
+import { ValidationDataError, ValidationError } from "@/lib/error";
 import { signUpSchema } from "@/schemas/auth.schema";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  console.log("llega aqui");
   try {
     const body = await request.json();
     const validated_data = signUpSchema.safeParse(body);
@@ -12,15 +12,12 @@ export async function POST(request: Request) {
       throw new ValidationDataError(validated_data.error);
     }
 
-    // Si la validación es exitosa, puedes proceder con la lógica del negocio
-    console.log("Datos validados:", validated_data);
+    await createUser(validated_data.data);
 
-    /* 
-    // Valida y guarda al usuario en tu base de datos
-    // Aquí podrías usar Prisma, Mongoose, etc.
-    const newUser = await db.insert */
-
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      message: "create user successfully!",
+    });
   } catch (error) {
     if (error instanceof ValidationDataError) {
       return NextResponse.json(
@@ -28,8 +25,13 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-
-    console.log(error);
-    return NextResponse.json({ ok: false, message: "error" }, { status: 500 });
+    
+    if (error instanceof ValidationError) {
+      return NextResponse.json(
+        { ok: false, message: error.message },
+        { status: 409 },
+      );
+    }
+    return NextResponse.json({ ok: false, message: "Internal server error" }, { status: 500 });
   }
 }

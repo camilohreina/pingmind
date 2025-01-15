@@ -4,10 +4,12 @@ import {timestamp, pgTable, text, primaryKey, integer} from "drizzle-orm/pg-core
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
-  phone: text("phone").notNull(),
+  phone: text("phone").notNull().unique(),
   name: text("name"),
   email: text("email"),
-  emailVerified: timestamp("emailVerified", {mode: "date"}),
+  email_verified: timestamp("email_verified", {mode: "date"}),
+  is_active: text("is_active").notNull().default("true"),
+  is_deleted: text("is_deleted").notNull().default("false"),
   password: text("password").notNull(),
   image: text("image"),
 });

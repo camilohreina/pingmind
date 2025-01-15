@@ -43,7 +43,7 @@ export class badRequestError extends Error {
   }
 }
 
-export class internalServerError extends Error {
+export class InternalServerError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "internalServerError";
