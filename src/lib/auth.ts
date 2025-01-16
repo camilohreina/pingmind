@@ -1,34 +1,51 @@
-import NextAuth, {NextAuthConfig} from "next-auth";
-import GitHub from "next-auth/providers/github";
-import {DrizzleAdapter} from "@auth/drizzle-adapter";
+import Credentials from "next-auth/providers/credentials";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import NextAuth from "next-auth";
+import { db } from "@/db";
+import type { Adapter } from "next-auth/adapters";
+import { getUserByPhone } from "@/db/queries/users";
+import { compare } from "bcrypt";
 
-import {db} from "@/db";
-
-export const authConfig = {
-  providers: [GitHub],
-  adapter: DrizzleAdapter(db),
-  callbacks: {
-    async session({session, user}) {
-      session.user.id = user.id;
-
-      return session;
-    },
-    authorized({auth, request: {nextUrl}}) {
-      const isLoggedIn = !!auth?.user;
-      const paths = ["/me", "/create"];
-      const isProtected = paths.some((path) => nextUrl.pathname.startsWith(path));
-
-      if (isProtected && !isLoggedIn) {
-        const redirectUrl = new URL("api/auth/signin", nextUrl.origin);
-
-        redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
-
-        return Response.redirect(redirectUrl);
-      }
-
-      return true;
-    },
+export const { auth, handlers, signIn } = NextAuth({
+  adapter: DrizzleAdapter(db) as Adapter,
+  pages: {
+    signIn: "/es/login",
+    error: "/es/login",
   },
-} satisfies NextAuthConfig;
+  providers: [
+    Credentials({
+      credentials: {
+        phone: {},
+        password: {},
+      },
+      authorize: async (credentials) => {
+        if (!credentials.phone || !credentials.password) {
+          return null;
+        }
 
-export const {handlers, auth, signOut} = NextAuth(authConfig);
+        const { phone, password } = credentials;
+        const [user] = await getUserByPhone(phone as string);
+        console.log(user);
+        if (!user) {
+          return null;
+        }
+
+        const isValid = await compare(
+          password as string,
+          user.password as string,
+        );
+
+        if (isValid) {
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+          };
+        }
+
+        return null;
+      },
+    }),
+  ],
+});

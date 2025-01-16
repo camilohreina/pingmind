@@ -12,3 +12,7 @@ export const dbExistingUser = async (phone: string) => {
     id: users.id
   }).from(users).where(eq(users.phone, phone));
 }
+
+export const getUserByPhone = async (phone: string) => {
+  return db.select().from(users).where(eq(users.phone, phone))
+}

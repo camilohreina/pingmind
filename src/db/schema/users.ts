@@ -1,6 +1,6 @@
 import type {AdapterAccount} from "@auth/core/adapters";
 
-import {timestamp, pgTable, text, primaryKey, integer} from "drizzle-orm/pg-core";
+import {timestamp, pgTable, text, primaryKey, integer, boolean} from "drizzle-orm/pg-core";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -8,8 +8,8 @@ export const users = pgTable("user", {
   name: text("name"),
   email: text("email"),
   email_verified: timestamp("email_verified", {mode: "date"}),
-  is_active: text("is_active").notNull().default("true"),
-  is_deleted: text("is_deleted").notNull().default("false"),
+  is_active: boolean("is_active").notNull().default(true),
+  is_deleted: boolean("is_deleted").notNull().default(false),
   password: text("password").notNull(),
   image: text("image"),
 });
