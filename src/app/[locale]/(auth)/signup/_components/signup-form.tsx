@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,19 +23,26 @@ import {
 } from "@/components/ui/card";
 import { signUpSchema, SignUpFormData } from "@/schemas/auth.schema";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { signup } from "@/services/auth";
 
 export default function SignUpForm() {
   const t = useTranslations("signup_page.form");
   const router = useRouter();
+  const signupFn = useMutation({
+    mutationFn: (data:SignUpFormData) => {
+      return signup(data);
+    },
+  })
+
 
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
       phone: "",
-      email: "",
       password: "",
     },
   });
@@ -44,14 +50,10 @@ export default function SignUpForm() {
   async function onSubmit(data: SignUpFormData) {
     try {
       console.log("Sign up attempt with:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-      router.push("/dashboard");
+      await signupFn.mutateAsync(data);
+      //router.push("/dashboard");
     } catch (err) {
       console.error("Sign up failed:", err);
-      form.setError("root", {
-        type: "manual",
-        message: t("rootErrorMessage"),
-      });
     }
   }
 
