@@ -7,11 +7,13 @@ export const users = pgTable("user", {
   phone: text("phone").notNull().unique(),
   name: text("name"),
   email: text("email"),
-  email_verified: timestamp("email_verified", {mode: "date"}),
+  emailVerified: timestamp("email_verified", {mode: "date"}),
   is_active: boolean("is_active").notNull().default(true),
   is_deleted: boolean("is_deleted").notNull().default(false),
   password: text("password").notNull(),
   image: text("image"),
+  created_at: timestamp("created_at").notNull().defaultNow(),
+  updatedA_at: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const accounts = pgTable(
