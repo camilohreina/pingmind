@@ -34,7 +34,6 @@ export const { auth, handlers, signIn } = NextAuth({
 
         const { phone, password } = credentials;
         const [user] = await getUserByPhone(phone as string);
-        console.log(user);
         if (!user) {
           return null;
         }

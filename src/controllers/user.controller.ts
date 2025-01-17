@@ -13,7 +13,7 @@ export const createUser = async (data: SignUpFormData) => {
       throw new ValidationError("User already exists");
     }
     // Hash the password
-    const hashedPassword = await hash(password, 17);
+    const hashedPassword = await hash(password, 10);
 
     // Create the user
     await dbCreateUser({
