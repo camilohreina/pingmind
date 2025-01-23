@@ -10,7 +10,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
 
     const user = await getUserByPhone(fromNumber);
     if (!user) {
-      await sendRegisterMessage();
+      await sendRegisterMessage(fromNumber);
       return { status: "success", action: "send_register_user" };
     }
     //TODO: aqui la logica para verificar si tiene un plan activo

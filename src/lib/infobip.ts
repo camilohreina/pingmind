@@ -7,14 +7,14 @@ const client = new Infobip({
   authType: AuthType.ApiKey,
 });
 
-export const sendRegisterMessage = async () => {
+export const sendRegisterMessage = async (phone: string) => {
   try {
     const response = await client.channels.whatsapp.send({
       type: "text",
       from: process.env.INFOBIP_PHONE_NUMBER!,
-      to: "573224354004",
+      to: phone,
       content: {
-        text: AUTO_REPLY_REGISTER,
+        text: AUTO_REPLY_REGISTER(phone),
       },
     });
     console.log(response);

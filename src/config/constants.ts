@@ -1,11 +1,11 @@
 export const TRIGGER_REGISTER_WORDS = ["hi", "hola", "buenas", "hello"];
 
-export const AUTO_REPLY_REGISTER = `¡Hola! 👋 Este es un mensaje de Camilo, el creador de PingMind:
+export const AUTO_REPLY_REGISTER = (phone: string) =>
+  `¡Hola! 👋 Este es un mensaje de Camilo, el creador de PingMind:\n
 ¡Tengo buenas noticias! Ahora puedes probar PingMind gratis por 3 días y descubrir todas sus funcionalidades 🎉
 Ingresa a la web para registrarte y elegir uno de nuestros planes. Tranqui, puedes cancelar en cualquier momento 🤝
-www.pingmind.app/signin/signup?phone=573224354004
-Una vez tengas un plan, vuelve a esta conversación y envía un mensaje para seguir conversando.
-Si tienes alguna duda, escríbeme por WhatsApp al +525652247590 - Estoy para ayudarte.
+www.pingmind.app/es/signup?phone=${phone} \n
+Una vez tengas un plan, vuelve a esta conversación y envía un mensaje para seguir conversando.\n
 ¡Gracias por ser parte de esta aventura! 🚀`;
 
 export const getInfobipConfig = () => ({
