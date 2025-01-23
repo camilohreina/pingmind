@@ -1,3 +1,4 @@
+import { createLogMessage, getLogMessage } from "@/db/queries/log-messages";
 import { createReminder, getReminderSame } from "@/db/queries/reminders";
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
@@ -17,6 +18,13 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     const message = data.message?.text || "";
     const fromNumber = data.from;
 
+    const messageProcessed = await getLogMessage(data?.messageId);
+
+    if (messageProcessed) {
+      console.log("Message already processed");
+      return { status: "success", action: "message_already_processed" };
+    }
+
     const user = await getUserByPhone(fromNumber);
     if (!user) {
       await sendRegisterMessage(fromNumber);
@@ -32,6 +40,11 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     return result;
   } catch (error) {
     throw new AiError("Error processing message with AI");
+  } finally {
+    createLogMessage({
+      id: crypto.randomUUID(),
+      messageId: data?.messageId,
+    });
   }
 };
 

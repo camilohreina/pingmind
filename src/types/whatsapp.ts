@@ -1,4 +1,5 @@
 export interface WhatsAppMessage {
+  messageId: string;
   message?: {
     text?: string;
   };

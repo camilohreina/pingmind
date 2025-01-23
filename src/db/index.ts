@@ -1,7 +1,8 @@
-import {neon, neonConfig} from "@neondatabase/serverless";
+import {neon} from "@neondatabase/serverless";
 import {drizzle} from "drizzle-orm/neon-http";
 import { accounts, sessions, users, verificationTokens } from "./schema/users";
 import { reminderRelations, reminders } from "./schema/reminders";
+import { logMessages } from "./schema/log-messages";
 
 // neonConfig.fetchConnectionCache = true;
 
@@ -15,10 +16,12 @@ export const db = drizzle(sql, {logger: true,
         accounts,
         sessions,
         verificationTokens,
-        reminderRelations
+        reminderRelations,
+        logMessages
     }
 });
 export * from './schema/users'
 export * from './schema/reminders'
+export * from './schema/log-messages'
 
 export * from "drizzle-orm";
