@@ -1,5 +1,6 @@
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
+import { AiError } from "@/lib/error";
 import { sendRegisterMessage } from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
 
@@ -17,9 +18,11 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     processUserMessage({
       message,
       phone: fromNumber,
-      timezone: "America/Bogota",
+      timezone: user.timezone,
     });
-  } catch (error) {}
+  } catch (error) {
+    throw new AiError("Error processing message with AI");
+  }
 };
 
 /* export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {

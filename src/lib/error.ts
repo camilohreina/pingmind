@@ -8,6 +8,13 @@ export class ValidationError extends Error {
   }
 }
 
+export class AiError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AiError";
+  }
+}
+
 export class ConnectionError extends Error {
   constructor(message: string) {
     super(message);
