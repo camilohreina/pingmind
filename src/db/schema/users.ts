@@ -11,8 +11,9 @@ export const users = pgTable("user", {
   is_deleted: boolean("is_deleted").notNull().default(false),
   password: text("password").notNull(),
   image: text("image"),
+  timezone: text("timezone").notNull().default("UTC"),
   created_at: timestamp("created_at").notNull().defaultNow(),
-  updatedA_at: timestamp("updated_at").notNull().defaultNow(),
+  updated_at: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const accounts = pgTable(

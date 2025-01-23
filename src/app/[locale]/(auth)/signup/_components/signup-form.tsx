@@ -47,6 +47,7 @@ export default function SignUpForm({ phone }: Props) {
       name: "",
       phone: phone ? `+${phone}` : "",
       password: "",
+      country: "",
     },
   });
 
@@ -89,7 +90,12 @@ export default function SignUpForm({ phone }: Props) {
                 <FormItem>
                   <FormLabel>{t("phoneLabel")}</FormLabel>
                   <FormControl>
-                    <PhoneInput {...field} />
+                    <PhoneInput
+                      onCountryChange={(country) => {
+                        form.setValue("country", country ? country : "");
+                      }}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>{t("phoneDescription")}</FormDescription>
                   <FormMessage />
