@@ -1,8 +1,16 @@
+import { createReminder, getReminderSame } from "@/db/queries/reminders";
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
 import { AiError } from "@/lib/error";
 import { sendRegisterMessage } from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
+
+interface reminderReview {
+  userId: string;
+  message: string;
+  phone: string;
+  timezone: string;
+}
 
 export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
   try {
@@ -15,13 +23,61 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       return { status: "success", action: "send_register_user" };
     }
     //TODO: aqui la logica para verificar si tiene un plan activo
-    processUserMessage({
+    const result = await handleReminder({
+      userId: user.id,
       message,
       phone: fromNumber,
       timezone: user.timezone,
     });
+    return result;
   } catch (error) {
     throw new AiError("Error processing message with AI");
+  }
+};
+
+export const handleReminder = async ({
+  userId,
+  message,
+  phone,
+  timezone,
+}: reminderReview) => {
+  try {
+    const reminder_user = await processUserMessage({
+      message,
+      phone: phone,
+      timezone: timezone,
+    });
+
+    if (!reminder_user)
+      return { status: "error", error: "ai_error_process", ok: false };
+
+    const equalReminder = await getReminderSame({
+      text: reminder_user.message,
+      scheduledAt: new Date(reminder_user.date),
+      userId,
+      status: "PENDING",
+    });
+
+    if (equalReminder) {
+      return { status: "success", ok: true };
+    }
+
+    const reminder = await createReminder({
+      id: crypto.randomUUID(),
+      userId,
+      text: reminder_user.message,
+      scheduledAt: new Date(reminder_user.date),
+      status: "PENDING",
+    });
+
+    if (reminder) {
+      console.log("equal reminder");
+      return { status: "success", ok: true };
+    }
+
+    return { status: "error", error: "reminder_not_created", ok: false };
+  } catch (error) {
+    return { status: "error", error: "internal_server_error", ok: false };
   }
 };
 

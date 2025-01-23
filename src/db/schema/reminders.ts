@@ -6,6 +6,8 @@ export const reminders = pgTable("reminders", {
   id: varchar("id", { length: 255 }).primaryKey(),
   userId: varchar("user_id", { length: 255 }).notNull(),
   text: text("text").notNull(),
+  title: varchar("title", { length: 255 }),
+  localDate: timestamp("local_date"),
   scheduledAt: timestamp("scheduled_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   status: varchar("status", {

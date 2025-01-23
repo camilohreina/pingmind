@@ -5,11 +5,14 @@ export async function POST(req: Request) {
   try {
     const info = await req.json();
     const [data] = info.results as any;
+    console.log({info});
+    console.log("-----------------------------");
+    console.log({data});
     const result = await handleWebhook(data);
-    if (result.status === "error") {
+    if (result?.error) {
       return NextResponse.json(result, { status: 500 });
     }
-    return NextResponse.json(result);
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

@@ -10,7 +10,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   //get message from request
   const data = await req.json();
   const { countryCode } = data;
-
+  
   getTimeZoneFromCountryCode(countryCode);
 
   return NextResponse.json(
