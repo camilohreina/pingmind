@@ -1,5 +1,4 @@
 import type {AdapterAccount} from "@auth/core/adapters";
-
 import {timestamp, pgTable, text, primaryKey, integer, boolean} from "drizzle-orm/pg-core";
 
 export const users = pgTable("user", {

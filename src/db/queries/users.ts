@@ -7,12 +7,9 @@ export const dbCreateUser = async (user: newUser) => {
   return db.insert(users).values(user).execute();
 };
 
-export const dbExistingUser = async (phone: string) => {
-  return db.select({
-    id: users.id
-  }).from(users).where(eq(users.phone, phone));
-}
 
 export const getUserByPhone = async (phone: string) => {
-  return db.select().from(users).where(eq(users.phone, phone))
+  return db.query.users.findFirst({
+    where: eq(users.phone, phone)
+  })
 }

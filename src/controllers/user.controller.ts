@@ -1,4 +1,4 @@
-import { dbCreateUser, dbExistingUser } from "@/db/queries/users";
+import { dbCreateUser, getUserByPhone } from "@/db/queries/users";
 import { ValidationError } from "@/lib/error";
 import { SignUpFormData } from "@/schemas/auth.schema";
 import { hash } from "bcrypt";
@@ -7,7 +7,7 @@ export const createUser = async (data: SignUpFormData) => {
   const { name, phone, password } = data;
   try {
     // Verify if the user already exists
-    const [existingUser] = await dbExistingUser(phone);
+    const existingUser = await getUserByPhone(phone);
     console.log(existingUser);
     if (existingUser) {
       throw new ValidationError("User already exists");

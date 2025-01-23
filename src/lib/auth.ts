@@ -33,7 +33,7 @@ export const { auth, handlers, signIn } = NextAuth({
         }
 
         const { phone, password } = credentials;
-        const [user] = await getUserByPhone(phone as string);
+        const user = await getUserByPhone(phone as string);
         if (!user) {
           return null;
         }

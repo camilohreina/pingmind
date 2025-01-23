@@ -1,8 +1,28 @@
+import { getUserByPhone } from "@/db/queries/users";
+import { processUserMessage } from "@/lib/ai";
 import { sendRegisterMessage } from "@/lib/infobip";
-import { shouldReplyToMessage } from "@/lib/utils";
 import { WhatsAppMessage } from "@/types/whatsapp";
 
 export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
+  try {
+    const message = data.message?.text || "";
+    const fromNumber = data.from;
+
+    const user = await getUserByPhone(fromNumber);
+    if (!user) {
+      await sendRegisterMessage();
+      return { status: "success", action: "send_register_user" };
+    }
+    //TODO: aqui la logica para verificar si tiene un plan activo
+    processUserMessage({
+      message,
+      phone: fromNumber,
+      timezone: "America/Bogota",
+    });
+  } catch (error) {}
+};
+
+/* export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
   try {
     const message = data.message?.text || "";
     const fromNumber = data.from;
@@ -20,3 +40,4 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     return { status: "error", message: errorMessage };
   }
 };
+ */
