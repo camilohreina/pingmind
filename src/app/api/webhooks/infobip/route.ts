@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    const info = await req.json();
+    const [data] = info.results as any;
     const result = await handleWebhook(data);
-    console.log(result);
     if (result.status === "error") {
       return NextResponse.json(result, { status: 500 });
     }

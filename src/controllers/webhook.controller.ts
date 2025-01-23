@@ -8,7 +8,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     const fromNumber = data.from;
 
     if (shouldReplyToMessage(message)) {
-        console.log(`Received message from ${fromNumber}: ${message}`);
+      console.log(`Received message from ${fromNumber}: ${message}`);
       await sendRegisterMessage();
     }
 
