@@ -28,21 +28,24 @@ import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { signup } from "@/services/auth";
 
-export default function SignUpForm() {
+interface Props {
+  phone: null | string;
+}
+
+export default function SignUpForm({ phone }: Props) {
   const t = useTranslations("signup_page.form");
   const router = useRouter();
   const signupFn = useMutation({
-    mutationFn: (data:SignUpFormData) => {
+    mutationFn: (data: SignUpFormData) => {
       return signup(data);
     },
-  })
-
+  });
 
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
-      phone: "",
+      phone: phone ? `+${phone}` : "",
       password: "",
     },
   });
@@ -86,7 +89,7 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>{t("phoneLabel")}</FormLabel>
                   <FormControl>
-                    <PhoneInput defaultCountry="US" {...field} />
+                    <PhoneInput {...field} />
                   </FormControl>
                   <FormDescription>{t("phoneDescription")}</FormDescription>
                   <FormMessage />
