@@ -30,8 +30,10 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/auth";
+import { useToast } from "@/hooks/use-toast";
 
 export function LoginForm() {
+  const { toast } = useToast();
   const t = useTranslations("login_page.form");
   const router = useRouter();
   const form = useForm<LoginFormData>({
@@ -42,16 +44,40 @@ export function LoginForm() {
     },
   });
 
+  const toastSuccessLogin = () => {
+    toast({
+      title: t("toast.success.title"),
+      description: t("toast.success.description"),
+    });
+  };
+
+  const toastFailedLogin = () => {
+    toast({
+      title: t("toast.error.title"),
+      description: t("toast.error.description"),
+    });
+  };
+
   const loginFn = useMutation({
     mutationFn: (data: LoginFormData) => {
       return login(data);
+    },
+    onSuccess: (response) => {
+      if (response?.error) {
+        return toastFailedLogin();
+      }
+      toastSuccessLogin();
+      //TODO: Redirect to dashboard or previous page
+      //router.push("/dashboard");
+    },
+    onError: (err) => {
+      toastFailedLogin();
     },
   });
 
   async function onSubmit(data: LoginFormData) {
     try {
       // Here you would typically call your authentication API
-      console.log("Login attempt with:", data);
       loginFn.mutateAsync(data);
 
       // Simulating a successful login

@@ -36,7 +36,17 @@
       "password_label": "Password",
       "login_button": "Log in",
       "signup_prompt": "New to pingmind?",
-      "signup_link": "Create an account"
+      "signup_link": "Create an account",
+      "toast": {
+        "success": {
+          "title": "Welcome!",
+          "description": "You have successfully logged in."
+        },
+        "error": {
+          "title": "Error",
+          "description": "Login failed. Please try again."
+        }
+      }
     }
   },
   "signup_page": {

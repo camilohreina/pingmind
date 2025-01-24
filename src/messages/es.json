@@ -36,7 +36,17 @@
       "password_label": "Contraseña",
       "login_button": "Iniciar sesión",
       "signup_prompt": "¿Nuevo en pingmind?",
-      "signup_link": "Crea una cuenta"
+      "signup_link": "Crea una cuenta",
+      "toast": {
+        "success": {
+          "title": "¡Bienvenido!",
+          "description": "Has iniciado sesión correctamente."
+        },
+        "error": {
+          "title": "Error",
+          "description": "El inicio de sesión falló. Por favor, inténtalo de nuevo."
+        }
+      }
     }
   },
   "signup_page": {
