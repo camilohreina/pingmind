@@ -82,10 +82,11 @@ export const handleReminder = async ({
       text: reminder_user.message,
       scheduledAt: new Date(reminder_user.date),
       status: "PENDING",
+      response: reminder_user.response,
+      alert: reminder_user.alert,
     });
 
     if (reminder) {
-  
       await sendReplyReminder({
         phone,
         message: reminder_user.response,

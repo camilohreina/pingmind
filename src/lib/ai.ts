@@ -25,6 +25,7 @@ export const processUserMessage = async ({
         timezone: z.string(),
         localDate: z.string(),
         response: z.string(),
+      alert : z.string()  
       }),
       system: `
             You are an assistant designed to process natural language reminder messages. Your task is to extract information from the messages and return a JSON object with the following properties:
@@ -35,6 +36,7 @@ export const processUserMessage = async ({
               - 'timezone': The user's time zone is ${timezone}.
               - 'localDate': The date and time in the user's local time zone, formatted as ISO 8601.
               - 'response': A message to be sent back to the user, confirming the action taken on the reminder.
+              - 'alert': A message to be sent to the user as a reminder at the specified date and time.
               The current date and time is ${new Date().toISOString()}, and the user's timezone is UTC, inferred from their phone number: ${phone}.
               Ensure that:
               1. The 'date' is always provided in the correct ISO 8601 format in UTC.

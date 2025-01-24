@@ -10,6 +10,8 @@ export const reminders = pgTable("reminders", {
   localDate: timestamp("local_date"),
   scheduledAt: timestamp("scheduled_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  response: text("response"),
+  alert: text("alert"),
   status: varchar("status", {
     length: 50,
     enum: ["PENDING", "COMPLETED", "CANCELLED"],

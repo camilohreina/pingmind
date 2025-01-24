@@ -17,7 +17,6 @@ export const sendRegisterMessage = async (phone: string) => {
         text: AUTO_REPLY_REGISTER(phone),
       },
     });
-    console.log(response);
   } catch (error) {
     console.log(error);
   }
@@ -34,7 +33,6 @@ export const sendReplyReminder = async ({phone, message}:{phone: string, message
         text: message,
       },
     });
-    console.log(response);
   } catch (error) {
     console.log(error);
   }
