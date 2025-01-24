@@ -22,3 +22,20 @@ export const sendRegisterMessage = async (phone: string) => {
     console.log(error);
   }
 };
+
+export const sendReplyReminder = async ({phone, message}:{phone: string, message: string}) => {
+  console.log("llegando al reply");
+  try {
+    const response = await client.channels.whatsapp.send({
+      type: "text",
+      from: process.env.INFOBIP_PHONE_NUMBER!,
+      to: phone,
+      content: {
+        text: message,
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -3,7 +3,7 @@ import { createReminder, getReminderSame } from "@/db/queries/reminders";
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
 import { AiError } from "@/lib/error";
-import { sendRegisterMessage } from "@/lib/infobip";
+import { sendRegisterMessage, sendReplyReminder } from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
 
 interface reminderReview {
@@ -72,6 +72,7 @@ export const handleReminder = async ({
     });
 
     if (equalReminder) {
+      console.log("equal reminder");
       return { status: "success", ok: true };
     }
 
@@ -84,7 +85,11 @@ export const handleReminder = async ({
     });
 
     if (reminder) {
-      console.log("equal reminder");
+  
+      await sendReplyReminder({
+        phone,
+        message: reminder_user.response,
+      });
       return { status: "success", ok: true };
     }
 
