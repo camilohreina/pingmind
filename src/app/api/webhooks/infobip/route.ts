@@ -1,4 +1,4 @@
-import { handleWebhook } from "@/controllers/webhook.controller";
+import { handleWebhook } from "@/controllers/webhook-messages.controller";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {

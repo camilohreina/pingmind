@@ -34,8 +34,8 @@ export const getReminderLastMinute = () => {
 
   return db
     .select({
-        reminder: reminders,
-        phone: users.phone,
+      reminder: reminders,
+      phone: users.phone,
     })
     .from(reminders)
     .innerJoin(users, eq(reminders.userId, users.id))
@@ -58,6 +58,32 @@ export const updateStatusReminder = ({
   return db
     .update(reminders)
     .set({ status })
+    .where(eq(reminders.id, id))
+    .execute();
+};
+
+export const getPendingRemindersByUser = (userId: string) => {
+  return db.query.reminders.findMany({
+    where: and(eq(reminders.userId, userId), eq(reminders.status, "PENDING")),
+  });
+};
+
+export const updateReminder = ({
+  id,
+  text,
+  scheduledAt,
+  status,
+}: {
+  id: string;
+  text: string;
+  scheduledAt: Date;
+  status: (typeof reminders.status.enumValues)[number];
+}) => {
+
+  
+  return db
+    .update(reminders)
+    .set({ text, scheduledAt, status })
     .where(eq(reminders.id, id))
     .execute();
 };

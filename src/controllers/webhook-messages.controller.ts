@@ -1,10 +1,20 @@
 import { createLogMessage, getLogMessage } from "@/db/queries/log-messages";
-import { createReminder, getReminderSame } from "@/db/queries/reminders";
+import {
+  createReminder,
+  getPendingRemindersByUser,
+  getReminderSame,
+} from "@/db/queries/reminders";
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
 import { AiError } from "@/lib/error";
 import { sendRegisterMessage, sendReplyReminder } from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
+import {
+  addNewReminder,
+  cancelReminder,
+  formatRemnindersToAi,
+  updatePendingReminder,
+} from "./reminder.controller";
 
 interface reminderReview {
   userId: string;
@@ -55,67 +65,53 @@ export const handleReminder = async ({
   timezone,
 }: reminderReview) => {
   try {
+    const reminders_list = await getPendingRemindersByUser(userId);
+    const formatted_reminders = formatRemnindersToAi({ reminders_list });
     const reminder_user = await processUserMessage({
       message,
       phone: phone,
       timezone: timezone,
+      reminders: formatted_reminders,
     });
 
     if (!reminder_user)
       return { status: "error", error: "ai_error_process", ok: false };
 
-    const equalReminder = await getReminderSame({
-      text: reminder_user.message,
-      scheduledAt: new Date(reminder_user.date),
-      userId,
-      status: "PENDING",
-    });
-
-    if (equalReminder) {
-      console.log("equal reminder");
-      return { status: "success", ok: true };
-    }
-
-    const reminder = await createReminder({
-      id: crypto.randomUUID(),
-      userId,
-      text: reminder_user.message,
-      scheduledAt: new Date(reminder_user.date),
-      status: "PENDING",
-      response: reminder_user.response,
-      alert: reminder_user.alert,
-    });
-
-    if (reminder) {
-      await sendReplyReminder({
+    if (reminder_user.action === "CREATE") {
+      await addNewReminder({
         phone,
-        message: reminder_user.response,
+        userId,
+        reminder_user,
       });
-      return { status: "success", ok: true };
+      return { status: "success", action: "create", ok: true };
+    }
+    if (reminder_user?.reminderId) {
+      console.log({reminderId: reminder_user.reminderId});
+      if (reminder_user.action === "UPDATE") {
+        await updatePendingReminder({
+          reminderId: reminder_user.reminderId,
+          phone,
+          reminder_user,
+        });
+        return { status: "success", action: "update", ok: true };
+      }
+
+      if (reminder_user.action === "DELETE") {
+        await cancelReminder({
+          reminderId: reminder_user.reminderId,
+          phone,
+          reminder_user,
+        });
+        return { status: "success", action: "delete", ok: true };
+      }
     }
 
-    return { status: "error", error: "reminder_not_created", ok: false };
+    if (reminder_user.action === "NO ACTION") {
+      return { status: "success", action: "no_action", ok: true };
+    }
+
+    return { status: "error", error: "reminder_error", ok: false };
   } catch (error) {
     return { status: "error", error: "internal_server_error", ok: false };
   }
 };
-
-/* export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
-  try {
-    const message = data.message?.text || "";
-    const fromNumber = data.from;
-
-    if (shouldReplyToMessage(message)) {
-      console.log(`Received message from ${fromNumber}: ${message}`);
-      await sendRegisterMessage();
-    }
-
-    return { status: "success" };
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
-    console.error("Error processing webhook:", errorMessage);
-    return { status: "error", message: errorMessage };
-  }
-};
- */
