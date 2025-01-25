@@ -67,32 +67,69 @@
     }
   },
   "pricing_page": {
-    "title": "Precios",
-    "subtitle": "Ya sea que estés probando nuestro servicio o necesites más, tenemos lo que necesitas.",
+    "title": "Planes",
+    "subtitle": "Ya sea que estés probando nuestro servicio o necesites más, tenemos una solución para ti.",
     "plans": {
       "starter": {
-        "name": "Inicio",
+        "name": "Starter",
         "tagline": "Para uso personal con necesidades básicas.",
         "features": {
-          "whatsapp_reminders": "Soporte para recordatorios por WhatsApp.",
-          "voice_recognition": "Reconocimiento de voz",
-          "voice_recognition_footnote": "Transcribe contenido de audio a texto con nuestra IA.",
-          "list_creation": "Creación de listas",
-          "list_creation_footnote": "Genera listas a partir de tus recordatorios.",
-          "image_recognition": "Reconocimiento de imágenes",
-          "image_recognition_footnote": "Extrae texto de imágenes y gestiona recordatorios.",
-          "early_access": "Funciones de acceso anticipado",
-          "priority_support": "Soporte prioritario"
-        },
-        "quota_info": "Puedes crear hasta {quota} recordatorios por mes.",
-        "unlimited_reminders": "Sin límite en la cantidad de recordatorios que puedes crear."
+          "whatsapp_reminders": "Soporte de recordatorios de WhatsApp.",
+          "voice_recognition": {
+            "text": "Reconocimiento de voz",
+            "footnote": "Transcribe contenido de audio a texto con nuestra IA."
+          },
+          "list_creation": {
+            "text": "Creación de listas",
+            "footnote": "Obtén listas de tus recordatorios."
+          },
+          "image_recognition": {
+            "text": "Reconocimiento de imágenes",
+            "footnote": "Extrae texto de imágenes y administra recordatorios.",
+            "negative": true
+          },
+          "early_access": {
+            "text": "Características de acceso anticipado",
+            "negative": true
+          },
+          "priority_support": {
+            "text": "Soporte prioritario",
+            "negative": true
+          }
+        }
       },
       "pro": {
         "name": "Pro",
-        "tagline": "Para recordatorios más grandes con mayores necesidades."
+        "tagline": "Para recordatorios con necesidades superiores.",
+        "features": {
+          "whatsapp_reminders": "Soporte de recordatorios de WhatsApp.",
+          "voice_recognition": {
+            "text": "Reconocimiento de voz",
+            "footnote": "Transcribe contenido de audio a texto con nuestra IA."
+          },
+          "list_creation": {
+            "text": "Creación de listas",
+            "footnote": "Obtén listas de tus recordatorios."
+          },
+          "image_recognition": {
+            "text": "Reconocimiento de imágenes",
+            "footnote": "Extrae texto de imágenes y administra recordatorios."
+          },
+          "early_access": {
+            "text": "Características de acceso anticipado"
+          },
+          "priority_support": {
+            "text": "Soporte prioritario"
+          }
+        }
       },
-      "upgrade_now": "Actualízate ahora",
-      "price_per_month": "por mes"
+      "tooltips": {
+        "upgrade_now": "Actualizar Ahora",
+        "reminders_included": {
+          "unlimited": "Recordatorios ilimitados.",
+          "limited": "{quota} recordatorios incluidos."
+        }
+      }
     }
   }
 }

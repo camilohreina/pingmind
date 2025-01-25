@@ -66,7 +66,7 @@
       "rootErrorMessage": "Sign up failed. Please try again."
     }
   },
-  "princing_page": {
+  "pricing_page": {
     "title": "Pricing",
     "subtitle": "Whether you're just trying out our service or need more, we've got you covered.",
     "plans": {
@@ -75,24 +75,61 @@
         "tagline": "For personal use with basic needs.",
         "features": {
           "whatsapp_reminders": "WhatsApp reminders support.",
-          "voice_recognition": "Voice recognition",
-          "voice_recognition_footnote": "Transcribe audio content to text with our AI.",
-          "list_creation": "List creation",
-          "list_creation_footnote": "Get list from your reminders.",
-          "image_recognition": "Image recognition",
-          "image_recognition_footnote": "Extract text from images and manage reminders.",
-          "early_access": "Early access features",
-          "priority_support": "Priority support"
-        },
-        "quota_info": "You can create up to {quota} reminders per month.",
-        "unlimited_reminders": "No limit on the number of reminders you can create."
+          "voice_recognition": {
+            "text": "Voice recognition",
+            "footnote": "Transcribe audio content to text with our AI."
+          },
+          "list_creation": {
+            "text": "List creation",
+            "footnote": "Get list from your reminders."
+          },
+          "image_recognition": {
+            "text": "Image recognition",
+            "footnote": "Extract text from images and manage reminders.",
+            "negative": true
+          },
+          "early_access": {
+            "text": "Early access features",
+            "negative": true
+          },
+          "priority_support": {
+            "text": "Priority support",
+            "negative": true
+          }
+        }
       },
       "pro": {
         "name": "Pro",
-        "tagline": "For larger reminders with higher needs."
+        "tagline": "For larger reminders with higher needs.",
+        "features": {
+          "whatsapp_reminders": "WhatsApp reminders support.",
+          "voice_recognition": {
+            "text": "Voice recognition",
+            "footnote": "Transcribe audio content to text with our AI."
+          },
+          "list_creation": {
+            "text": "List creation",
+            "footnote": "Get list from your reminders."
+          },
+          "image_recognition": {
+            "text": "Image recognition",
+            "footnote": "Extract text from images and manage reminders."
+          },
+          "early_access": {
+            "text": "Early access features"
+          },
+          "priority_support": {
+            "text": "Priority support"
+          }
+        }
       },
-      "upgrade_now": "Upgrade Now",
-      "price_per_month": "per month"
+      "tooltips": {
+        "upgrade_now": "Upgrade Now",
+        "reminders_included": {
+          "unlimited": "Unlimited reminders.",
+          "limited": "{quota} reminders included."
+        }
+      }
     }
   }
 }
