@@ -89,3 +89,28 @@ export const { auth, handlers, signIn } = NextAuth({
     },
   },
 });
+
+
+
+
+export const session = async ({ session, token }: any) => {
+  session.user.id = token.id;
+  return session;
+};
+
+export async function getUserServerSession() {
+  const authUserSession = await auth();
+  const user = authUserSession?.user;
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    email: user?.email,
+    first_name: user?.name,
+    last_name: '',
+    picture: user?.image,
+  };
+}
