@@ -27,7 +27,7 @@ const PlanCard = ({
   return (
     <div
       className={cn("relative rounded-2xl shadow-lg", {
-        "border-2 border-purple-800 shadow-purple-400": isPro,
+        "border-2 border-green-800 shadow-green-400": isPro,
         "border border-gray-600": !isPro,
       })}
     >

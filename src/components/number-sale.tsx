@@ -26,7 +26,7 @@ export default function NumberSale({}: Props) {
     <div className="flex flex-col gap-4 my-3 max-w-md mx-auto">
       <Button
         asChild
-        className="px-12 py-4 rounded-full bg-[#1ED760] font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-[#21e065] duration-200 transition-transform"
+        className="px-12 py-4 rounded-full bg-green-600 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-[#21e065] duration-200 transition-transform"
       >
         <Link
           href="https://wa.me/447908679639?text=Hello!"
@@ -41,7 +41,7 @@ export default function NumberSale({}: Props) {
 
       <Button
         variant="ghost"
-        className="flex justify-center items-center border border-dashed border-gray-600 p-2 rounded-md transform hover:scale-105 duration-300 transition-all"
+        className="flex cursor-pointer justify-center items-center border border-dashed border-gray-600 p-2 rounded-md transform hover:scale-105 duration-300 transition-all"
         onClick={() => {
           copyToClipboardWithMeta(PHONE_NUMBER);
           setHasCopied(true);
