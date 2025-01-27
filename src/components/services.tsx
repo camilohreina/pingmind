@@ -128,7 +128,7 @@ export default function WhatsAppReminderDemo() {
     <div className="flex flex-col md:flex-row gap-8 p-6 max-w-7xl mx-auto">
       <div className="w-full md:w-1/3">
         <h2 className={`${fontHead.className} text-2xl text-left mb-4`}>
-          Características
+          {t("home_page.services.titles.features")}
         </h2>
         <div className="space-y-4">
           {features.map((feature) => (
