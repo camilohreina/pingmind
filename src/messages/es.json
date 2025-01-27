@@ -46,41 +46,57 @@
       },
       "demoMessages": {
         "text": [
-          { "type": "user", "content": "Recordar comprar leche mañana" },
           {
+            "id": 1,
+            "type": "user",
+            "content": "Recordar comprar leche mañana"
+          },
+          {
+            "id": 2,
             "type": "bot",
             "content": "Entendido. He creado un recordatorio para comprar leche mañana. Te enviaré una notificación en el momento adecuado."
           },
           {
+            "id": 3,
             "type": "user",
             "content": "Gracias, también recuérdame llamar al dentista el viernes"
           },
           {
+            "id": 4,
             "type": "bot",
             "content": "Claro, he añadido un recordatorio para llamar al dentista el viernes. Te lo recordaré ese día."
           }
         ],
         "voice": [
           {
+            "id": 5,
             "type": "user",
             "content": "🎤 Nota de voz: 'Recordar recoger el traje de la tintorería el jueves'"
           },
           {
+            "id": 6,
             "type": "bot",
             "content": "He procesado tu nota de voz y creado un recordatorio para recoger el traje de la tintorería el jueves."
           },
           {
+            "id": 7,
             "type": "user",
             "content": "🎤 Nota de voz: 'Recordar recoger el traje de la tintorería el jueves'"
           },
           {
+            "id": 8,
             "type": "bot",
             "content": "Entendido. He creado un recordatorio para comprar un regalo de cumpleaños para tu mamá. ¿Quieres que te sugiera una fecha específica para este recordatorio?"
           }
         ],
         "image": [
-          { "type": "user", "content": "🖼️ Imagen: Cartel de un concierto" },
           {
+            "id": 9,
+            "type": "user",
+            "content": "🖼️ Imagen: Cartel de un concierto"
+          },
+          {
+            "id": 10,
             "type": "bot",
             "content": "He analizado la imagen del cartel del concierto. He creado un recordatorio para el evento el día 15 de julio a las 20:00."
           }
