@@ -25,6 +25,67 @@
       "how_it_works": "How it works",
       "pricing": "Pricing",
       "contact": "Contact"
+    },
+    "services": {
+      "features": {
+        "text": {
+          "name": "Text Reminders",
+          "description": "Send a text message to quickly create a reminder."
+        },
+        "voice": {
+          "name": "Voice Reminders",
+          "description": "Record a voice note to create a reminder without typing."
+        },
+        "image": {
+          "name": "Image Reminders",
+          "description": "Send an image to create a visual reminder."
+        }
+      },
+      "titles": {
+        "features": "Features"
+      },
+      "demoMessages": {
+        "text": [
+          { "type": "user", "content": "Remember to buy milk tomorrow" },
+          {
+            "type": "bot",
+            "content": "Understood. I have created a reminder to buy milk tomorrow. I will send you a notification at the appropriate time."
+          },
+          {
+            "type": "user",
+            "content": "Thanks, also remind me to call the dentist on Friday"
+          },
+          {
+            "type": "bot",
+            "content": "Sure, I have added a reminder to call the dentist on Friday. I will remind you on that day."
+          }
+        ],
+        "voice": [
+          {
+            "type": "user",
+            "content": "🎤 Voice note: 'Remember to pick up the suit from the dry cleaner on Thursday'"
+          },
+          {
+            "type": "bot",
+            "content": "I have processed your voice note and created a reminder to pick up the suit from the dry cleaner on Thursday."
+          },
+          {
+            "type": "user",
+            "content": "🎤 Voice note: 'Remember to pick up the suit from the dry cleaner on Thursday'"
+          },
+          {
+            "type": "bot",
+            "content": "Understood. I have created a reminder to buy a birthday gift for your mom. Would you like me to suggest a specific date for this reminder?"
+          }
+        ],
+        "image": [
+          { "type": "user", "content": "🖼️ Image: Concert poster" },
+          {
+            "type": "bot",
+            "content": "I’ve analyzed the concert poster image and created a reminder for the event on July 15th at 8:00 PM."
+          }
+        ]
+      }
     }
   },
   "login_page": {

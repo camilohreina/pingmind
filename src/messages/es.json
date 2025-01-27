@@ -25,6 +25,67 @@
       "how_it_works": "Cómo funciona",
       "pricing": "Precios",
       "contact": "Contacto"
+    },
+    "services": {
+      "features": {
+        "text": {
+          "name": "Recordatorios por Texto",
+          "description": "Envía un mensaje de texto para crear un recordatorio rápidamente."
+        },
+        "voice": {
+          "name": "Recordatorios por Voz",
+          "description": "Graba una nota de voz para crear un recordatorio sin escribir."
+        },
+        "image": {
+          "name": "Recordatorios con Imágenes",
+          "description": "Envía una imagen para crear un recordatorio visual."
+        }
+      },
+      "titles": {
+        "features": "Características"
+      },
+      "demoMessages": {
+        "text": [
+          { "type": "user", "content": "Recordar comprar leche mañana" },
+          {
+            "type": "bot",
+            "content": "Entendido. He creado un recordatorio para comprar leche mañana. Te enviaré una notificación en el momento adecuado."
+          },
+          {
+            "type": "user",
+            "content": "Gracias, también recuérdame llamar al dentista el viernes"
+          },
+          {
+            "type": "bot",
+            "content": "Claro, he añadido un recordatorio para llamar al dentista el viernes. Te lo recordaré ese día."
+          }
+        ],
+        "voice": [
+          {
+            "type": "user",
+            "content": "🎤 Nota de voz: 'Recordar recoger el traje de la tintorería el jueves'"
+          },
+          {
+            "type": "bot",
+            "content": "He procesado tu nota de voz y creado un recordatorio para recoger el traje de la tintorería el jueves."
+          },
+          {
+            "type": "user",
+            "content": "🎤 Nota de voz: 'Recordar recoger el traje de la tintorería el jueves'"
+          },
+          {
+            "type": "bot",
+            "content": "Entendido. He creado un recordatorio para comprar un regalo de cumpleaños para tu mamá. ¿Quieres que te sugiera una fecha específica para este recordatorio?"
+          }
+        ],
+        "image": [
+          { "type": "user", "content": "🖼️ Imagen: Cartel de un concierto" },
+          {
+            "type": "bot",
+            "content": "He analizado la imagen del cartel del concierto. He creado un recordatorio para el evento el día 15 de julio a las 20:00."
+          }
+        ]
+      }
     }
   },
   "login_page": {
