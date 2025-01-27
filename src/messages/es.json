@@ -102,6 +102,10 @@
           }
         ]
       }
+    },
+    "locale_switcher": {
+      "label": "Change language",
+      "locale": "{locale, select, en {🇺🇸 Ingles} es {🇪🇦 Español}  other {Unknown}}"
     }
   },
   "login_page": {

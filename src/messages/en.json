@@ -94,6 +94,10 @@
           }
         ]
       }
+    },
+    "locale_switcher": {
+      "label": "Change language",
+      "locale": "{locale, select, en {🇺🇸 English} es {🇪🇦 Spanish} other {Unknown}}"
     }
   },
   "login_page": {

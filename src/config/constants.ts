@@ -13,3 +13,5 @@ export const getInfobipConfig = () => ({
   baseUrl: process.env.INFOBIP_BASE_URL || "",
   whatsappNumber: process.env.WHATSAPP_NUMBER || "",
 });
+
+export const locales = ["en", "es"];

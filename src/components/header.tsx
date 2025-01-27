@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { LocaleSwitcher } from "./locale-switcher-select";
 
 export default function Header() {
   const t = useTranslations("home_page.header"); // Hook para traducciones dinámicas
@@ -86,6 +87,7 @@ export default function Header() {
                   <ChevronRight className="ml-2 size-4 animate-pulse" />
                 </Link>
               </Button>
+              <LocaleSwitcher />
             </div>
           </div>
         </div>
