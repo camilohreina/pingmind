@@ -32,7 +32,7 @@ const PlanCard = ({
       })}
     >
       {isPro && (
-        <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-purple-600 to-violet-500 px-2 py-2 text-sm font-medium text-white">
+        <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-green-600 to-green-500 px-2 py-2 text-sm font-medium text-white">
           {t("plans.tooltips.upgrade_now")}
         </div>
       )}
@@ -60,7 +60,7 @@ const PlanCard = ({
               {negative ? (
                 <Minus className="size-6 text-gray-300" />
               ) : (
-                <Check className="size-6 text-purple-500" />
+                <Check className="size-6 text-green-500" />
               )}
             </div>
             {footnote ? (

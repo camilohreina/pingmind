@@ -88,6 +88,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return encode(params);
     },
   },
+  session:{
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  }
 });
 
 
@@ -101,7 +105,7 @@ export const session = async ({ session, token }: any) => {
 export async function getUserServerSession() {
   const authUserSession = await auth();
   const user = authUserSession?.user;
-
+console.log(authUserSession);
   if (!user) {
     return null;
   }

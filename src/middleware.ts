@@ -7,7 +7,8 @@ import authConfig from '@/lib/auth.config'
 const publicPages = [
   '/',
   '/login',
-  '/signup'
+  '/signup',
+  '/plans'
   // (/secret requires auth)
 ]
 
