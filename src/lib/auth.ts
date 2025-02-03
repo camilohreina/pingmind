@@ -7,6 +7,7 @@ import { getUserByPhone } from "@/db/queries/users";
 import { compare } from "bcrypt";
 import { ValidationError } from "./error";
 import { encode } from "@auth/core/jwt";
+import authConfig from "./auth.config";
 
 const adapter = DrizzleAdapter(db, {
   usersTable: users,
@@ -15,7 +16,8 @@ const adapter = DrizzleAdapter(db, {
   verificationTokensTable: verificationTokens,
 }) as Adapter;
 
-export const { auth, handlers, signIn } = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  ...authConfig,
   adapter,
   pages: {
     signIn: "/es/login",
@@ -82,8 +84,6 @@ export const { auth, handlers, signIn } = NextAuth({
         if (!createdSession) {
           throw new ValidationError("Failed to create session");
         }
-
-        return sessionToken;
       }
       return encode(params);
     },
