@@ -67,7 +67,7 @@ export function LoginForm() {
         return toastFailedLogin();
       }
       toastSuccessLogin();
-      router.push("/dashboard");
+      router.push("/plans");
     },
     onError: (err) => {
       toastFailedLogin();

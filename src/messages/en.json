@@ -46,7 +46,11 @@
       },
       "demoMessages": {
         "text": [
-          { "id":1, "type": "user", "content": "Remember to buy milk tomorrow" },
+          {
+            "id": 1,
+            "type": "user",
+            "content": "Remember to buy milk tomorrow"
+          },
           {
             "id": 2,
             "type": "bot",
@@ -86,7 +90,7 @@
           }
         ],
         "image": [
-          { "id":9, "type": "user", "content": "🖼️ Image: Concert poster" },
+          { "id": 9, "type": "user", "content": "🖼️ Image: Concert poster" },
           {
             "id": 10,
             "type": "bot",
@@ -202,6 +206,10 @@
           "unlimited": "Unlimited reminders.",
           "limited": "{quota} reminders included."
         }
+      },
+      "button": {
+        "signUp": "Sign Up",
+        "upgradeNow": "Upgrade Now"
       }
     }
   }

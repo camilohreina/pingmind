@@ -5,6 +5,7 @@ import { getUserServerSession } from "@/lib/auth";
 import { ArrowRight } from "lucide-react";
 import { signIn } from "next-auth/react";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 type Props = {
   plan: string;
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export default function SignUpButton({ plan, user }: Props) {
+  const t = useTranslations("pricing_page.plans.button");
+
   return (
     <>
       {plan === "Free" ? (
@@ -22,7 +25,7 @@ export default function SignUpButton({ plan, user }: Props) {
             variant: "secondary",
           })}
         >
-          {user ? "Upgrade Now" : "Sign Up"}
+          {user ? t("upgradeNow") : t("signUp")}
           <ArrowRight className="size-5 ml-1.5" />
         </Button>
       ) : user ? (
@@ -34,7 +37,7 @@ export default function SignUpButton({ plan, user }: Props) {
             className: "w-full",
           })}
         >
-          {user ? "Upgrade Now" : "Sign Up"}
+          {user ? t("upgradeNow") : t("signUp")}
           <ArrowRight className="size-5 ml-1.5" />
         </Button>
       )}

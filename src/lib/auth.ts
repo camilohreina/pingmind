@@ -88,14 +88,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return encode(params);
     },
   },
-  session:{
-    strategy: 'jwt',
+  session: {
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
-  }
+  },
 });
-
-
-
 
 export const session = async ({ session, token }: any) => {
   session.user.id = token.id;
@@ -105,7 +102,6 @@ export const session = async ({ session, token }: any) => {
 export async function getUserServerSession() {
   const authUserSession = await auth();
   const user = authUserSession?.user;
-console.log(authUserSession);
   if (!user) {
     return null;
   }
@@ -114,7 +110,7 @@ console.log(authUserSession);
     id: user.id,
     email: user?.email,
     first_name: user?.name,
-    last_name: '',
+    last_name: "",
     picture: user?.image,
   };
 }

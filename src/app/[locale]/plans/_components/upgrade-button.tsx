@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type Props = {};
 
@@ -13,12 +14,14 @@ export default function UpgradeButton({}: Props) {
       },
     }); */
 
+  const t = useTranslations("pricing_page.plans.button");
+
   return (
     <Button
       onClick={() => console.log("create pricing session")}
       className="w-full"
     >
-      Upgrade now <ArrowRight className="size-5 ml-1.5" />
+      {t("upgradeNow")} <ArrowRight className="size-5 ml-1.5" />
     </Button>
   );
 }

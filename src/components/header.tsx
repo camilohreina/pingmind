@@ -8,11 +8,14 @@ import { Link } from "@/i18n/routing";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { LocaleSwitcher } from "./locale-switcher-select";
+import { useSession } from "next-auth/react";
 
 export default function Header() {
   const t = useTranslations("home_page.header"); // Hook para traducciones dinámicas
   const [scrollY, setScrollY] = useState(0);
 
+  const { data: session } = useSession();
+  const user = session?.user;
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -37,7 +40,10 @@ export default function Header() {
         {/* Vista Desktop */}
         <div className="mx-auto hidden md:block">
           <div className="flex h-16 items-center justify-between sm:h-20">
-            <Link href="/" className="flex items-center text-xl font-bold leading-[4rem]">
+            <Link
+              href="/"
+              className="flex items-center text-xl font-bold leading-[4rem]"
+            >
               {t("title")}
             </Link>
             {/* Menú de navegación (opcional) */}
@@ -69,7 +75,13 @@ export default function Header() {
               </Link>
             </div> 
             */}
-            <div className="flex gap-x-3">
+            <div className="flex gap-x-3 items-center">
+              <Link
+                className="rounded-xl  text-white font-medium hover:text-slate-200 transition duration-150"
+                href="/plans"
+              >
+                {t("pricing")}
+              </Link>
               {/* Botón de iniciar sesión */}
               {/* 
               <Button asChild variant="ghost">
@@ -81,12 +93,15 @@ export default function Header() {
                 </Link>
               </Button> 
               */}
-              <Button asChild className="rounded-xl" variant="secondary">
-                <Link className="text-base!" href="/login">
-                  {t("login")}
-                  <ChevronRight className="ml-2 size-4 animate-pulse" />
-                </Link>
-              </Button>
+              {!user && (
+                <Button asChild className="rounded-xl" variant="secondary">
+                  <Link className="text-base!" href="/login">
+                    {t("login")}
+                    <ChevronRight className="ml-2 size-4 animate-pulse" />
+                  </Link>
+                </Button>
+              )}
+
               <LocaleSwitcher />
             </div>
           </div>
@@ -97,7 +112,11 @@ export default function Header() {
           {t("title")}
           <Sheet>
             <SheetTrigger>
-              <Button className="shrink-0 md:hidden" size="icon" variant="outline">
+              <Button
+                className="shrink-0 md:hidden"
+                size="icon"
+                variant="outline"
+              >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">{t("menu_open")}</span>
               </Button>

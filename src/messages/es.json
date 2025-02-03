@@ -23,7 +23,7 @@
       "menu_open": "Abrir menú lateral",
       "services": "Servicios",
       "how_it_works": "Cómo funciona",
-      "pricing": "Precios",
+      "pricing": "Ver planes",
       "contact": "Contacto"
     },
     "services": {
@@ -210,6 +210,10 @@
           "unlimited": "Recordatorios ilimitados.",
           "limited": "{quota} recordatorios incluidos."
         }
+      },
+      "button": {
+        "signUp": "Registrarse",
+        "upgradeNow": "Mejorar ahora"
       }
     }
   }
