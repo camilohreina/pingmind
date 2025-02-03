@@ -27,6 +27,7 @@ import { Link, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { signup } from "@/services/auth";
+import { Loader2 } from "lucide-react";
 
 interface Props {
   phone: null | string;
@@ -35,7 +36,7 @@ interface Props {
 export default function SignUpForm({ phone }: Props) {
   const t = useTranslations("signup_page.form");
   const router = useRouter();
-  const signupFn = useMutation({
+  const { mutateAsync: signupFn, isPending } = useMutation({
     mutationFn: (data: SignUpFormData) => {
       return signup(data);
     },
@@ -53,9 +54,8 @@ export default function SignUpForm({ phone }: Props) {
 
   async function onSubmit(data: SignUpFormData) {
     try {
-      console.log("Sign up attempt with:", data);
-      await signupFn.mutateAsync(data);
-      //router.push("/dashboard");
+      await signupFn(data);
+      router.push("/login");
     } catch (err) {
       console.error("Sign up failed:", err);
     }
@@ -119,14 +119,9 @@ export default function SignUpForm({ phone }: Props) {
             {form.formState.errors.root && (
               <FormMessage>{form.formState.errors.root.message}</FormMessage>
             )}
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting
-                ? t("submittingButton")
-                : t("submitButton")}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && <Loader2 className="animate-spin mr-2" size={20} />}
+              {isPending ? t("submittingButton") : t("submitButton")}
             </Button>
           </CardContent>
           <CardFooter>

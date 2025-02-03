@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 
 import { loginSchema, LoginFormData } from "@/schemas/auth.schema";
 
@@ -27,10 +26,11 @@ import {
 } from "@/components/ui/card";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/auth";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export function LoginForm() {
   const { toast } = useToast();
@@ -58,7 +58,7 @@ export function LoginForm() {
     });
   };
 
-  const loginFn = useMutation({
+  const { mutateAsync: loginFn, isPending } = useMutation({
     mutationFn: (data: LoginFormData) => {
       return login(data);
     },
@@ -67,8 +67,7 @@ export function LoginForm() {
         return toastFailedLogin();
       }
       toastSuccessLogin();
-      //TODO: Redirect to dashboard or previous page
-      //router.push("/dashboard");
+      router.push("/dashboard");
     },
     onError: (err) => {
       toastFailedLogin();
@@ -78,13 +77,12 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormData) {
     try {
       // Here you would typically call your authentication API
-      loginFn.mutateAsync(data);
+      loginFn(data);
 
       // Simulating a successful login
       //await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
       //router.push("/dashboard");
     } catch (err) {
-      console.error("Login failed:", err);
       form.setError("root", {
         type: "manual",
         message: "Invalid credentials. Please try again.",
@@ -132,14 +130,9 @@ export function LoginForm() {
               <FormMessage>{form.formState.errors.root.message}</FormMessage>
             )}
 
-            <Button
-              className="w-full "
-              disabled={form.formState.isSubmitting}
-              type="submit"
-            >
-              {form.formState.isSubmitting
-                ? `${t("login_button")}...`
-                : t("login_button")}
+            <Button className="w-full " disabled={isPending} type="submit">
+              {isPending && <Loader2 className="animate-spin mr-2" size={20} />}
+              {isPending ? `${t("login_button")}...` : t("login_button")}
             </Button>
           </CardContent>
           <CardFooter>
