@@ -20,11 +20,13 @@
       "title": "PingMind",
       "login": "Iniciar sesión",
       "signup": "Empezar",
+      "logout": "Cerrar sesión",
       "menu_open": "Abrir menú lateral",
       "services": "Servicios",
       "how_it_works": "Cómo funciona",
       "pricing": "Ver planes",
-      "contact": "Contacto"
+      "contact": "Contacto",
+      "account": "Mi cuenta"
     },
     "services": {
       "features": {

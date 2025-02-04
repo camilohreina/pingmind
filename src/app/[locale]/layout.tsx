@@ -32,16 +32,16 @@ export default async function RootLayout({ children, params }: Props) {
 
   return (
     <html lang={locale}>
-      <body className="scheme-light dark:scheme-dark bg-background text-foreground container m-auto grid min-h-screen grid-rows-[auto_1fr_auto] gap-8 px-4 font-sans antialiased">
-        <NextIntlClientProvider messages={messages} timeZone="UTC">
-          <Providers>
+      <NextIntlClientProvider messages={messages} timeZone="UTC">
+        <Providers>
+          <body className="scheme-light dark:scheme-dark bg-background text-foreground min-h-screen font-sans antialiased">
             {children}
             <footer className="text-center leading-[4rem] opacity-70">
               pingmind
             </footer>
-          </Providers>
-        </NextIntlClientProvider>
-      </body>
+          </body>
+        </Providers>
+      </NextIntlClientProvider>
     </html>
   );
 }

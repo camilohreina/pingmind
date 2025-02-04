@@ -19,12 +19,14 @@
     "header": {
       "title": "PingMind",
       "login": "Login",
+      "logout": "Log out",
       "signup": "Get Started",
       "menu_open": "Open side menu",
       "services": "Services",
       "how_it_works": "How it works",
       "pricing": "Pricing",
-      "contact": "Contact"
+      "contact": "Contact",
+      "account": "Account"
     },
     "services": {
       "features": {
