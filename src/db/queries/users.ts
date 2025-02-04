@@ -17,3 +17,9 @@ export const getUserByPhone = async (phone: string) => {
     where: eq(users.phone, phone),
   });
 };
+
+export const getUserById = async (id: string) => {
+  return db.query.users.findFirst({
+    where: eq(users.id, id),
+  });
+}

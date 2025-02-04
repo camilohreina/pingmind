@@ -14,6 +14,10 @@ export const users = pgTable("user", {
   timezone: text("timezone").notNull().default("UTC"),
   created_at: timestamp("created_at").notNull().defaultNow(),
   updated_at: timestamp("updated_at").notNull().defaultNow(),
+  stripe_customer_id: text("stripe_customer_id").unique(),
+  stripe_subscription_id: text("stripe_subscription_id").unique(),
+  stripe_price_id: text("stripe_price_id"),
+  stripe_current_period_end: timestamp("stripe_current_period_end", {mode: "date"}),
 });
 
 export const accounts = pgTable(
