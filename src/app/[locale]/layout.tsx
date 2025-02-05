@@ -5,6 +5,7 @@ import "./globals.css";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import Providers from "@/components/Providers";
+import Navbar from "@/components/header";
 
 export const metadata: Metadata = {
   title: "pingmind",
@@ -35,6 +36,7 @@ export default async function RootLayout({ children, params }: Props) {
       <NextIntlClientProvider messages={messages} timeZone="UTC">
         <Providers>
           <body className="scheme-light dark:scheme-dark bg-background text-foreground min-h-screen font-sans antialiased">
+            <Navbar />
             {children}
             <footer className="text-center leading-[4rem] opacity-70">
               pingmind
