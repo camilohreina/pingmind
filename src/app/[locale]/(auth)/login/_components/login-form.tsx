@@ -118,7 +118,15 @@ export function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("password_label")}</FormLabel>
+                  <div className="flex justify-between">
+                    <FormLabel>{t("password_label")}</FormLabel>
+                    <Link
+                      href="/reset-password"
+                      className="ml-auto inline-block text-sm underline"
+                    >
+                     {t("reset_password")}
+                    </Link>
+                  </div>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>

@@ -117,6 +117,7 @@
       "phone_label": "Teléfono",
       "phone_placeholder": "Introduce tu número de teléfono, incluido el código de país.",
       "password_label": "Contraseña",
+      "reset_password": "¿Olvidaste tu contraseña?",
       "login_button": "Iniciar sesión",
       "signup_prompt": "¿Nuevo en pingmind?",
       "signup_link": "Crea una cuenta",

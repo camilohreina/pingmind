@@ -113,6 +113,7 @@
       "phone_label": "Phone",
       "phone_placeholder": "Enter your phone number including country code.",
       "password_label": "Password",
+      "reset_password": "¿Forgot your password?",
       "login_button": "Log in",
       "signup_prompt": "New to pingmind?",
       "signup_link": "Create an account",
