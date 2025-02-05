@@ -215,5 +215,30 @@
         "upgradeNow": "Upgrade Now"
       }
     }
+  },
+  "reset_password_page":{
+    "title": "Reset Password",
+    "description": {
+      "phone": "Enter your phone number to receive a code",
+      "otp": "Enter the OTP code sent to your phone",
+      "newPassword": "Enter your new password"
+    },
+    "phone_form":{
+      "title": "Enter your phone number",
+      "submit_button": "Send code",
+      "submitting_button": "Sending code..."
+    },
+    "otp_form": {
+      "label": "OTP Code",
+      "description": "Enter the OTP code sent to your phone",
+      "phone_message": "We have sent a code to your phone number",
+      "verify_button": "Verify code",
+      "submitting_button": "Verifying code..."
+    },
+    "new_password_form": {
+      "newPasswordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "submitButton": "Reset Password"
+    }
   }
 }

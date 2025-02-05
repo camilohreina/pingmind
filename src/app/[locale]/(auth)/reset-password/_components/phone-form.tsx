@@ -12,11 +12,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { useTranslations } from "next-intl";
 
 const phoneSchema = z.object({
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Número de teléfono inválido"),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
 });
 
 type PhoneFormValues = z.infer<typeof phoneSchema>;
@@ -26,6 +26,7 @@ interface PhoneFormProps {
 }
 
 export default function PhoneForm({ onSubmit }: PhoneFormProps) {
+  const t = useTranslations("reset_password_page.phone_form");
   const form = useForm<PhoneFormValues>({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
@@ -45,7 +46,7 @@ export default function PhoneForm({ onSubmit }: PhoneFormProps) {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Número de teléfono</FormLabel>
+              <FormLabel>{t("title")}</FormLabel>
               <FormControl>
                 <PhoneInput {...field} />
               </FormControl>
@@ -54,7 +55,7 @@ export default function PhoneForm({ onSubmit }: PhoneFormProps) {
           )}
         />
         <Button type="submit" className="w-full">
-          Enviar código
+          {t("submit_button")}
         </Button>
       </form>
     </Form>

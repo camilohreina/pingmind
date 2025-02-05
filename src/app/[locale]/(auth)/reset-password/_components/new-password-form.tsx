@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
 
 const passwordSchema = z
   .object({
@@ -33,6 +34,7 @@ interface NewPasswordFormProps {
 }
 
 export default function NewPasswordForm({ onSubmit }: NewPasswordFormProps) {
+  const t = useTranslations("reset_password_page.new_password_form");
   const form = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
@@ -53,7 +55,7 @@ export default function NewPasswordForm({ onSubmit }: NewPasswordFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nueva contraseña</FormLabel>
+              <FormLabel>{t("newPasswordLabel")}</FormLabel>
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
@@ -66,7 +68,7 @@ export default function NewPasswordForm({ onSubmit }: NewPasswordFormProps) {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirmar contraseña</FormLabel>
+              <FormLabel>{t("confirmPasswordLabel")}</FormLabel>
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
@@ -75,7 +77,7 @@ export default function NewPasswordForm({ onSubmit }: NewPasswordFormProps) {
           )}
         />
         <Button type="submit" className="w-full">
-          Restablecer contraseña
+          {t("submitButton")}
         </Button>
       </form>
     </Form>

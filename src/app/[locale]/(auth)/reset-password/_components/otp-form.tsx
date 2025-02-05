@@ -18,6 +18,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useTranslations } from "next-intl";
 
 const otpSchema = z.object({
   otp: z.string().length(6, "El código OTP debe tener 6 dígitos"),
@@ -37,7 +38,7 @@ export default function OtpForm({ onSubmit, phone }: OtpFormProps) {
       otp: "",
     },
   });
-
+  const t = useTranslations("reset_password_page.otp_form");
   const handleSubmit = (values: OtpFormValues) => {
     onSubmit(values.otp);
   };
@@ -50,9 +51,9 @@ export default function OtpForm({ onSubmit, phone }: OtpFormProps) {
           name="otp"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Código OTP</FormLabel>
-              <FormControl >
-                <InputOTP  maxLength={6} {...field}>
+              <FormLabel>{t("label")}</FormLabel>
+              <FormControl>
+                <InputOTP maxLength={6} {...field}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
                     <InputOTPSlot index={1} />
@@ -63,18 +64,16 @@ export default function OtpForm({ onSubmit, phone }: OtpFormProps) {
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
-              <FormDescription>
-                Please enter the one-time password sent to your phone.
-              </FormDescription>
+              <FormDescription>{t("description")}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <p className="text-sm text-gray-500">
-          Se ha enviado un código a {phone}
+          {t("phone_message")} {phone}
         </p>
         <Button type="submit" className="w-full">
-          Verificar código
+          {t("verify_button")}
         </Button>
       </form>
     </Form>
