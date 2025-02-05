@@ -28,7 +28,7 @@ export const processUserMessage = async ({
       model: openai("gpt-4o"),
       schema: z.object({
         action: z.enum(["CREATE", "UPDATE", "DELETE", "NO ACTION"]),
-        reminderId: z.string().optional(),
+        reminderId: z.string().optional().nullable(),
         message: z.string(),
         title: z.string(),
         date: z.string(),
@@ -61,6 +61,7 @@ export const processUserMessage = async ({
 
     return object;
   } catch (error) {
+    console.log(error);
     throw new AiError("Error processing message with AI");
   }
 };

@@ -49,6 +49,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     });
     return result;
   } catch (error) {
+    console.log(error);
     throw new AiError("Error processing message with AI");
   } finally {
     createLogMessage({
@@ -112,6 +113,7 @@ export const handleReminder = async ({
 
     return { status: "error", error: "reminder_error", ok: false };
   } catch (error) {
+    console.log(error);
     return { status: "error", error: "internal_server_error", ok: false };
   }
 };
