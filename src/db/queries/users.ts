@@ -24,11 +24,14 @@ export const getUserById = async (id: string) => {
   });
 };
 
-export const saveResetPasswordCode = (code: string) => {
-  return db.update(users).set({
-    reset_password_code: code,
-    reset_password_expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
-  });
+export const saveResetPasswordCode = (phone: string, code: string) => {
+  return db
+    .update(users)
+    .set({
+      reset_password_code: code,
+      reset_password_expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
+    })
+    .where(eq(users.phone, phone));
 };
 
 export const getUserByPhoneAndCode = async (phone: string, code: string) => {
@@ -39,4 +42,18 @@ export const getUserByPhoneAndCode = async (phone: string, code: string) => {
       gte(users.reset_password_expires, new Date()),
     ),
   });
+};
+
+export const updateUserNewPassword = async (
+  phone: string,
+  password: string,
+) => {
+  return db
+    .update(users)
+    .set({
+      password: password,
+      reset_password_code: null,
+      reset_password_expires: null,
+    })
+    .where(eq(users.phone, phone));
 };

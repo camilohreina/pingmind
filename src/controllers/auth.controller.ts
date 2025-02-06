@@ -2,9 +2,11 @@ import {
   getUserByPhone,
   getUserByPhoneAndCode,
   saveResetPasswordCode,
+  updateUserNewPassword,
 } from "@/db/queries/users";
 import { verificationCodeMessage } from "@/lib/infobip";
 import { generateVerificationCode } from "@/lib/utils";
+import { hash } from "bcrypt";
 
 export const sendOTPCode = async ({ phone }: { phone: string }) => {
   try {
@@ -15,7 +17,7 @@ export const sendOTPCode = async ({ phone }: { phone: string }) => {
     }
 
     const code = generateVerificationCode();
-    await saveResetPasswordCode(code);
+    await saveResetPasswordCode(phone, code);
     //await verificationCodeMessage({ phone, code });
     return { status: 200, ok: true, message: "Code sent successfully" };
   } catch (error) {
@@ -40,4 +42,23 @@ export const verifyCodeResetPassword = async ({
   } catch (error) {
     return { status: 500, ok: false, message: "Internal server error" };
   }
+};
+
+export const updateUserPassword = async ({
+  phone,
+  password,
+}: {
+  phone: string;
+  password: string;
+}) => {
+  try {
+    const hashedPassword = await hash(password, 10);
+
+    await updateUserNewPassword(phone, hashedPassword);
+    return { status: 200, ok: true, message: "Password updated successfully" };
+  } catch (error) {
+    return { status: 500, ok: false, message: "Internal server error" };
+  }
+
+  // Update user password in database
 };

@@ -9,7 +9,7 @@ export const createUser = async (data: SignUpFormData) => {
   try {
     // Verify if the user already exists
     const existingUser = await getUserByPhone(phone);
-    console.log(existingUser);
+    
     if (existingUser) {
       throw new ValidationError("User already exists");
     }

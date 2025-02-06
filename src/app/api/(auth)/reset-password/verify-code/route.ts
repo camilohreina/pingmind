@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // Validar esquema de entrada
     const validated_data = verificationCodeSchema.safeParse(body);
 
     if (!validated_data.success) {
