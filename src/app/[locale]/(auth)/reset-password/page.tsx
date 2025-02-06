@@ -12,8 +12,7 @@ import PhoneForm from "./_components/phone-form";
 import OtpForm from "./_components/otp-form";
 import NewPasswordForm from "./_components/new-password-form";
 import { useTranslations } from "next-intl";
-import { sendCodeResetPassword, updatePassword } from "@/services/auth";
-import { verifyCodeResetPassword } from "@/controllers/auth.controller";
+import { sendCodeResetPassword, updatePassword, verifyCodeResetPassword } from "@/services/auth";
 
 export default function ResetPassword() {
   const t = useTranslations("reset_password_page");
