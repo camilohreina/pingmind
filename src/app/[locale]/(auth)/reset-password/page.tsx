@@ -12,6 +12,8 @@ import PhoneForm from "./_components/phone-form";
 import OtpForm from "./_components/otp-form";
 import NewPasswordForm from "./_components/new-password-form";
 import { useTranslations } from "next-intl";
+import { sendCodeResetPassword, updatePassword } from "@/services/auth";
+import { verifyCodeResetPassword } from "@/controllers/auth.controller";
 
 export default function ResetPassword() {
   const t = useTranslations("reset_password_page");
@@ -19,23 +21,22 @@ export default function ResetPassword() {
   const [phone, setPhone] = useState("");
 
   const handlePhoneSubmit = async (phoneNumber: string) => {
-    // Simular envío de OTP
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await sendCodeResetPassword({ phone: phoneNumber });
     setPhone(phoneNumber);
     setStep("otp");
   };
 
   const handleOtpSubmit = async (otp: string) => {
-    // Simular verificación de OTP
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await verifyCodeResetPassword({ phone, code: otp });
     setStep("newPassword");
   };
 
   const handlePasswordReset = async (newPassword: string) => {
-    // Simular actualización de contraseña
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Contraseña actualizada con éxito");
-    // Aquí podrías redirigir al usuario a la página de inicio de sesión
+    await updatePassword({
+      phone,
+      password: newPassword,
+      confirmPassword: newPassword,
+    });
   };
 
   return (

@@ -48,6 +48,8 @@ export const verificationCodeSchema = z.object({
     .regex(/^\d{6}$/, "Code must be a 6-digit number"),
 });
 
+export type VerificationCodeValues = z.infer<typeof verificationCodeSchema>;
+
 export const updatePasswordSchema = z
   .object({
     phone: z
@@ -70,3 +72,5 @@ export const updatePasswordSchema = z
     message: "The passwords do not match",
     path: ["confirmPassword"],
   });
+
+export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
