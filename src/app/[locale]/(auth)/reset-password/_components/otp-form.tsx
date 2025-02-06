@@ -19,6 +19,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 const otpSchema = z.object({
   otp: z.string().length(6, "El código OTP debe tener 6 dígitos"),
@@ -29,9 +30,10 @@ type OtpFormValues = z.infer<typeof otpSchema>;
 interface OtpFormProps {
   onSubmit: (otp: string) => void;
   phone: string;
+  isLoading: boolean;
 }
 
-export default function OtpForm({ onSubmit, phone }: OtpFormProps) {
+export default function OtpForm({ onSubmit, phone, isLoading }: OtpFormProps) {
   const form = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
@@ -72,7 +74,8 @@ export default function OtpForm({ onSubmit, phone }: OtpFormProps) {
         <p className="text-sm text-gray-500">
           {t("phone_message")} {phone}
         </p>
-        <Button type="submit" className="w-full">
+        <Button type="submit" disabled={isLoading} className="w-full">
+          {isLoading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
           {t("verify_button")}
         </Button>
       </form>

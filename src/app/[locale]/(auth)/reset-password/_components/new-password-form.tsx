@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 const passwordSchema = z
   .object({
@@ -31,9 +32,10 @@ type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 interface NewPasswordFormProps {
   onSubmit: (password: string) => void;
+  isLoading: boolean;
 }
 
-export default function NewPasswordForm({ onSubmit }: NewPasswordFormProps) {
+export default function NewPasswordForm({ onSubmit, isLoading }: NewPasswordFormProps) {
   const t = useTranslations("reset_password_page.new_password_form");
   const form = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordSchema),
@@ -76,7 +78,8 @@ export default function NewPasswordForm({ onSubmit }: NewPasswordFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button type="submit" disabled={isLoading} className="w-full">
+          {isLoading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
           {t("submitButton")}
         </Button>
       </form>
