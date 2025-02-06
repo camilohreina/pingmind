@@ -37,3 +37,16 @@ export const phoneSchema = z.object({
 });
 
 export type PhoneFormValues = z.infer<typeof phoneSchema>;
+
+
+// Esquema de validación para verificación de código
+export const verificationCodeSchema = z.object({
+  phone: z
+    .string()
+    .min(10, 'Invalid phone number')
+    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format'),
+  code: z
+    .string()
+    .length(6, 'Code must be 6 digits')
+    .regex(/^\d{6}$/, 'Code must be a 6-digit number'),
+})

@@ -7,13 +7,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // Validar el formato del número de teléfono
     const validated_data = phoneSchema.safeParse(body);
 
     if (!validated_data.success) {
       throw new ValidationDataError(validated_data.error);
     }
+
     const response = await sendOTPCode(validated_data.data);
+
     return NextResponse.json(response, { status: response.status });
   } catch (error) {
     console.error("Error in reset password route:", error);

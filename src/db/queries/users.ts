@@ -1,4 +1,4 @@
-import { db, eq } from "..";
+import { and, db, eq, gte } from "..";
 import { users } from "../schema/users";
 
 type newUser = typeof users.$inferInsert;
@@ -28,5 +28,15 @@ export const saveResetPasswordCode = (code: string) => {
   return db.update(users).set({
     reset_password_code: code,
     reset_password_expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
+  });
+};
+
+export const getUserByPhoneAndCode = async (phone: string, code: string) => {
+  return db.query.users.findFirst({
+    where: and(
+      eq(users.phone, phone),
+      eq(users.reset_password_code, code),
+      gte(users.reset_password_expires, new Date()),
+    ),
   });
 };
