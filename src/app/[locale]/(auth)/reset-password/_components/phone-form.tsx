@@ -14,12 +14,8 @@ import {
 } from "@/components/ui/form";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useTranslations } from "next-intl";
+import { PhoneFormValues, phoneSchema } from "@/schemas/auth.schema";
 
-const phoneSchema = z.object({
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
-});
-
-type PhoneFormValues = z.infer<typeof phoneSchema>;
 
 interface PhoneFormProps {
   onSubmit: (phone: string) => void;

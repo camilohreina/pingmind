@@ -20,3 +20,13 @@ export interface SendMessageParams {
     whatsappNumber: string;
   };
 }
+
+export interface TemplateDataProps {
+  body: {
+    placeholders: string[];
+  };
+  buttons?: {
+    type: string;
+    parameter: string;
+  }[];
+}

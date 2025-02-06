@@ -22,4 +22,11 @@ export const getUserById = async (id: string) => {
   return db.query.users.findFirst({
     where: eq(users.id, id),
   });
-}
+};
+
+export const saveResetPasswordCode = (code: string) => {
+  return db.update(users).set({
+    reset_password_code: code,
+    reset_password_expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
+  });
+};

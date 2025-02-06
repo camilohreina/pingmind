@@ -30,3 +30,10 @@ export const signUpSchema = z.object({
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
+
+
+export const phoneSchema = z.object({
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+});
+
+export type PhoneFormValues = z.infer<typeof phoneSchema>;
