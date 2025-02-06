@@ -9,12 +9,12 @@ export async function POST(request: Request) {
 
     // Validar el formato del número de teléfono
     const validated_data = phoneSchema.safeParse(body);
-    console.log(validated_data);
+
     if (!validated_data.success) {
       throw new ValidationDataError(validated_data.error);
     }
     const response = await sendOTPCode(validated_data.data);
-    return NextResponse.json(response, {status: response.status})
+    return NextResponse.json(response, { status: response.status });
   } catch (error) {
     console.error("Error in reset password route:", error);
     if (error instanceof ValidationDataError) {

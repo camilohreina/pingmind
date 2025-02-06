@@ -4,7 +4,8 @@ import { generateVerificationCode } from "@/lib/utils";
 
 export const sendOTPCode = async ({ phone }: { phone: string }) => {
   try {
-    const user = getUserByPhone(phone);
+    const user = await getUserByPhone(phone);
+    
     if (!user) {
       return { status: 400, ok: false, message: "User not found" };
     }
