@@ -116,7 +116,7 @@ export const cancelReminder = async ({
   }
 };
 
-export const formatRemnindersToAi = ({
+export const formatRemindersToAi = ({
   reminders_list,
 }: {
   reminders_list: (typeof reminders.$inferSelect)[];

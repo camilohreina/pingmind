@@ -12,7 +12,7 @@ import { WhatsAppMessage } from "@/types/whatsapp";
 import {
   addNewReminder,
   cancelReminder,
-  formatRemnindersToAi,
+  formatRemindersToAi,
   updatePendingReminder,
 } from "./reminder.controller";
 
@@ -67,7 +67,7 @@ export const handleReminder = async ({
 }: reminderReview) => {
   try {
     const reminders_list = await getPendingRemindersByUser(userId);
-    const formatted_reminders = formatRemnindersToAi({ reminders_list });
+    const formatted_reminders = formatRemindersToAi({ reminders_list });
     const reminder_user = await processUserMessage({
       message,
       phone: phone,

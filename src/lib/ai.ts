@@ -1,7 +1,13 @@
 import { openai } from "@ai-sdk/openai";
+import { OpenAI } from "openai";
 import { generateObject } from "ai";
 import { z } from "zod";
 import { AiError } from "./error";
+import fs from "fs";
+
+const openaiLib = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 interface Reminder {
   id: string;
@@ -64,4 +70,12 @@ export const processUserMessage = async ({
     console.log(error);
     throw new AiError("Error processing message with AI");
   }
+};
+
+export const getTranscriptionFromAudio = async (audioPath: string) => {
+  const transcription = await openaiLib.audio.transcriptions.create({
+    file: fs.createReadStream(audioPath),
+    model: "whisper-1",
+  });
+  return transcription;
 };
