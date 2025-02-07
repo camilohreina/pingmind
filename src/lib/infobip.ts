@@ -75,7 +75,7 @@ const sendWhatsAppTemplate = async ({
           content: {
             templateName: template_name,
             templateData,
-            language: 'es',
+            language: 'en_GB',
           },
         },
       ],
@@ -98,7 +98,7 @@ export const verificationCodeMessage = async ({
     console.log({ phone, code });
     await sendWhatsAppTemplate({
       phone,
-      template_name: 'pingming_verification_code',
+      template_name: 'pingmind_verification_code',
       parameters: [code],
       withButtons: true,
     });

@@ -30,9 +30,9 @@ export const sendCodeResetPassword = async (data: PhoneFormValues) => {
       phone,
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return null;
+    return error.response.data;
   }
 };
 

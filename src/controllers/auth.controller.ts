@@ -18,7 +18,7 @@ export const sendOTPCode = async ({ phone }: { phone: string }) => {
 
     const code = generateVerificationCode();
     await saveResetPasswordCode(phone, code);
-    //await verificationCodeMessage({ phone, code });
+    await verificationCodeMessage({ phone, code });
     return { status: 200, ok: true, message: "Code sent successfully" };
   } catch (error) {
     return { status: 500, ok: false, message: "Internal server error" };
