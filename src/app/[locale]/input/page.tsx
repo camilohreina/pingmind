@@ -13,7 +13,7 @@ export default function Chat() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("/api/test/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

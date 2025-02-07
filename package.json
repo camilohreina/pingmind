@@ -48,6 +48,7 @@
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^3.26.3",
     "node-schedule": "^2.1.1",
+    "openai": "^4.83.0",
     "postcss": "^8.4.41",
     "react": "19.0.0",
     "react-dom": "19.0.0",
