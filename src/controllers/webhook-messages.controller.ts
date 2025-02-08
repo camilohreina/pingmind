@@ -7,7 +7,11 @@ import {
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
 import { AiError } from "@/lib/error";
-import { sendRegisterMessage, sendReplyReminder } from "@/lib/infobip";
+import {
+  getAudioInfobip,
+  sendRegisterMessage,
+  sendReplyReminder,
+} from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
 import {
   addNewReminder,
@@ -15,6 +19,8 @@ import {
   formatRemindersToAi,
   updatePendingReminder,
 } from "./reminder.controller";
+import { extractMediaId } from "@/lib/utils";
+import { getTextFromAudio } from "./ai.controller";
 
 interface reminderReview {
   userId: string;
@@ -43,12 +49,36 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
 
     const type_message = data.message?.type;
 
-    const result = await handleReminder({
-      userId: user.id,
-      message,
-      phone: fromNumber,
-      timezone: user.timezone,
-    });
+    let result = { status: "success", ok: true };
+
+    if (type_message === "TEXT") {
+      result = await handleReminder({
+        userId: user.id,
+        message,
+        phone: fromNumber,
+        timezone: user.timezone,
+      });
+    }
+
+    if (type_message === "AUDIO" && data.message?.url) {
+      const audioMessage = {
+        url: data.message.url,
+        type: "AUDIO",
+      };
+      const message_audio = await handleAudioReminder({
+        message: audioMessage,
+      });
+      if (message_audio) {
+        result = await handleReminder({
+          userId: user.id,
+          message: message_audio,
+          phone: fromNumber,
+          timezone: user.timezone,
+        });
+        return result;
+      }
+    }
+
     return result;
   } catch (error) {
     console.log(error);
@@ -118,4 +148,26 @@ export const handleReminder = async ({
     console.log(error);
     return { status: "error", error: "internal_server_error", ok: false };
   }
+};
+
+interface AudioMessageReview {
+  url: string;
+  type: string;
+}
+
+export const handleAudioReminder = async ({
+  message,
+}: {
+  message: AudioMessageReview;
+}) => {
+  const { url } = message;
+  const mediaId = extractMediaId(url);
+  if (!mediaId) {
+    return null;
+  }
+  const response: AsyncIterable<Uint8Array> = await getAudioInfobip({
+    audioId: mediaId,
+  });
+  const transcription = await getTextFromAudio(response);
+  return transcription.text;
 };

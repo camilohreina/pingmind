@@ -5,8 +5,6 @@ export async function POST(req: Request) {
   try {
     const info = await req.json();
     const [data] = info.results as any;
-    console.log(data);
-    return NextResponse.json(data, { status: 200 });
     const result = await handleWebhook(data);
     if (result?.error) {
       return NextResponse.json(result, { status: 500 });
