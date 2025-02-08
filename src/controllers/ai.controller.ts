@@ -3,8 +3,10 @@ import { Readable } from "stream";
 import path from "path";
 import { getTranscriptionFromAudio } from "@/lib/ai";
 
-export const getTextFromAudio = async (audioFile: Blob) => {
-  const fileBuffer = Buffer.from(await (audioFile as Blob).arrayBuffer());
+export const getTextFromAudio = async (
+  audioFile: AsyncIterable<Uint8Array>,
+) => {
+  const fileBuffer = await handleAudioDownload(audioFile);
   const tmpDir = ensureTempDir();
   const audioPath = path.join(tmpDir, "audio.webm");
   await saveBufferToFile(fileBuffer, audioPath);
@@ -19,8 +21,10 @@ const ensureTempDir = () => {
   if (!fs.existsSync(tmpDir)) {
     fs.mkdirSync(tmpDir, { recursive: true });
   }
+
   return tmpDir;
 };
+// Utility function to convert Blob to AsyncIterable<Uint8Array>
 
 const saveBufferToFile = async (buffer: Buffer, filePath: string) => {
   const stream = Readable.from(buffer);
@@ -32,3 +36,15 @@ const saveBufferToFile = async (buffer: Buffer, filePath: string) => {
     writeStream.on("error", reject);
   });
 };
+
+export async function handleAudioDownload(response: AsyncIterable<Uint8Array>) {
+  const chunks = [];
+
+  for await (const chunk of response) {
+    chunks.push(chunk);
+  }
+
+  const buffer = Buffer.concat(chunks);
+
+  return buffer;
+}

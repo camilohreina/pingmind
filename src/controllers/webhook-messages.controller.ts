@@ -31,7 +31,6 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     const messageProcessed = await getLogMessage(data?.messageId);
 
     if (messageProcessed) {
-      console.log("Message already processed");
       return { status: "success", action: "message_already_processed" };
     }
 
@@ -41,6 +40,9 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       return { status: "success", action: "send_register_user" };
     }
     //TODO: aqui la logica para verificar si tiene un plan activo
+
+    const type_message = data.message?.type;
+
     const result = await handleReminder({
       userId: user.id,
       message,
@@ -87,7 +89,7 @@ export const handleReminder = async ({
       return { status: "success", action: "create", ok: true };
     }
     if (reminder_user?.reminderId) {
-      console.log({reminderId: reminder_user.reminderId});
+      console.log({ reminderId: reminder_user.reminderId });
       if (reminder_user.action === "UPDATE") {
         await updatePendingReminder({
           reminderId: reminder_user.reminderId,

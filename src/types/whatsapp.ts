@@ -1,10 +1,15 @@
 export interface WhatsAppMessage {
   messageId: string;
-  message?: {
+  message: {
     text?: string;
+    url?: string;
+    type: TypeMessage
   };
   from: string;
 }
+
+
+type TypeMessage = "AUDIO" | "TEXT" ;
 
 export interface MessageResponse {
   status: string;

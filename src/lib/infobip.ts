@@ -23,7 +23,13 @@ export const sendRegisterMessage = async (phone: string) => {
   }
 };
 
-export const sendReplyReminder = async ({phone, message}:{phone: string, message: string}) => {
+export const sendReplyReminder = async ({
+  phone,
+  message,
+}: {
+  phone: string;
+  message: string;
+}) => {
   console.log("llegando al reply");
   try {
     const response = await client.channels.whatsapp.send({
@@ -37,7 +43,7 @@ export const sendReplyReminder = async ({phone, message}:{phone: string, message
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const sendWhatsAppTemplate = async ({
   phone,
@@ -61,13 +67,13 @@ const sendWhatsAppTemplate = async ({
     if (withButtons) {
       templateData.buttons = [
         {
-          type: 'URL',
+          type: "URL",
           parameter: parameters[0],
         },
       ];
     }
     const response = await client.channels.whatsapp.send({
-      type: 'template',
+      type: "template",
       messages: [
         {
           from: process.env.INFOBIP_PHONE_NUMBER!,
@@ -75,7 +81,7 @@ const sendWhatsAppTemplate = async ({
           content: {
             templateName: template_name,
             templateData,
-            language: 'en_GB',
+            language: "en_GB",
           },
         },
       ],
@@ -85,7 +91,6 @@ const sendWhatsAppTemplate = async ({
     return null;
   }
 };
-
 
 export const verificationCodeMessage = async ({
   phone,
@@ -98,11 +103,23 @@ export const verificationCodeMessage = async ({
     console.log({ phone, code });
     await sendWhatsAppTemplate({
       phone,
-      template_name: 'pingmind_verification_code',
+      template_name: "pingmind_verification_code",
       parameters: [code],
       withButtons: true,
     });
   } catch (error) {
-    throw new Error('Error al enviar el mensaje de verificación');
+    throw new Error("Error al enviar el mensaje de verificación");
+  }
+};
+
+export const getAudioInfobip = async ({ audioId }: { audioId: string }) => {
+  try {
+    const response = await client.channels.whatsapp.media.download(
+      process.env.INFOBIP_PHONE_NUMBER!,
+      audioId,
+    );
+    return response.data;
+  } catch (error) {
+    console.log({ error });
   }
 };
