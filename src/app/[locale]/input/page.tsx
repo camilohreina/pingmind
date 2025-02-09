@@ -25,8 +25,6 @@ export default function Chat() {
         }),
       });
       const data = await res.json();
-
-      console.log(data);
       setResponse(data.message);
     } catch (error) {
       console.error("Error:", error);

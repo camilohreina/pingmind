@@ -1,18 +1,27 @@
 import fs from "fs";
 import { Readable } from "stream";
 import path from "path";
-import { getTranscriptionFromAudio } from "@/lib/ai";
+import { getTranscriptionFromAudio, getTranscriptionFromImage } from "@/lib/ai";
 
 export const getTextFromAudio = async (
   audioFile: AsyncIterable<Uint8Array>,
 ) => {
-  const fileBuffer = await handleAudioDownload(audioFile);
+  const fileBuffer = await handleMediaDownload(audioFile);
   const tmpDir = ensureTempDir();
   const audioPath = path.join(tmpDir, "audio.webm");
   await saveBufferToFile(fileBuffer, audioPath);
   const transcription = await getTranscriptionFromAudio(audioPath);
   return transcription;
-  // Call OpenAI API for transcription
+};
+
+export const getTextFromImage = async (
+  imageFile: AsyncIterable<Uint8Array>,
+) => {
+  const fileBuffer = await handleMediaDownload(imageFile);
+  const base64Image = fileBuffer.toString("base64");
+  const transcription = await getTranscriptionFromImage(base64Image);
+  console.log({transcription});
+  return transcription;
 };
 
 // Utility function to ensure a temporary directory exists
@@ -37,7 +46,7 @@ const saveBufferToFile = async (buffer: Buffer, filePath: string) => {
   });
 };
 
-export async function handleAudioDownload(response: AsyncIterable<Uint8Array>) {
+export async function handleMediaDownload(response: AsyncIterable<Uint8Array>) {
   const chunks = [];
 
   for await (const chunk of response) {

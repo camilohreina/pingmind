@@ -79,3 +79,37 @@ export const getTranscriptionFromAudio = async (audioPath: string) => {
   });
   return transcription;
 };
+
+export const getTranscriptionFromImage = async (base64: string) => {
+  const response = await openaiLib.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text:
+              "This image contains event information. Please extract the event details and format them as follows:\n\n" +
+              "TITLE: [event title]\n" +
+              "DATE: [event date]\n" +
+              "TIME: [event time]\n" +
+              "LOCATION: [event location]\n" +
+              "DETAILS: [any important additional details]\n\n" +
+              "If any field is not present in the image, omit it. Keep the format concise and direct. " +
+              "Format the response exactly with these field names in capital letters followed by colons. " +
+              "If you see any contact information or registration details, include them in the DETAILS section.",
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${base64}`,
+            },
+          },
+        ],
+      },
+    ],
+    max_tokens: 500,
+  });
+  return response.choices[0].message.content;
+};

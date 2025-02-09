@@ -9,7 +9,7 @@ export interface WhatsAppMessage {
 }
 
 
-type TypeMessage = "AUDIO" | "TEXT" ;
+type TypeMessage = "AUDIO" | "TEXT" | "IMAGE"; ;
 
 export interface MessageResponse {
   status: string;

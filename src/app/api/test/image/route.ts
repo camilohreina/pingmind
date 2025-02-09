@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getTextFromAudio } from "@/controllers/ai.controller";
+import { getTextFromImage } from "@/controllers/ai.controller";
 import { getMediaInfobip } from "@/lib/infobip";
+import { NextRequest, NextResponse } from "next/server";
 
-// API handler for POST requests
 export async function POST(req: NextRequest) {
   try {
     // Validate Content-Type
@@ -18,15 +17,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Audio file not found' }, { status: 400 });
     } */
 
-    //const response:  AsyncIterable<Uint8Array> = await getMediaInfobip({ mediaId: "3966813530218966" });
+    //const response:  AsyncIterable<Uint8Array> = await getMediaInfobip({ mediaId: "634318522333073" });
 
+    //console.log(response);
+
+    //const transcription = await getTextFromImage(response)
+    //console.log(transcription);
     //const response  = await getAudioFromUrl('https://d9krvg.api.infobip.com/whatsapp/1/senders/447908679639/media/3966813530218966')
 
-    //const transcription = await getTextFromAudio(response);
+    // const transcription = await getTextFromAudio(response);
     // Convert audio file to a buffer and save to a temporary file
     //console.log(transcription);
     // Respond with transcription result
-    return NextResponse.json({ result: "transcription" }, { status: 200 });
+    return NextResponse.json({ result: "image to text" }, { status: 200 });
   } catch (error) {
     console.error("Error handling request:", error);
     return NextResponse.json(

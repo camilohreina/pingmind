@@ -7,11 +7,7 @@ import {
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
 import { AiError } from "@/lib/error";
-import {
-  getAudioInfobip,
-  sendRegisterMessage,
-  sendReplyReminder,
-} from "@/lib/infobip";
+import { getMediaInfobip, sendRegisterMessage } from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
 import {
   addNewReminder,
@@ -20,7 +16,7 @@ import {
   updatePendingReminder,
 } from "./reminder.controller";
 import { extractMediaId } from "@/lib/utils";
-import { getTextFromAudio } from "./ai.controller";
+import { getTextFromAudio, getTextFromImage } from "./ai.controller";
 
 interface reminderReview {
   userId: string;
@@ -72,6 +68,25 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         result = await handleReminder({
           userId: user.id,
           message: message_audio,
+          phone: fromNumber,
+          timezone: user.timezone,
+        });
+        return result;
+      }
+    }
+
+    if (type_message === "IMAGE" && data.message?.url) {
+      const imageMessage = {
+        url: data.message.url,
+        type: "IMAGE",
+      };
+      const message_image = await handleImageReminder({
+        message: imageMessage,
+      });
+      if (message_image) {
+        result = await handleReminder({
+          userId: user.id,
+          message: message_image,
           phone: fromNumber,
           timezone: user.timezone,
         });
@@ -150,7 +165,7 @@ export const handleReminder = async ({
   }
 };
 
-interface AudioMessageReview {
+interface MediaMessageReview {
   url: string;
   type: string;
 }
@@ -158,16 +173,34 @@ interface AudioMessageReview {
 export const handleAudioReminder = async ({
   message,
 }: {
-  message: AudioMessageReview;
+  message: MediaMessageReview;
 }) => {
   const { url } = message;
   const mediaId = extractMediaId(url);
   if (!mediaId) {
     return null;
   }
-  const response: AsyncIterable<Uint8Array> = await getAudioInfobip({
-    audioId: mediaId,
+  const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
+    mediaId: mediaId,
   });
   const transcription = await getTextFromAudio(response);
   return transcription.text;
+};
+
+export const handleImageReminder = async ({
+  message,
+}: {
+  message: MediaMessageReview;
+}) => {
+  const { url } = message;
+  const mediaId = extractMediaId(url);
+  if (!mediaId) {
+    return null;
+  }
+  const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
+    mediaId: mediaId,
+  });
+
+  const transcription = await getTextFromImage(response);
+  return transcription;
 };

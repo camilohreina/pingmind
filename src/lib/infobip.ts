@@ -112,11 +112,11 @@ export const verificationCodeMessage = async ({
   }
 };
 
-export const getAudioInfobip = async ({ audioId }: { audioId: string }) => {
+export const getMediaInfobip = async ({ mediaId }: { mediaId: string }) => {
   try {
     const response = await client.channels.whatsapp.media.download(
       process.env.INFOBIP_PHONE_NUMBER!,
-      audioId,
+      mediaId,
     );
     return response.data;
   } catch (error) {
