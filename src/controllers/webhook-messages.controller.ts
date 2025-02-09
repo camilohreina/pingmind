@@ -121,7 +121,7 @@ export const handleReminder = async ({
       timezone: timezone,
       reminders: formatted_reminders,
     });
-
+    
     if (!reminder_user)
       return { status: "error", error: "ai_error_process", ok: false };
 

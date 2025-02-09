@@ -27,6 +27,7 @@ export const processUserMessage = async ({
   phone: string;
   reminders: Reminder[];
 }) => {
+  //TODO: code for handle errors for code
   try {
     const { object } = await generateObject({
       output: "object",
@@ -59,7 +60,16 @@ export const processUserMessage = async ({
               1. The 'date' is always provided in the correct ISO 8601 format in UTC.
               2. If no specific date or time is mentioned in the message, the 'date' should be null.
               3. Handle ambiguous time expressions intelligently, clarifying AM/PM and dates (e.g., "tomorrow" or "next Friday").
-              `,
+              4. If the user provides a date without a time, default the time to 9:00 AM in the user's local time zone.
+              5. If the user provides a time without a date, default the date to today.
+              6. If the user provides a past date or time, return an error message.
+              7. If the user provides an invalid date or time format, return an error message.
+              8. If the user provides a reminder that conflicts with an existing reminder, return an error message.
+              9. If the user requests to delete a reminder that does not exist, return an error message.
+              10. If the user requests to update a reminder that does not exist, return an error message.
+              11. If the user provides a message that is too short or unclear, return an error message.
+              12. If the user provides a message that is too long, return an error message.
+              13. Use the timezone for return in his language.`,
       prompt: `Current reminders: ${JSON.stringify(reminders)}
           User message: ${message}`,
       mode: "json",
