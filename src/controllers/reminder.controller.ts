@@ -12,6 +12,7 @@ type ReminderUser = {
   timezone: string;
   title: string;
   localDate: string;
+  reminderDate: string;
   response: string;
   alert: string;
   message: string;
@@ -55,13 +56,14 @@ export const addNewReminder = async ({
       id: crypto.randomUUID(),
       userId,
       text: reminder_user.message,
-      scheduledAt: new Date(reminder_user.date),
+      scheduledAt: new Date(reminder_user.reminderDate),
       status: "PENDING",
       response: reminder_user.response,
       alert: reminder_user.alert,
+      localDate: new Date(reminder_user.localDate),
     });
     if (reminder) {
-      await sendReplyReminder({
+        await sendReplyReminder({
         phone,
         message: reminder_user.response,
       });
@@ -82,7 +84,7 @@ export const updatePendingReminder = async ({
   const response = await updateReminder({
     id: reminderId,
     text: reminder_user.message,
-    scheduledAt: new Date(reminder_user.date),
+    scheduledAt: new Date(reminder_user.reminderDate),
     status: "PENDING",
   });
   if (response) {
