@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 
 import { processUserMessage } from "@/lib/ai";
 import { getTimeZoneFromCountryCode } from "@/lib/utils";
+import { text } from "stream/consumers";
+import { handleWebhook } from "@/controllers/webhook-messages.controller";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -21,13 +23,20 @@ export async function POST(req: Request): Promise<NextResponse> {
     },
     { status: 200 },
   );
-  /*   const data = await req.json();
-  const {message, phone, timezone} = data;
+/*   const {message, phone, timezone} = data;
 
+  const infoTest = {
+    message:{
+      text: message,
+      type: "TEXT"
+    },
+    from: phone,
+    messageId: '123456789',
+  }
   console.log(message);
   //generate response
 
-  const objMessage = await processUserMessage({timezone, message, phone});
+  const objMessage = await handleWebhook(infoTest);
 
   console.log(objMessage);
 
