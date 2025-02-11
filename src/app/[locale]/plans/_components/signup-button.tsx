@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { signIn } from "next-auth/react";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 
 type Props = {
   plan: string;
@@ -17,28 +18,32 @@ export default function SignUpButton({ plan, user }: Props) {
 
   return (
     <>
-      {plan === "Free" ? (
+      {plan === "Starter" ? (
         <Button
-          onClick={() => signIn("credentials")}
+          asChild
           className={buttonVariants({
             className: "w-full",
             variant: "secondary",
           })}
         >
-          {user ? t("upgradeNow") : t("signUp")}
-          <ArrowRight className="size-5 ml-1.5" />
+          <Link href="/login">
+            {user ? t("upgradeNow") : t("signUp")}
+            <ArrowRight className="size-5 ml-1.5" />
+          </Link>
         </Button>
       ) : user ? (
         <UpgradeButton />
       ) : (
         <Button
-          onClick={() => signIn("credentials")}
+          asChild
           className={buttonVariants({
             className: "w-full",
           })}
         >
-          {user ? t("upgradeNow") : t("signUp")}
-          <ArrowRight className="size-5 ml-1.5" />
+          <Link href="/login">
+            {user ? t("upgradeNow") : t("signUp")}
+            <ArrowRight className="size-5 ml-1.5" />
+          </Link>
         </Button>
       )}
     </>

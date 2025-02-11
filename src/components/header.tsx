@@ -26,7 +26,7 @@ export default async function Navbar({}: Props) {
           <MobileNav isAuth={!!user} />
           <div className="hidden items-center space-x-4 sm:flex">
             <Link
-              href="/pricing"
+              href="/plans"
               className={buttonVariants({
                 variant: "ghost",
                 size: "sm",

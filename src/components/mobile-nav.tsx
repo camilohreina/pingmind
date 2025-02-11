@@ -57,7 +57,7 @@ export default function MobileNav({ isAuth }: Props) {
                   <Link
                     onClick={() => closeOnCurrent("/pricing")}
                     className="flex items-center w-full font-semibold "
-                    href="/pricing"
+                    href="/plans"
                   >
                     {t("pricing")}
                   </Link>
@@ -69,7 +69,7 @@ export default function MobileNav({ isAuth }: Props) {
                   <Link
                     onClick={() => closeOnCurrent("/pricing")}
                     className="flex items-center w-full font-semibold "
-                    href="/pricing"
+                    href="/plans"
                   >
                     {t("pricing")}
                   </Link>
