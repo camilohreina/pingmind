@@ -32,7 +32,7 @@ export default function SignUpButton({ plan, user }: Props) {
           </Link>
         </Button>
       ) : user ? (
-        <UpgradeButton />
+        <UpgradeButton slug="starter" />
       ) : (
         <Button
           asChild
