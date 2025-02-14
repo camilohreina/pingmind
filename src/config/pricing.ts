@@ -6,6 +6,14 @@ export const PLANS = [
     earlyFeatures: false,
     voiceRecognition: true,
     imageRecognition: false,
+    mode: {
+      test: {
+        variantId: "683605",
+      },
+      live: {
+        variantId: "",
+      },
+    },
     price: {
       amount: 1.99,
       priceIds: {
@@ -21,6 +29,14 @@ export const PLANS = [
     earlyFeatures: true,
     voiceRecognition: true,
     imageRecognition: true,
+    mode: {
+      test: {
+        variantId: "683622",
+      },
+      live: {
+        variantId: "",
+      },
+    },
     price: {
       amount: 5.99,
       priceIds: {
