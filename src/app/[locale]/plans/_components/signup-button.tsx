@@ -19,32 +19,42 @@ export default function SignUpButton({ plan, user }: Props) {
   return (
     <>
       {plan === "Starter" ? (
-        <Button
-          asChild
-          className={buttonVariants({
-            className: "w-full",
-            variant: "secondary",
-          })}
-        >
-          <Link href="/login">
-            {user ? t("upgradeNow") : t("signUp")}
-            <ArrowRight className="size-5 ml-1.5" />
-          </Link>
-        </Button>
-      ) : user ? (
-        <UpgradeButton slug="starter" />
+        <>
+          {user ? (
+            <UpgradeButton slug="starter" />
+          ) : (
+            <Button
+              asChild
+              className={buttonVariants({
+                className: "w-full",
+                variant: "secondary",
+              })}
+              onClick={() => signIn()}
+            >
+              {t("signUp")}
+              <ArrowRight className="size-5 ml-1.5" />
+            </Button>
+          )}
+        </>
       ) : (
-        <Button
-          asChild
-          className={buttonVariants({
-            className: "w-full",
-          })}
-        >
-          <Link href="/login">
-            {user ? t("upgradeNow") : t("signUp")}
-            <ArrowRight className="size-5 ml-1.5" />
-          </Link>
-        </Button>
+        <>
+          {user ? (
+            <UpgradeButton slug="pro" />
+          ) : (
+            <Link href="/[locale]/auth/signup" locale="en">
+              <Button
+                asChild
+                className={buttonVariants({
+                  className: "w-full",
+                  variant: "secondary",
+                })}
+              >
+                {t("signUp")}
+                <ArrowRight className="size-5 ml-1.5" />
+              </Button>
+            </Link>
+          )}
+        </>
       )}
     </>
   );
