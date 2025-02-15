@@ -56,7 +56,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           password as string,
           user.password as string,
         );
-        console.log(user);
+        
         if (isValid) {
           return {
             id: user.id,
