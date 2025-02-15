@@ -57,3 +57,49 @@ export const updateUserNewPassword = async (
     })
     .where(eq(users.phone, phone));
 };
+
+type subscriptionData = {
+  stripeSubscriptionId: string;
+  stripeCustomerId: string;
+  stripePriceId: string;
+  stripeCurrentPeriodEnd: Date;
+  userId: string;
+};
+
+export const createSubscription = async ({
+  stripeSubscriptionId,
+  stripeCustomerId,
+  stripePriceId,
+  stripeCurrentPeriodEnd,
+  userId,
+}: subscriptionData) => {
+  return db
+    .update(users)
+    .set({
+      stripe_subscription_id: stripeSubscriptionId,
+      stripe_customer_id: stripeCustomerId,
+      stripe_price_id: stripePriceId,
+      stripe_current_period_end: stripeCurrentPeriodEnd,
+    })
+    .where(eq(users.id, userId));
+};
+
+interface updateSubscriptionData {
+  stripePriceId: string;
+  stripeCurrentPeriodEnd: Date;
+  userId: string;
+}
+
+export const updateSubscription = async ({
+  stripePriceId,
+  stripeCurrentPeriodEnd,
+  userId,
+}: updateSubscriptionData) => {
+  return db
+    .update(users)
+    .set({
+      stripe_price_id: stripePriceId,
+      stripe_current_period_end: stripeCurrentPeriodEnd,
+    })
+    .where(eq(users.id, userId));
+};
