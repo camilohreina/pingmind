@@ -2,6 +2,8 @@
   "home_page": {
     "title": "Pequeños<mark> recordatorios</mark>, grandes soluciones.",
     "badge_sale": "<strong>Pingmind</strong> ha llegado!",
+    "init_app": "Iniciar con WhatsApp",
+    "add_contact": "o añade el contacto manualmente",
     "features": {
       "0": {
         "title": "Recordatorios Puntuales",

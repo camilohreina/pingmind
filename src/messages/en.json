@@ -2,6 +2,8 @@
   "home_page": {
     "title": "Small<mark> reminders</mark>, big solutions.",
     "badge_sale": "<strong>Pingmind</strong> comming soon!",
+    "init_app": "Start with WhatsApp",
+    "add_contact": "or add contact manually",
     "features": {
       "0": {
         "title": "Timely Reminders",

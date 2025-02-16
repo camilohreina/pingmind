@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckIcon, Files } from "lucide-react";
 import { WhatsApp } from "./icons";
 import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 type Props = {};
 
@@ -15,6 +16,8 @@ const PHONE_NUMBER = "+44 7908 679639";
 
 export default function NumberSale({}: Props) {
   const [hasCopied, setHasCopied] = React.useState(false);
+
+  const t = useTranslations("home_page");
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -33,12 +36,11 @@ export default function NumberSale({}: Props) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Start with whatsapp
+          {t("init_app")}
           <WhatsApp />
         </Link>
       </Button>
-      <p className="text-gray-400 text-sm">or add contact manually</p>
-
+      <p className="text-gray-400 text-sm"> {t("add_contact")}</p>
       <Button
         variant="ghost"
         className="flex cursor-pointer justify-center items-center border border-dashed border-gray-600 p-2 rounded-md transform hover:scale-105 duration-300 transition-all"
