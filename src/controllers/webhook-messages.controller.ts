@@ -121,10 +121,10 @@ export const handleReminder = async ({
       timezone: timezone,
       reminders: formatted_reminders,
     });
-    
+
     if (!reminder_user)
       return { status: "error", error: "ai_error_process", ok: false };
-
+    console.log(reminder_user);
     if (reminder_user.action === "CREATE") {
       await addNewReminder({
         phone,
