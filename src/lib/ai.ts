@@ -60,87 +60,18 @@ export const processUserMessage = async ({
           - 'timeConfirmed': A boolean indicating whether the time has been explicitly confirmed by the user.
           - the current date and time is ${new Date().toISOString()} in UTC.
 
-          ** CRITICALLY IMPORTANT FOR UPDATE ACTIONS **
-          When the user message indicates they want to update or modify an existing reminder:
-          1. You MUST determine WHICH specific reminder they're referring to from the provided reminders list
-          2. You MUST extract the exact 'id' of that reminder and include it in the 'reminderId' field
-          3. Consider MULTIPLE matching strategies in this exact order:
-             a. CONTENT MATCH: If user refers to reminder content (e.g., "cita", "reunión"), match with reminder.title or reminder.message
-             b. TIME MATCH: If user mentions specific time (e.g., "a las 5", "6pm"), match with both reminder.readableTime and reminder.hour12Format
-             c. CONTEXT MATCH: Consider what would make most sense to update given current time and reminder times
-             d. SINGLE REMINDER: If user has only one pending reminder, it's likely the one they want to update
-          4. Use PARTIAL matching for text - don't require exact match (e.g., if reminder says "cita médica" user might just say "cita")
-          5. For TIME matching, be flexible with formats (e.g., "5", "5pm", "17:00", "cinco") - check reminder.readableTime and reminder.hour12Format
-          6. If multiple potential matches, prefer the one with closest time to what user mentioned
-          7. If no clear match, set action to 'NO ACTION' with response asking for clarification about which reminder
-          8. ALWAYS double-check your identification before finalizing by comparing content and times
-          9. For update actions, ALWAYS set reminderId to a VALID ID from the reminders list
+          Time Interpretation Rules:
+          1. Relative Time Processing:
+            - Identify and process relative time expressions in any language:
+              * Time units (minutes, hours, days)
+              * Fractions (half hour, quarter hour)
+              * Informal time references (morning, afternoon, evening, night)
+            - Always set seconds to 00 in all calculations
+            - For any relative time expression, calculate from the current moment
 
-          Examples of UPDATE detection patterns:
-          - "Cambiar reunión de las 3 para las 4" → Find reminder with "reunión" at 3:00 → Update to 4:00
-          - "La cita de las 5 ahora es a las 6:30" → Find reminder with "cita" at 5:00 → Update to 6:30
-          - "Ya no es a las 3, es a las 5" → Find reminder scheduled for 3:00 → Update to 5:00
-          - "Puedes actualizar la reunión para mañana" → Find reminder with "reunión" → Update date to tomorrow
-          - "Mover la cita para el viernes" → Find reminder with "cita" → Update date to Friday
-
-          Time Format Matching Examples:
-          - User says "a las 6" → Match reminders with readableTime "6:00" or "18:00" or hour12Format "6:00 AM" or "6:00 PM"
-          - User says "la reunión de la mañana" → Match reminders with times before noon (hour12Format containing "AM")
-          - User says "la cita de la tarde" → Match reminders with afternoon times (hour12Format containing "PM")
-
-          Time Zone and Time Processing Rules:
-
-          1. Local Time Processing (CRITICAL):
-            - ALL user times MUST be interpreted as local times first
-            - Steps for processing ANY time mentioned:
-              a. Interpret time in local timezone (e.g., America/Bogota)
-              b. Apply smart time resolution (see rule 2)
-              c. Get final local time
-              d. ONLY THEN convert to UTC using timezone offset
-            
-            Example for "9":
-            - Current local time: 8:00 PM (20:00) Bogota
-            - User says: "a las 9"
-            - Interpret as: 9:00 PM (21:00) Bogota time
-            - Convert to UTC: 21:00 - 5 hours = 02:00 UTC next day
-
-          2. Smart Time Resolution (in LOCAL time):
-            - Given current time is 8:00 PM (20:00) LOCAL:
-            - If user says "9" or "9:00":
-              * Option 1: 9:00 AM (09:00) LOCAL = next day
-              * Option 2: 9:00 PM (21:00) LOCAL = today
-              * Choose 9:00 PM as it's the next possible time
-            
-            Time Distance Calculation (in LOCAL time):
-            - 9:00 PM today = 1 hour from now ✓ (CHOOSE THIS)
-            - 9:00 AM tomorrow = 13 hours from now ✗
-
-          3. UTC Conversion Process (CRITICAL):
-            - ONLY after local time is final, convert to UTC
-            - Example for America/Bogota (UTC-5):
-              * If local time is 9:00 PM (21:00)
-              * UTC time = local time + 5 hours
-              * If this pushes into next day, adjust date accordingly
-            - ALL storage in UTC must maintain the correct local time relationship
-
-          4. Time Proximity Logic:
-            - Calculate ALL time differences in LOCAL time first
-            - Compare possible interpretations in LOCAL time
-            - Select closest future time in LOCAL time
-            - Only after selection, convert to UTC
-
-          5. Same-Day Priority (in LOCAL time):
-            - Always check if time is possible TODAY in local timezone first
-            - Only move to tomorrow if time has passed in local timezone
-            - Examples (current time 8:00 PM local):
-              * "9:00" → 9:00 PM today local time
-              * "7:00" → 7:00 AM tomorrow local time
-
-          6. Early Reminder Logic:
-            - Process early reminder times in LOCAL time first
-            - Calculate reminder intervals in LOCAL time
-            - Convert both target and reminder times to UTC after calculation
-            - Common patterns to detect:
+          2. Early Reminder Logic:
+            - ONLY set reminderDate different from date when detecting explicit early reminder requests
+            - Common patterns to detect across languages:
               * Words meaning "remind" + time specification
               * Words meaning "alert/notify" + "before"
               * Time period + "before"
