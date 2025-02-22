@@ -60,72 +60,136 @@ export const processUserMessage = async ({
           - 'timeConfirmed': A boolean indicating whether the time has been explicitly confirmed by the user.
           - the current date and time is ${new Date().toISOString()} in UTC.
 
-          Time Interpretation Rules:
-          1. Relative Time Processing:
-            - Identify and process relative time expressions in any language:
-              * Time units (minutes, hours, days)
-              * Fractions (half hour, quarter hour)
-              * Informal time references (morning, afternoon, evening, night)
-            - Always set seconds to 00 in all calculations
-            - For any relative time expression, calculate from the current moment
+          Time Zone and Time Processing Rules:
 
-          2. Early Reminder Logic:
-            - ONLY set reminderDate different from date when detecting explicit early reminder requests
-            - Common patterns to detect across languages:
+          1. Local Time Processing (CRITICAL):
+            - ALL user times MUST be interpreted as local times first
+            - Steps for processing ANY time mentioned:
+              a. Interpret time in local timezone (e.g., America/Bogota)
+              b. Apply smart time resolution (see rule 2)
+              c. Get final local time
+              d. ONLY THEN convert to UTC using timezone offset
+            
+            Example for "9":
+            - Current local time: 8:00 PM (20:00) Bogota
+            - User says: "a las 9"
+            - Interpret as: 9:00 PM (21:00) Bogota time
+            - Convert to UTC: 21:00 - 5 hours = 02:00 UTC next day
+
+          2. Smart Time Resolution (in LOCAL time):
+            - Given current time is 8:00 PM (20:00) LOCAL:
+            - If user says "9" or "9:00":
+              * Option 1: 9:00 AM (09:00) LOCAL = next day
+              * Option 2: 9:00 PM (21:00) LOCAL = today
+              * Choose 9:00 PM as it's the next possible time
+            
+            Time Distance Calculation (in LOCAL time):
+            - 9:00 PM today = 1 hour from now ✓ (CHOOSE THIS)
+            - 9:00 AM tomorrow = 13 hours from now ✗
+
+          3. UTC Conversion Process (CRITICAL):
+            - ONLY after local time is final, convert to UTC
+            - Example for America/Bogota (UTC-5):
+              * If local time is 9:00 PM (21:00)
+              * UTC time = local time + 5 hours
+              * If this pushes into next day, adjust date accordingly
+            - ALL storage in UTC must maintain the correct local time relationship
+
+          4. Time Proximity Logic:
+            - Calculate ALL time differences in LOCAL time first
+            - Compare possible interpretations in LOCAL time
+            - Select closest future time in LOCAL time
+            - Only after selection, convert to UTC
+
+          5. Same-Day Priority (in LOCAL time):
+            - Always check if time is possible TODAY in local timezone first
+            - Only move to tomorrow if time has passed in local timezone
+            - Examples (current time 8:00 PM local):
+              * "9:00" → 9:00 PM today local time
+              * "7:00" → 7:00 AM tomorrow local time
+
+          6. Early Reminder Logic:
+            - Process early reminder times in LOCAL time first
+            - Calculate reminder intervals in LOCAL time
+            - Convert both target and reminder times to UTC after calculation
+            - Common patterns to detect:
               * Words meaning "remind" + time specification
               * Words meaning "alert/notify" + "before"
               * Time period + "before"
-              * Early notification requests
-            - If no early reminder is explicitly requested, set reminderDate equal to date
 
-          3. Time Defaults:
-            - No specific time mentioned → 09:00:00 in user's timezone
+          7. Time Defaults (ALL in LOCAL time):
+            - No specific time mentioned → 09:00:00 local time
             - Time periods in any language:
-              * Morning equivalent → 09:00:00
-              * Afternoon equivalent → 14:00:00
-              * Evening equivalent → 18:00:00
-              * Night equivalent → 20:00:00
+              * Morning → 09:00:00 local
+              * Afternoon → 14:00:00 local
+              * Evening → 18:00:00 local
+              * Night → 20:00:00 local
 
-          4. Time Interpretation:
-            If no AM/PM equivalent is specified:
+          8. Local Time Interpretation (when AM/PM not specified):
             - 5:00-11:59 → AM
             - 12:00-16:59 → PM
             - 17:00-23:59 → PM
             - 00:00-4:59 → AM
 
-          5. Date Processing:
-            - Default to current date if unspecified
-            - Next day if mentioned time has passed
-            - Convert all times to UTC maintaining seconds at 00
+          9. Date Processing:
+            - Process ALL dates in local timezone first
+            - Default to current local date if unspecified
+            - Next local date if local time has passed
+            - Convert to UTC only after local date/time is confirmed
             - Handle culture-specific date formats
 
-          6. Validation:
-            - Reject past dates/times
-            - Handle ambiguous expressions
-            - Validate all times have seconds set to 00
+          10. Validation:
+              - Validate times in LOCAL timezone first
+              - Confirm UTC conversion maintains correct local time
+              - Verify date adjustments during UTC conversion
+              - Ensure all times have seconds set to 00
+              - Validate timezone offset calculations
 
-          7. Error Cases:
-            - Invalid date/time formats
-            - Conflicting information
-            - Unclear or ambiguous requests
-            - Missing critical information
+          11. Error Cases:
+              - Invalid local time formats
+              - Invalid UTC conversions
+              - Timezone calculation errors
+              - Missing timezone information
+              - Ambiguous local times
+              - Daylight saving time edge cases
 
-          8. For immediate reminders (when reminderDate equals date):
-            - Use present tense
-            - Examples:
-              * "It's time for your meeting"
-              * "It's time to take your medicine"
-              * "Your appointment is now"
+          12. Response Formatting:
+              - ALWAYS show times to users in their local timezone
+              - Include AM/PM indicators for clarity
+              - Specify "hora local" in responses
+              - Example responses:
+                * "Recordatorio programado para hoy a las 9:00 PM hora local"
+                * "Reminder set for today at 9:00 PM local time"
 
-          9. For early reminders (when reminderDate is before date):
-            - Use future tense
-            - Include the remaining time
-            - Examples:
-              * "In 10 minutes you have a meeting"
-              * "Your medicine should be taken in 15 minutes"
-              * "Meeting with team starts in 5 minutes"
-   
-            `,
+          13. Reminder Message Format:
+              For immediate reminders (when reminderDate equals date):
+              - Use present tense referring to local time
+              - Examples:
+                * "It's time for your meeting"
+                * "Es hora de tu reunión"
+
+              For early reminders (when reminderDate is before date):
+              - Use future tense with local time reference
+              - Include the remaining time in local timezone
+              - Examples:
+                * "In 10 minutes you have a meeting"
+                * "En 10 minutos tienes una reunión"
+
+          14. JSON Response Construction:
+              Example for 9:00 PM local time in Bogota:
+              {
+                "date": "2025-02-22T02:00:00.000Z",         // UTC time
+                "localDate": "2025-02-21T21:00:00.000-05:00", // Local time
+                "response": "... a las 9:00 PM hora local"
+              }
+
+          15. Time Storage Rules:
+              - Store both UTC and local time versions
+              - ALL comparisons for "next possible time" must use local time
+              - ALL user communication must use local time
+              - Internal processing uses UTC
+              - Maintain timezone information for all conversions
+                      `,
 
       prompt: `Current reminders: ${JSON.stringify(reminders)}
           User message: ${message}`,
