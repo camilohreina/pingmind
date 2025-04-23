@@ -98,7 +98,7 @@
           {
             "id": 10,
             "type": "bot",
-            "content": "I’ve analyzed the concert poster image and created a reminder for the event on July 15th at 8:00 PM."
+            "content": "I've analyzed the concert poster image and created a reminder for the event on July 15th at 8:00 PM."
           }
         ]
       }
@@ -241,6 +241,60 @@
       "newPasswordLabel": "New Password",
       "confirmPasswordLabel": "Confirm Password",
       "submitButton": "Reset Password"
+    }
+  },
+  "dashboard": {
+    "title": "My Reminders",
+    "subtitle": "Manage your reminders and notifications",
+    "add_reminder": "Add reminder",
+    "cancel": "Cancel",
+    "loading": "Loading reminders...",
+    "error": "Error",
+    "no_reminders": "You don't have any reminders yet. Create one!",
+    "untitled_reminder": "Untitled reminder",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "complete": "Complete",
+      "cancel": "Cancel",
+      "edit": "Edit"
+    },
+    "form": {
+      "add_title": "Add reminder",
+      "edit_title": "Edit reminder",
+      "description": "Create a new reminder to receive notifications at the right time.",
+      "title": {
+        "label": "Title",
+        "placeholder": "Reminder title",
+        "description": "Optional: add a descriptive title to your reminder."
+      },
+      "text": {
+        "label": "Text",
+        "placeholder": "What do you need to remember?",
+        "description": "Describe what you need to remember in detail."
+      },
+      "date": {
+        "label": "Date",
+        "placeholder": "Select a date",
+        "description": "When do you want to receive this reminder?"
+      },
+      "time": {
+        "label": "Time",
+        "placeholder": "Select a time",
+        "description": "At what time do you want to receive this reminder?"
+      },
+      "submitting": "Saving...",
+      "create": "Create reminder",
+      "update": "Update reminder"
     }
   }
 }

@@ -112,6 +112,60 @@
       "locale": "{locale, select, en {🇺🇸 Ingles} es {🇪🇦 Español}  other {Unknown}}"
     }
   },
+  "dashboard": {
+    "title": "Mis Recordatorios",
+    "subtitle": "Administra tus recordatorios y notificaciones",
+    "add_reminder": "Añadir recordatorio",
+    "cancel": "Cancelar",
+    "loading": "Cargando recordatorios...",
+    "error": "Error",
+    "no_reminders": "No tienes recordatorios actualmente. ¡Crea uno nuevo!",
+    "untitled_reminder": "Recordatorio sin título",
+    "tabs": {
+      "all": "Todos",
+      "pending": "Pendientes",
+      "completed": "Completados",
+      "cancelled": "Cancelados"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "completed": "Completado",
+      "cancelled": "Cancelado"
+    },
+    "actions": {
+      "complete": "Completar",
+      "cancel": "Cancelar",
+      "edit": "Editar"
+    },
+    "form": {
+      "add_title": "Añadir recordatorio",
+      "edit_title": "Editar recordatorio",
+      "description": "Crea un nuevo recordatorio para recibir notificaciones en el momento adecuado.",
+      "title": {
+        "label": "Título",
+        "placeholder": "Título del recordatorio",
+        "description": "Opcional: añade un título descriptivo a tu recordatorio."
+      },
+      "text": {
+        "label": "Texto",
+        "placeholder": "¿Qué necesitas recordar?",
+        "description": "Describe lo que necesitas recordar en detalle."
+      },
+      "date": {
+        "label": "Fecha",
+        "placeholder": "Selecciona una fecha",
+        "description": "¿Cuándo quieres recibir este recordatorio?"
+      },
+      "time": {
+        "label": "Hora",
+        "placeholder": "Selecciona una hora",
+        "description": "¿A qué hora quieres recibir este recordatorio?"
+      },
+      "submitting": "Guardando...",
+      "create": "Crear recordatorio",
+      "update": "Actualizar recordatorio"
+    }
+  },
   "login_page": {
     "form": {
       "title": "Iniciar sesión",

@@ -1,7 +1,7 @@
 import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth, { DefaultSession } from "next-auth";
-import { accounts, db, sessions, users, verificationTokens } from "@/db";
+import { accounts, db, is, sessions, users, verificationTokens } from "@/db";
 import type { Adapter } from "next-auth/adapters";
 import { getUserByPhone } from "@/db/queries/users";
 import { compare } from "bcrypt";
@@ -48,6 +48,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const { phone, password } = credentials;
         const user = await getUserByPhone(phone as string);
+        console.log(user);
         if (!user) {
           return null;
         }
@@ -56,7 +57,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           password as string,
           user.password as string,
         );
-        
+        console.log({ isValid, password, userPassword: user.password });
         if (isValid) {
           return {
             id: user.id,
@@ -87,14 +88,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
       }
       return session;
-    }
+    },
   },
   jwt: {
     encode: async function (params) {
       // Solo crear la sesión en la base de datos si es un nuevo inicio de sesión
       if (params?.token?.credentials && !params.token?.sessionToken) {
         const sessionToken = crypto.randomUUID();
-        
+
         if (!params.token?.sub) {
           throw new ValidationError("No user ID found in token");
         }
