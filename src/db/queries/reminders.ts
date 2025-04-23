@@ -64,7 +64,11 @@ export const updateStatusReminder = ({
 
 export const getPendingRemindersByUser = (userId: string) => {
   return db.query.reminders.findMany({
-    where: and(eq(reminders.userId, userId), eq(reminders.status, "PENDING")),
+    where: and(
+      eq(reminders.userId, userId),
+      eq(reminders.status, "PENDING"),
+      gte(reminders.scheduledAt, new Date()),
+    ),
   });
 };
 
@@ -79,8 +83,6 @@ export const updateReminder = ({
   scheduledAt: Date;
   status: (typeof reminders.status.enumValues)[number];
 }) => {
-
-  
   return db
     .update(reminders)
     .set({ text, scheduledAt, status })

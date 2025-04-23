@@ -5,7 +5,7 @@ import { getTranscriptionFromAudio, getTranscriptionFromImage } from "@/lib/ai";
 
 export const getTextFromAudio = async (
   audioFile: AsyncIterable<Uint8Array>,
-) => {
+): Promise<string> => {
   const fileBuffer = await handleMediaDownload(audioFile);
   const tmpDir = ensureTempDir();
   const audioPath = path.join(tmpDir, "audio.webm");
@@ -16,11 +16,10 @@ export const getTextFromAudio = async (
 
 export const getTextFromImage = async (
   imageFile: AsyncIterable<Uint8Array>,
-) => {
+): Promise<string> => {
   const fileBuffer = await handleMediaDownload(imageFile);
   const base64Image = fileBuffer.toString("base64");
   const transcription = await getTranscriptionFromImage(base64Image);
-  console.log({transcription});
   return transcription;
 };
 

@@ -7,7 +7,7 @@ import {
 import { getUserByPhone } from "@/db/queries/users";
 import { processUserMessage } from "@/lib/ai";
 import { AiError } from "@/lib/error";
-import { getMediaInfobip, sendRegisterMessage } from "@/lib/infobip";
+import { getMediaInfobip, sendRegisterMessage, sendReplyReminder } from "@/lib/infobip";
 import { WhatsAppMessage } from "@/types/whatsapp";
 import {
   addNewReminder,
@@ -17,6 +17,21 @@ import {
 } from "./reminder.controller";
 import { extractMediaId } from "@/lib/utils";
 import { getTextFromAudio, getTextFromImage } from "./ai.controller";
+import { handleConversationalMessage } from "@/lib/whatsapp-conversations";
+import { ConversationType } from "@/types/conversations";
+
+// Definir tipos de conversación localmente para evitar conflictos
+enum MessageType {
+  GREETING = "GREETING",
+  QUESTION = "QUESTION",
+  REMINDER_CREATION = "REMINDER_CREATION",
+  REMINDER_UPDATE = "REMINDER_UPDATE",
+  REMINDER_DELETION = "REMINDER_DELETION",
+  REMINDER_LIST = "REMINDER_LIST",
+  HELP = "HELP",
+  CHAT = "CHAT",
+  UNKNOWN = "UNKNOWN"
+}
 
 interface reminderReview {
   userId: string;
@@ -29,8 +44,10 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
   try {
     const message = data.message?.text || "";
     const fromNumber = data.from;
+    const messageId = data?.messageId || "";
 
-    const messageProcessed = await getLogMessage(data?.messageId);
+    // Verificar si el mensaje ya fue procesado
+    const messageProcessed = await getLogMessage(messageId);
 
     if (messageProcessed) {
       return { status: "success", action: "message_already_processed" };
@@ -45,17 +62,9 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
 
     const type_message = data.message?.type;
 
-    let result = { status: "success", ok: true };
+    let processedMessage = message;
 
-    if (type_message === "TEXT") {
-      result = await handleReminder({
-        userId: user.id,
-        message,
-        phone: fromNumber,
-        timezone: user.timezone,
-      });
-    }
-
+    // Procesar mensajes de audio y convertirlos a texto
     if (type_message === "AUDIO" && data.message?.url) {
       const audioMessage = {
         url: data.message.url,
@@ -65,16 +74,14 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         message: audioMessage,
       });
       if (message_audio) {
-        result = await handleReminder({
-          userId: user.id,
-          message: message_audio,
-          phone: fromNumber,
-          timezone: user.timezone,
-        });
-        return result;
+        processedMessage = message_audio;
+      } else {
+        // Si el procesamiento de audio falló, mantenemos el mensaje original
+        processedMessage = "No pude entender tu mensaje de audio. ¿Podrías intentar nuevamente?";
       }
     }
 
+    // Procesar mensajes de imagen y convertirlos a texto
     if (type_message === "IMAGE" && data.message?.url) {
       const imageMessage = {
         url: data.message.url,
@@ -84,25 +91,70 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         message: imageMessage,
       });
       if (message_image) {
-        result = await handleReminder({
-          userId: user.id,
-          message: message_image,
-          phone: fromNumber,
-          timezone: user.timezone,
-        });
-        return result;
+        processedMessage = message_image;
+      } else {
+        // Si el procesamiento de imagen falló, mantenemos un mensaje genérico
+        processedMessage = "No pude procesar correctamente tu imagen. ¿Podrías describirla en un mensaje de texto?";
       }
     }
 
-    return result;
+    // Obtener recordatorios pendientes del usuario
+    const pendingReminders = await getPendingRemindersByUser(user.id);
+
+    // Usar el nuevo manejador conversacional
+    const conversationalResult = await handleConversationalMessage({
+      userId: user.id,
+      message: processedMessage,
+      phone: fromNumber,
+      timezone: user.timezone,
+      userName: user.name || undefined,
+      language: 'es', // Por defecto español, puedes usar la preferencia del usuario si está disponible
+      pendingReminders: pendingReminders.length
+    });
+
+    // Enviar la respuesta conversacional al usuario
+    await sendReplyReminder({
+      phone: fromNumber,
+      message: conversationalResult.responseMessage
+    });
+
+    // Si la clasificación del mensaje indica que es un intento de crear un recordatorio y tenemos toda la información necesaria
+    if (conversationalResult.messageType === ConversationType.REMINDER_CREATION && !conversationalResult.needsMoreInfo) {
+      // Proceder con el procesamiento tradicional para crear el recordatorio
+      const result = await handleReminder({
+        userId: user.id,
+        message: processedMessage,
+        phone: fromNumber,
+        timezone: user.timezone,
+      });
+      
+      return { 
+        ...result, 
+        conversational: true, 
+        conversationalResponse: conversationalResult.responseMessage 
+      };
+    }
+
+    // Para otros tipos de mensajes, devolvemos el resultado del procesamiento conversacional
+    return { 
+      status: "success", 
+      action: "conversational_response", 
+      conversational: true,
+      messageType: conversationalResult.messageType,
+      responseMessage: conversationalResult.responseMessage
+    };
+
   } catch (error) {
     console.log(error);
     throw new AiError("Error processing message with AI");
   } finally {
-    createLogMessage({
-      id: crypto.randomUUID(),
-      messageId: data?.messageId,
-    });
+    // Guarda el ID del mensaje como procesado
+    if (data?.messageId) {
+      createLogMessage({
+        id: crypto.randomUUID(),
+        messageId: data.messageId,
+      });
+    }
   }
 };
 
@@ -124,7 +176,9 @@ export const handleReminder = async ({
 
     if (!reminder_user)
       return { status: "error", error: "ai_error_process", ok: false };
+      
     console.log(reminder_user);
+    
     if (reminder_user.action === "CREATE") {
       await addNewReminder({
         phone,
@@ -133,6 +187,7 @@ export const handleReminder = async ({
       });
       return { status: "success", action: "create", ok: true };
     }
+    
     if (reminder_user?.reminderId) {
       console.log({ reminderId: reminder_user.reminderId });
       if (reminder_user.action === "UPDATE") {
@@ -174,33 +229,45 @@ export const handleAudioReminder = async ({
   message,
 }: {
   message: MediaMessageReview;
-}) => {
+}): Promise<string | undefined> => {
   const { url } = message;
   const mediaId = extractMediaId(url);
   if (!mediaId) {
-    return null;
+    return undefined;
   }
-  const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
-    mediaId: mediaId,
-  });
-  const transcription = await getTextFromAudio(response);
-  return transcription.text;
+  try {
+    const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
+      mediaId: mediaId,
+    });
+    const transcription = await getTextFromAudio(response);
+    return transcription;
+  } catch (error) {
+    console.error("Error procesando audio:", error);
+    return undefined;
+  }
 };
 
 export const handleImageReminder = async ({
   message,
 }: {
   message: MediaMessageReview;
-}) => {
+}): Promise<string | undefined> => {
   const { url } = message;
   const mediaId = extractMediaId(url);
   if (!mediaId) {
-    return null;
+    return undefined;
   }
-  const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
-    mediaId: mediaId,
-  });
-
-  const transcription = await getTextFromImage(response);
-  return transcription;
+  try {
+    const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
+      mediaId: mediaId,
+    });
+    const transcription = await getTextFromImage(response);
+    if (typeof transcription === 'string') {
+      return transcription;
+    }
+    return undefined;
+  } catch (error) {
+    console.error("Error procesando imagen:", error);
+    return undefined;
+  }
 };

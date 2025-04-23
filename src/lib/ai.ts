@@ -203,44 +203,63 @@ export const processUserMessage = async ({
   }
 };
 
-export const getTranscriptionFromAudio = async (audioPath: string) => {
-  const transcription = await openaiLib.audio.transcriptions.create({
-    file: fs.createReadStream(audioPath),
-    model: "whisper-1",
-  });
-  return transcription;
-};
+export async function getTranscriptionFromAudio(
+  filePath: string
+): Promise<string> {
+  try {
+    const response = await openaiLib.audio.transcriptions.create({
+      file: fs.createReadStream(filePath),
+      model: "whisper-1",
+    });
+    return response.text;
+  } catch (error) {
+    console.error("Error transcribing audio:", error);
+    return "";
+  }
+}
 
-export const getTranscriptionFromImage = async (base64: string) => {
-  const response = await openaiLib.chat.completions.create({
-    model: "gpt-4o",
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text:
-              "This image contains event information. Please extract the event details and format them as follows:\n\n" +
-              "TITLE: [event title]\n" +
-              "DATE: [event date]\n" +
-              "TIME: [event time]\n" +
-              "LOCATION: [event location]\n" +
-              "DETAILS: [any important additional details]\n\n" +
-              "If any field is not present in the image, omit it. Keep the format concise and direct. " +
-              "Format the response exactly with these field names in capital letters followed by colons. " +
-              "If you see any contact information or registration details, include them in the DETAILS section.",
-          },
-          {
-            type: "image_url",
-            image_url: {
-              url: `data:image/jpeg;base64,${base64}`,
+export async function getTranscriptionFromImage(
+  base64Image: string
+): Promise<string> {
+  try {
+    const response = await openaiLib.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: `You are an assistant that helps extract event details from images. 
+Return ONLY the extracted information in the following format:
+"<event title>: <event description> | <date-time>".
+
+If there is no event information, return an empty string.
+
+Rules:
+- Return ONLY the extracted text, no additional notes or explanations
+- Format date-times in a readable, natural language format
+- If no clear event is in the image, return an empty string`,
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${base64Image}`,
+              },
             },
-          },
-        ],
-      },
-    ],
-    max_tokens: 500,
-  });
-  return response.choices[0].message.content;
-};
+            {
+              type: "text",
+              text: "Extract any event, reminder or appointment information from this image.",
+            },
+          ],
+        },
+      ],
+      max_tokens: 300,
+    });
+
+    return response.choices[0].message.content || "";
+  } catch (error) {
+    console.error("Error processing image:", error);
+    return "";
+  }
+}
