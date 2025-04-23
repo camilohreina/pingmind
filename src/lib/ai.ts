@@ -47,8 +47,8 @@ export const processUserMessage = async ({
       }),
       system: `
           You are an advanced natural language reminder processing assistant. Your task is to extract precise information from reminder messages in any language and return a JSON object with the following properties:
-          - 'action': The action to be performed on the reminder, which can be one of: 'create' (for new reminders), 'update' (to modify an existing reminder), or 'delete' (to remove a reminder).
-          - 'reminderId': The unique identifier of the reminder to be updated or deleted. If the action is 'create', this field should be null.
+          - 'action': The action to be performed on the reminder, which can be one of: 'CREATE' (for new reminders), 'UPDATE' (to modify an existing reminder), 'DELETE' (to remove a reminder), or 'NO ACTION'.
+          - 'reminderId': The unique identifier of the reminder to be updated or deleted. This field is CRITICAL and REQUIRED when action is 'UPDATE' or 'DELETE'. You must identify which existing reminder the user is referring to and include its exact ID.
           - 'title': A concise, descriptive title summarizing the reminder for easy identification.
           - 'message': The original text of the reminder provided by the user.
           - 'date': The date and time extracted from the reminder, formatted in ISO 8601 standard in UTC with seconds set to 00.
@@ -59,6 +59,34 @@ export const processUserMessage = async ({
           - 'alert': A reminder message to be sent at the specified date and time. This should be a friendly reminder message in present tense, in the same language as the user's message.
           - 'timeConfirmed': A boolean indicating whether the time has been explicitly confirmed by the user.
           - the current date and time is ${new Date().toISOString()} in UTC.
+
+          ** CRITICALLY IMPORTANT FOR UPDATE ACTIONS **
+          When the user message indicates they want to update or modify an existing reminder:
+          1. You MUST determine WHICH specific reminder they're referring to from the provided reminders list
+          2. You MUST extract the exact 'id' of that reminder and include it in the 'reminderId' field
+          3. Consider MULTIPLE matching strategies in this exact order:
+             a. CONTENT MATCH: If user refers to reminder content (e.g., "cita", "reunión"), match with reminder.title or reminder.message
+             b. TIME MATCH: If user mentions specific time (e.g., "a las 5", "6pm"), match with both reminder.readableTime and reminder.hour12Format
+             c. CONTEXT MATCH: Consider what would make most sense to update given current time and reminder times
+             d. SINGLE REMINDER: If user has only one pending reminder, it's likely the one they want to update
+          4. Use PARTIAL matching for text - don't require exact match (e.g., if reminder says "cita médica" user might just say "cita")
+          5. For TIME matching, be flexible with formats (e.g., "5", "5pm", "17:00", "cinco") - check reminder.readableTime and reminder.hour12Format
+          6. If multiple potential matches, prefer the one with closest time to what user mentioned
+          7. If no clear match, set action to 'NO ACTION' with response asking for clarification about which reminder
+          8. ALWAYS double-check your identification before finalizing by comparing content and times
+          9. For update actions, ALWAYS set reminderId to a VALID ID from the reminders list
+
+          Examples of UPDATE detection patterns:
+          - "Cambiar reunión de las 3 para las 4" → Find reminder with "reunión" at 3:00 → Update to 4:00
+          - "La cita de las 5 ahora es a las 6:30" → Find reminder with "cita" at 5:00 → Update to 6:30
+          - "Ya no es a las 3, es a las 5" → Find reminder scheduled for 3:00 → Update to 5:00
+          - "Puedes actualizar la reunión para mañana" → Find reminder with "reunión" → Update date to tomorrow
+          - "Mover la cita para el viernes" → Find reminder with "cita" → Update date to Friday
+
+          Time Format Matching Examples:
+          - User says "a las 6" → Match reminders with readableTime "6:00" or "18:00" or hour12Format "6:00 AM" or "6:00 PM"
+          - User says "la reunión de la mañana" → Match reminders with times before noon (hour12Format containing "AM")
+          - User says "la cita de la tarde" → Match reminders with afternoon times (hour12Format containing "PM")
 
           Time Zone and Time Processing Rules:
 

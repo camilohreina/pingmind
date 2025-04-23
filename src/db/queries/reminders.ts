@@ -72,7 +72,7 @@ export const getPendingRemindersByUser = (userId: string) => {
   });
 };
 
-export const updateReminder = ({
+export const updateReminder = async ({
   id,
   text,
   scheduledAt,
@@ -83,9 +83,29 @@ export const updateReminder = ({
   scheduledAt: Date;
   status: (typeof reminders.status.enumValues)[number];
 }) => {
-  return db
-    .update(reminders)
-    .set({ text, scheduledAt, status })
-    .where(eq(reminders.id, id))
-    .execute();
+  try {
+    console.log("DB: Actualizando recordatorio", { id, text, scheduledAt, status });
+    
+    // Verificar primero si el recordatorio existe
+    const existingReminder = await db.query.reminders.findFirst({
+      where: eq(reminders.id, id),
+    });
+    
+    if (!existingReminder) {
+      console.log("DB: Recordatorio no encontrado con ID:", id);
+      return null;
+    }
+    
+    const result = await db
+      .update(reminders)
+      .set({ text, scheduledAt, status })
+      .where(eq(reminders.id, id))
+      .execute();
+      
+    console.log("DB: Resultado de actualización:", result);
+    return result;
+  } catch (error) {
+    console.error("DB: Error al actualizar recordatorio:", error);
+    throw error;
+  }
 };

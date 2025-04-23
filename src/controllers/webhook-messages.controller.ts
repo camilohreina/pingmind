@@ -166,7 +166,12 @@ export const handleReminder = async ({
 }: reminderReview) => {
   try {
     const reminders_list = await getPendingRemindersByUser(userId);
+    console.log("Recordatorios pendientes del usuario:", userId, reminders_list.length);
+    
     const formatted_reminders = formatRemindersToAi({ reminders_list });
+    
+    console.log("Recordatorios enviados a la IA:", JSON.stringify(formatted_reminders, null, 2));
+    
     const reminder_user = await processUserMessage({
       message,
       phone: phone,
@@ -177,7 +182,12 @@ export const handleReminder = async ({
     if (!reminder_user)
       return { status: "error", error: "ai_error_process", ok: false };
       
-    console.log(reminder_user);
+    console.log("Respuesta de la IA para actualización:", {
+      action: reminder_user.action,
+      reminderId: reminder_user.reminderId,
+      message: reminder_user.message,
+      reminderDate: reminder_user.reminderDate
+    });
     
     if (reminder_user.action === "CREATE") {
       await addNewReminder({
@@ -188,15 +198,60 @@ export const handleReminder = async ({
       return { status: "success", action: "create", ok: true };
     }
     
+    // Validación adicional para UPDATE - Debe tener un ID de recordatorio válido
+    if (reminder_user.action === "UPDATE") {
+      if (!reminder_user.reminderId) {
+        console.log("ERROR: Se solicitó UPDATE pero faltó reminderId. Mensaje:", message);
+        
+        // Enviar mensaje al usuario explicando el problema
+        await sendReplyReminder({
+          phone,
+          message: "Lo siento, no pude identificar qué recordatorio deseas actualizar. ¿Podrías especificar más detalles como el asunto o la hora del recordatorio original?"
+        });
+        
+        return { status: "error", error: "missing_reminder_id", action: "update_failed", ok: false };
+      }
+      
+      // Verificar si el ID existe en la lista de recordatorios pendientes
+      const reminderExists = reminders_list.some(rem => rem.id === reminder_user.reminderId);
+      if (!reminderExists) {
+        console.log(`ERROR: ReminderId ${reminder_user.reminderId} no encontrado en recordatorios pendientes`);
+        
+        await sendReplyReminder({
+          phone,
+          message: "Lo siento, no encontré ese recordatorio en tu lista de pendientes. Es posible que ya se haya completado o cancelado."
+        });
+        
+        return { status: "error", error: "reminder_not_found", action: "update_failed", ok: false };
+      }
+    }
+    
     if (reminder_user?.reminderId) {
-      console.log({ reminderId: reminder_user.reminderId });
+      console.log("Procesando recordatorio con ID:", reminder_user.reminderId);
       if (reminder_user.action === "UPDATE") {
-        await updatePendingReminder({
+        const updateResult = await updatePendingReminder({
           reminderId: reminder_user.reminderId,
           phone,
           reminder_user,
         });
-        return { status: "success", action: "update", ok: true };
+        console.log("Resultado de updatePendingReminder:", updateResult);
+        
+        if (updateResult.ok) {
+          return { status: "success", action: "update", ok: true };
+        } else {
+          // Si la actualización falló, enviar mensaje específico al usuario
+          await sendReplyReminder({
+            phone,
+            message: "Lo siento, hubo un problema al actualizar tu recordatorio. Por favor, intenta de nuevo."
+          });
+          // Devolver un objeto con la estructura correcta
+          return {
+            status: "error", 
+            action: "update_failed", 
+            ok: false,
+            errorType: "update_failed"
+          };
+        }
       }
 
       if (reminder_user.action === "DELETE") {
@@ -207,6 +262,9 @@ export const handleReminder = async ({
         });
         return { status: "success", action: "delete", ok: true };
       }
+    } else if (reminder_user.action === "UPDATE" || reminder_user.action === "DELETE") {
+      console.log("ERROR: Se solicitó UPDATE o DELETE pero no se proporcionó reminderId");
+      return { status: "error", error: "missing_reminder_id", ok: false };
     }
 
     if (reminder_user.action === "NO ACTION") {
@@ -215,7 +273,7 @@ export const handleReminder = async ({
 
     return { status: "error", error: "reminder_error", ok: false };
   } catch (error) {
-    console.log(error);
+    console.log("Error en handleReminder:", error);
     return { status: "error", error: "internal_server_error", ok: false };
   }
 };
