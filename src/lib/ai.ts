@@ -1,9 +1,14 @@
 import { openai } from "@ai-sdk/openai";
 import { OpenAI } from "openai";
-import { generateObject } from "ai";
+import { generateObject, generateText, tool } from "ai";
 import { z } from "zod";
 import { AiError } from "./error";
 import fs from "fs";
+import * as chrono from "chrono-node";
+import {
+  addNewReminder,
+  getRemindersUserByPhone,
+} from "@/controllers/reminder.controller";
 
 const openaiLib = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -163,7 +168,7 @@ export const processUserMessage = async ({
 };
 
 export async function getTranscriptionFromAudio(
-  filePath: string
+  filePath: string,
 ): Promise<string> {
   try {
     const response = await openaiLib.audio.transcriptions.create({
@@ -178,7 +183,7 @@ export async function getTranscriptionFromAudio(
 }
 
 export async function getTranscriptionFromImage(
-  base64Image: string
+  base64Image: string,
 ): Promise<string> {
   try {
     const response = await openaiLib.chat.completions.create({
@@ -220,5 +225,119 @@ Rules:
   } catch (error) {
     console.error("Error processing image:", error);
     return "";
+  }
+}
+
+const getRemindersByUser = tool({
+  description: "get reminders list by user",
+  parameters: z.object({
+    phone: z.string().describe("User phone number"),
+  }),
+  execute: async ({ phone }) => {
+    const reminders = await getRemindersUserByPhone({ phone });
+    if (reminders.length === 0) {
+      return { success: true, error: "No reminders found" };
+    }
+    return {
+      success: true,
+      reminders,
+    };
+  },
+});
+
+const createReminderUser = tool({
+  description: "create reminder user",
+  parameters: z.object({
+    phone: z.string(),
+    title: z.string().describe("Title of the reminder"),
+    message: z.string().describe("Description of the reminder"),
+    response: z.string().describe("Response to the user, must be in present tense"),
+    alert: z.string().describe("Alert message to be sent, must be in present tense because it will be sent at the time of the reminder"),
+    timezone: z.string().describe("User's timezone by phone"),
+    dueDate: z
+      .string()
+      .describe(
+        "This property is mandatory in ENGLISH. Natural language due date like 'tomorrow', 'tomorrow at 3pm', 'today at 9am', 'next Monday', 'Jan 23' (optional). ONLY in English.",
+      ),
+  }),
+  execute: async ({
+    phone,
+    dueDate,
+    message,
+    title,
+    response,
+    alert,
+    timezone,
+  }) => {
+    const reminderDate = chrono.parseDate(dueDate, {
+      instant: new Date(),
+      timezone,
+    });
+    if (!reminderDate) {
+      throw new AiError("Error parsing date");
+    }
+    const reminder_user = {
+      message,
+      response,
+      reminderDate: reminderDate.toISOString(),
+      localDate: reminderDate.toISOString(),
+      alert,
+      title
+    };
+    const newReminder = addNewReminder({
+      phone,
+      reminder_user,
+    });
+    if (!newReminder) {
+      return { success: false, error: "Error creating reminder" };
+    }
+    return {
+      success: true,
+      reminder: newReminder,
+    };
+  },
+});
+
+
+async function getTools() {
+  return {
+    getRemindersByUser,
+    createReminderUser,
+  };
+}
+
+interface UserMessageI {
+  role: "data" | "user" | "system" | "assistant";
+  content: string;
+}
+
+export async function processMessageByUser({
+  message,
+  phone,
+}: {
+  message: string;
+  phone: string;
+}) {
+  const SYSTEM_PROMPT = `You are an AI asistant to help with reminders.
+You can get a list of products by using the getRemindersByUser tool.
+You can create a new reminder by using the createReminderUser tool.
+The user phone is ${phone}.
+`;
+
+  try {
+    const userMessage: UserMessageI = { role: "user", content: message };
+    const tools = await getTools();
+    console.log({ userMessage });
+    const result = await generateText({
+      model: openai("gpt-4o"),
+      tools,
+      messages: [userMessage],
+      system: SYSTEM_PROMPT,
+      maxSteps: 20,
+    });
+    return result.text;
+  } catch (error) {
+    console.log(error);
+    throw new AiError("Error processing message with AI");
   }
 }

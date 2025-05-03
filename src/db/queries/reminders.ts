@@ -1,7 +1,8 @@
 import { and, db, eq, gte, lte, users } from "..";
 import { reminders } from "../schema/reminders";
+import { getUserByPhone } from "./users";
 
-type newReminder = typeof reminders.$inferInsert;
+export type newReminder = typeof reminders.$inferInsert;
 
 export const createReminder = (reminder: newReminder) => {
   return db.insert(reminders).values(reminder).execute();
@@ -63,6 +64,21 @@ export const updateStatusReminder = ({
 };
 
 export const getPendingRemindersByUser = (userId: string) => {
+  return db.query.reminders.findMany({
+    where: and(
+      eq(reminders.userId, userId),
+      eq(reminders.status, "PENDING"),
+      gte(reminders.scheduledAt, new Date()),
+    ),
+  });
+};
+
+export const getPendingRemindersByPhone = async (phone: string) => {
+  const user  = await getUserByPhone(phone);
+  if (!user) {
+    return [];
+  }
+  const userId = user.id;
   return db.query.reminders.findMany({
     where: and(
       eq(reminders.userId, userId),
