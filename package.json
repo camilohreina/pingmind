@@ -37,6 +37,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "chrono-node": "^2.8.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
@@ -89,9 +90,5 @@
     "prettier-plugin-tailwindcss": "^0.6.6",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0"
-  },
-  "peerDependencies": {
-    "@opentelemetry/instrumentation": "^0.56.0",
-    "@opentelemetry/sdk-logs": ">=0.46.0 && <1.0.0"
   }
 }
