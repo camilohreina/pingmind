@@ -7,9 +7,10 @@ import fs from "fs";
 import * as chrono from "chrono-node";
 import {
   addNewReminder,
+  cancelReminder,
   getRemindersUserByPhone,
+  updatePendingReminder,
 } from "@/controllers/reminder.controller";
-
 const openaiLib = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -251,8 +252,14 @@ const createReminderUser = tool({
     phone: z.string(),
     title: z.string().describe("Title of the reminder"),
     message: z.string().describe("Description of the reminder"),
-    response: z.string().describe("Response to the user, must be in present tense"),
-    alert: z.string().describe("Alert message to be sent, must be in present tense because it will be sent at the time of the reminder"),
+    response: z
+      .string()
+      .describe("Response to the user, must be in present tense"),
+    alert: z
+      .string()
+      .describe(
+        "Alert message to be sent, must be in present tense because it will be sent at the time of the reminder",
+      ),
     timezone: z.string().describe("User's timezone by phone"),
     dueDate: z
       .string()
@@ -282,7 +289,7 @@ const createReminderUser = tool({
       reminderDate: reminderDate.toISOString(),
       localDate: reminderDate.toISOString(),
       alert,
-      title
+      title,
     };
     const newReminder = addNewReminder({
       phone,
@@ -298,11 +305,122 @@ const createReminderUser = tool({
   },
 });
 
+const getReminderId = tool({
+  description: "get reminder id to update",
+  parameters: z.object({
+    phone: z.string().describe("User phone number"),
+    description: z.string().describe("Description of the reminder"),
+  }),
+  execute: async ({ phone, description }) => {
+    const reminders = await getRemindersUserByPhone({ phone });
+    if (reminders.length === 0) {
+      return { success: true, error: "No reminders found" };
+    }
 
+    const { object } = await generateObject({
+      output: "object",
+      temperature: 0.5,
+      model: openai("gpt-4o"),
+      schema: z.object({
+        reminderId: z.string(),
+      }),
+      system: `Eres un asistente especializado en interpretar cambios a recordatorios.
+      El usuario te proporcionará una instrucción para modificar un recordatorio existente.
+      Debes identificar qué recordatorio quiere modificar.
+      Responde en formato JSON con los siguientes campos:
+      - reminderId: ID del recordatorio a modificar`,
+
+      prompt: `Current reminders: ${JSON.stringify(reminders)}
+          User message: ${description}`,
+      mode: "json",
+    });
+
+    return {
+      success: true,
+      reminderId: object.reminderId,
+    };
+  },
+});
+
+const updateReminderUser = tool({
+  description: "update reminder user",
+  parameters: z.object({
+    reminderId: z.string().describe("ID of the reminder to update"),
+    title: z.string().describe("Title of the reminder"),
+    message: z.string().describe("Description of the reminder"),
+    response: z
+      .string()
+      .describe("Response to the user, must be in present tense"),
+    alert: z
+      .string()
+      .describe(
+        "Alert message to be sent, must be in present tense because it will be sent at the time of the reminder",
+      ),
+    timezone: z.string().describe("User's timezone by phone"),
+    dueDate: z
+      .string()
+      .describe(
+        "This property is mandatory in ENGLISH. Natural language due date like 'tomorrow', 'tomorrow at 3pm', 'today at 9am', 'next Monday', 'Jan 23' (optional). ONLY in English.",
+      ),
+  }),
+  execute: async ({
+    reminderId,
+    dueDate,
+    message,
+    title,
+    response,
+    alert,
+    timezone,
+  }) => {
+    const reminderDate = chrono.parseDate(dueDate, {
+      instant: new Date(),
+      timezone,
+    });
+    if (!reminderDate) {
+      throw new AiError("Error parsing date");
+    }
+    const reminder_user = {
+      message,
+      response,
+      reminderDate: reminderDate.toISOString(),
+      localDate: reminderDate.toISOString(),
+      alert,
+      title,
+    };
+    const updatedReminder = updatePendingReminder({
+      reminderId,
+      reminder_user,
+    });
+    if (!updatedReminder) {
+      return { success: false, error: "Error updating reminder" };
+    }
+    return {
+      success: true,
+      reminder: updatedReminder,
+    };
+  },
+});
+
+const deleteReminderUser = tool({
+  description: "delete reminder user",
+  parameters: z.object({
+    reminderId: z.string().describe("ID of the reminder to delete"),
+  }),
+  execute: async ({ reminderId }) => {
+    await cancelReminder({ reminderId });
+    return {
+      success: true,
+      reminderId,
+    };
+  },
+});
 async function getTools() {
   return {
     getRemindersByUser,
     createReminderUser,
+    getReminderId,
+    updateReminderUser,
+    deleteReminderUser
   };
 }
 
@@ -319,9 +437,12 @@ export async function processMessageByUser({
   phone: string;
 }) {
   const SYSTEM_PROMPT = `You are an AI asistant to help with reminders.
-You can get a list of products by using the getRemindersByUser tool.
-You can create a new reminder by using the createReminderUser tool.
-The user phone is ${phone}.
+    You can get a list of products by using the getRemindersByUser tool.
+    You can create a new reminder by using the createReminderUser tool.
+    You can update a reminder by using the updateReminderUser tool.
+    You can get the reminderId to update by using the getReminderId tool.
+    You can get the reminderId to delete by using the getReminderId tool.
+    The user phone is ${phone}.
 `;
 
   try {

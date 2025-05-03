@@ -76,11 +76,9 @@ export const addNewReminder = async ({
 
 export const updatePendingReminder = async ({
   reminderId,
-  phone,
   reminder_user,
 }: {
   reminderId: string;
-  phone: string;
   reminder_user: ReminderUser;
 }) => {
   const response = await updateReminder({
@@ -100,12 +98,8 @@ export const updatePendingReminder = async ({
 
 export const cancelReminder = async ({
   reminderId,
-  phone,
-  reminder_user,
 }: {
   reminderId: string;
-  phone: string;
-  reminder_user: ReminderUser;
 }) => {
   const response = await updateStatusReminder({
     id: reminderId,

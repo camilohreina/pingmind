@@ -118,7 +118,6 @@ export const updateReminder = async ({
       .where(eq(reminders.id, id))
       .execute();
       
-    console.log("DB: Resultado de actualización:", result);
     return result;
   } catch (error) {
     console.error("DB: Error al actualizar recordatorio:", error);
