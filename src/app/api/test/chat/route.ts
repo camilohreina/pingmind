@@ -8,16 +8,14 @@ export const maxDuration = 30;
 export async function POST(req: Request): Promise<NextResponse> {
   //get message from request
   const data = await req.json();
-  const { countryCode, phone, message } = data;
+  const { phone, message } = data;
 
-  console.log(data);
-  const timezone = getTimeZoneFromCountryCode(countryCode);
   const result = await processMessageByUser({
     message,
     phone,
   });
 
-  console.log();
+
   return NextResponse.json(
     {
       ok: true,

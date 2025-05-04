@@ -1,20 +1,14 @@
 import { createLogMessage, getLogMessage } from "@/db/queries/log-messages";
-import {
-  createReminder,
-  getPendingRemindersByUser,
-  getReminderSame,
-} from "@/db/queries/reminders";
+
 import { getUserByPhone } from "@/db/queries/users";
-import { processUserMessage } from "@/lib/ai";
+import { processMessageByUser } from "@/lib/ai";
 import { AiError } from "@/lib/error";
-import { getMediaInfobip, sendRegisterMessage } from "@/lib/infobip";
-import { WhatsAppMessage } from "@/types/whatsapp";
 import {
-  addNewReminder,
-  cancelReminder,
-  formatRemindersToAi,
-  updatePendingReminder,
-} from "./reminder.controller";
+  getMediaInfobip,
+  sendRegisterMessage,
+  sendReplyReminder,
+} from "@/lib/infobip";
+import { WhatsAppMessage } from "@/types/whatsapp";
 import { extractMediaId } from "@/lib/utils";
 import { getTextFromAudio, getTextFromImage } from "./ai.controller";
 
@@ -113,45 +107,18 @@ export const handleReminder = async ({
   timezone,
 }: reminderReview) => {
   try {
-    const reminders_list = await getPendingRemindersByUser(userId);
-    const formatted_reminders = formatRemindersToAi({ reminders_list });
-    const reminder_user = await processUserMessage({
+    const response_user = await processMessageByUser({
       message,
       phone: phone,
-      timezone: timezone,
-      reminders: formatted_reminders,
     });
 
-    if (!reminder_user)
-      return { status: "error", error: "ai_error_process", ok: false };
-    console.log(reminder_user);
-    if (reminder_user.action === "CREATE") {
-      await addNewReminder({
+    if (response_user) {
+      await sendReplyReminder({
         phone,
-        reminder_user,
+        message: response_user,
       });
-      return { status: "success", action: "create", ok: true };
-    }
-    if (reminder_user?.reminderId) {
-      console.log({ reminderId: reminder_user.reminderId });
-      if (reminder_user.action === "UPDATE") {
-        await updatePendingReminder({
-          reminderId: reminder_user.reminderId,
-          reminder_user,
-        });
-        return { status: "success", action: "update", ok: true };
-      }
 
-      if (reminder_user.action === "DELETE") {
-        await cancelReminder({
-          reminderId: reminder_user.reminderId,
-        });
-        return { status: "success", action: "delete", ok: true };
-      }
-    }
-
-    if (reminder_user.action === "NO ACTION") {
-      return { status: "success", action: "no_action", ok: true };
+      return { ok: true, status: "success", message: response_user };
     }
 
     return { status: "error", error: "reminder_error", ok: false };
@@ -180,7 +147,7 @@ export const handleAudioReminder = async ({
     mediaId: mediaId,
   });
   const transcription = await getTextFromAudio(response);
-  return transcription
+  return transcription;
 };
 
 export const handleImageReminder = async ({

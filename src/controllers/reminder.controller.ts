@@ -64,13 +64,6 @@ export const addNewReminder = async ({
       alert: reminder_user.alert,
       localDate: new Date(reminder_user.localDate),
     });
-    /*     if (reminder) {
-        await sendReplyReminder({
-        phone,
-        message: reminder_user.response,
-      });
-      return { status: "success", ok: true };
-    } */
   } catch (error) {}
 };
 
@@ -87,13 +80,7 @@ export const updatePendingReminder = async ({
     scheduledAt: new Date(reminder_user.reminderDate),
     status: "PENDING",
   });
-  /*   if (response) {
-    await sendReplyReminder({
-      phone,
-      message: reminder_user.response,
-    });
-    return { status: "success", ok: true };
-  } */
+
 };
 
 export const cancelReminder = async ({
@@ -105,13 +92,7 @@ export const cancelReminder = async ({
     id: reminderId,
     status: "CANCELLED",
   });
-  /*   if (response) {
-    await sendReplyReminder({
-      phone,
-      message: reminder_user.response,
-    });
-    return { status: "success", ok: true };
-  } */
+
 };
 
 export const formatRemindersToAi = ({

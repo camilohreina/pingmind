@@ -32,7 +32,7 @@ export const getReminderSame = ({
 export const getReminderLastMinute = () => {
   const now = new Date();
   const utcNow = new Date(now.toUTCString());
-
+  const utcAfter = new Date(utcNow.getTime() + 60000);
   return db
     .select({
       reminder: reminders,
@@ -42,8 +42,8 @@ export const getReminderLastMinute = () => {
     .innerJoin(users, eq(reminders.userId, users.id))
     .where(
       and(
-        lte(reminders.scheduledAt, utcNow),
-        gte(reminders.scheduledAt, new Date(utcNow.getTime() - 60000)),
+        lte(reminders.scheduledAt, utcAfter),
+        gte(reminders.scheduledAt, utcNow),
         eq(reminders.status, "PENDING"),
       ),
     );
@@ -74,7 +74,7 @@ export const getPendingRemindersByUser = (userId: string) => {
 };
 
 export const getPendingRemindersByPhone = async (phone: string) => {
-  const user  = await getUserByPhone(phone);
+  const user = await getUserByPhone(phone);
   if (!user) {
     return [];
   }
@@ -100,24 +100,23 @@ export const updateReminder = async ({
   status: (typeof reminders.status.enumValues)[number];
 }) => {
   try {
-    console.log("DB: Actualizando recordatorio", { id, text, scheduledAt, status });
-    
+
     // Verificar primero si el recordatorio existe
     const existingReminder = await db.query.reminders.findFirst({
       where: eq(reminders.id, id),
     });
-    
+
     if (!existingReminder) {
       console.log("DB: Recordatorio no encontrado con ID:", id);
       return null;
     }
-    
+
     const result = await db
       .update(reminders)
       .set({ text, scheduledAt, status })
       .where(eq(reminders.id, id))
       .execute();
-      
+
     return result;
   } catch (error) {
     console.error("DB: Error al actualizar recordatorio:", error);
