@@ -137,7 +137,6 @@ export const handleReminder = async ({
       if (reminder_user.action === "UPDATE") {
         await updatePendingReminder({
           reminderId: reminder_user.reminderId,
-          phone,
           reminder_user,
         });
         return { status: "success", action: "update", ok: true };
@@ -146,8 +145,6 @@ export const handleReminder = async ({
       if (reminder_user.action === "DELETE") {
         await cancelReminder({
           reminderId: reminder_user.reminderId,
-          phone,
-          reminder_user,
         });
         return { status: "success", action: "delete", ok: true };
       }
@@ -183,7 +180,7 @@ export const handleAudioReminder = async ({
     mediaId: mediaId,
   });
   const transcription = await getTextFromAudio(response);
-  return transcription.text;
+  return transcription
 };
 
 export const handleImageReminder = async ({

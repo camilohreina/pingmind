@@ -10,7 +10,7 @@ const updateStatusSchema = z.object({
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
   
@@ -18,7 +18,7 @@ export async function PATCH(
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
   
-  const { id } = params;
+  const { id } = await params;
   
   if (!id) {
     return NextResponse.json(

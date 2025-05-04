@@ -12,7 +12,7 @@ const updateReminderSchema = z.object({
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
   
@@ -20,7 +20,7 @@ export async function PUT(
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
   
-  const { id } = params;
+  const { id } = await params;
   
   if (!id) {
     return NextResponse.json(
