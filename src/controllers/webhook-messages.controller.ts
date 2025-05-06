@@ -1,4 +1,8 @@
-import { createLogMessage, getLogMessage, getLogMessagesContext } from "@/db/queries/log-messages";
+import {
+  createLogMessage,
+  getLogMessage,
+  getLogMessagesContext,
+} from "@/db/queries/log-messages";
 
 import { getUserByPhone } from "@/db/queries/users";
 import { processMessageByUser } from "@/lib/ai";
@@ -39,7 +43,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
 
     const type_message = data.message?.type;
 
-    let result = { status: "success", ok: true };
+    let result: { status: string; ok: boolean; used_tool?: boolean } = { status: "success", ok: true };
     let content = message;
 
     if (type_message === "TEXT") {
@@ -90,19 +94,24 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         return result;
       }
     }
-    createLogMessage({
+    const log_message = {
       id: crypto.randomUUID(),
       message_id: data?.messageId,
       user_id: user.id,
       content,
-    });
+      used_context: false,
+    };
+    
+    if (result.ok && result.used_tool) {
+      log_message.used_context = true;
+    }
+    createLogMessage(log_message);
 
     return result;
   } catch (error) {
     console.log(error);
     throw new AiError("Error processing message with AI");
   } finally {
- 
   }
 };
 
@@ -114,27 +123,46 @@ export const handleReminder = async ({
 }: reminderReview) => {
   try {
     const context = await getLogMessagesContext(userId);
-    const format_context = context.map((item) => ({id: item.id, content: item.content, is_reply: item.is_reply})); 
-    const response_user = await processMessageByUser({
+    const format_context = context.map((item) => ({
+      id: item.id,
+      content: item.content,
+      is_reply: item.is_reply,
+    }));
+    const { hasUsedReminderTool, text } = await processMessageByUser({
       userId,
       message,
       phone: phone,
-      context_messages: format_context
+      context_messages: format_context,
     });
 
-    if (response_user) {
-   /*    await sendReplyReminder({
+    if (text) {
+      /*    await sendReplyReminder({
         phone,
-        message: response_user,
+        message: text,
       }); */
 
-      return { ok: true, status: "success", message: response_user };
+      return {
+        ok: true,
+        status: "success",
+        message: text,
+        used_tool: hasUsedReminderTool,
+      };
     }
 
-    return { status: "error", error: "reminder_error", ok: false };
+    return {
+      ok: false,
+      status: "error",
+      error: "reminder_error",
+      used_tool: false,
+    };
   } catch (error) {
     console.log(error);
-    return { status: "error", error: "internal_server_error", ok: false };
+    return {
+      ok: false,
+      status: "error",
+      error: "internal_server_error",
+      used_tool: false,
+    };
   }
 };
 

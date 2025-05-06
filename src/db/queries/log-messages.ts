@@ -1,4 +1,4 @@
-import { and, db, eq } from "..";
+import { and, db, eq, inArray } from "..";
 import { logMessages } from "../schema/log-messages";
 
 type newLogMessage = typeof logMessages.$inferInsert;
@@ -21,4 +21,12 @@ export const getLogMessagesContext = (userId: string) => {
     ),
     orderBy: (logMessages, { desc }) => [desc(logMessages.created_at)],
   });
+};
+
+export const finishContextMessage = (messagesId: string[]) => {
+  return db
+    .update(logMessages)
+    .set({ used_context: true })
+    .where(inArray(logMessages.id, messagesId))
+    .execute();
 };

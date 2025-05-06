@@ -12,7 +12,7 @@ import {
   updatePendingReminder,
 } from "@/controllers/reminder.controller";
 import { SYSTEM_PROMPT_MCP } from "@/config/constants";
-import { createLogMessage } from "@/db/queries/log-messages";
+import { createLogMessage, finishContextMessage } from "@/db/queries/log-messages";
 const openaiLib = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -460,24 +460,36 @@ export async function processMessageByUser({
     }
     const userMessage: UserMessageI = { role: "user", content: message };
     const tools = await getTools();
-    const SYSTEM_PROMPT = SYSTEM_PROMPT_MCP(phone);
-    console.log({ userMessage });
-    const result = await generateText({
+    const SYSTEM_PROMPT = SYSTEM_PROMPT_MCP(phone); 
+    const { text, steps } = await generateText({
       model: openai("gpt-4o"),
       tools,
       messages: [...context, userMessage],
       system: SYSTEM_PROMPT,
       maxSteps: 2,
     });
-    console.log(result.toolCalls);
+    const allToolCalls = steps.flatMap((step) => step.toolCalls);
+    const hasUsedReminderTool = allToolCalls.some((toolCall) =>
+      [
+        "createReminderUser",
+        "updateReminderUser",
+        "deleteReminderUser",
+      ].includes(toolCall.toolName),
+    );
+
+    if (hasUsedReminderTool && context_messages && context_messages.length > 0) {
+      const messagesId = context_messages?.map((item) => item.id);
+      await finishContextMessage(messagesId)
+    } 
     await createLogMessage({
       id: crypto.randomUUID(),
       message_id: crypto.randomUUID(),
       user_id: userId,
-      content: result.text,
+      content: text,
       is_reply: true,
+      used_context: hasUsedReminderTool,
     });
-    return result.text;
+    return {text, hasUsedReminderTool};
   } catch (error) {
     console.log(error);
     throw new AiError("Error processing message with AI");
