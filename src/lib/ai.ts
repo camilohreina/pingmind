@@ -466,7 +466,7 @@ export async function processMessageByUser({
       tools,
       messages: [...context, userMessage],
       system: SYSTEM_PROMPT,
-      maxSteps: 2,
+      maxSteps: 5,
     });
     const allToolCalls = steps.flatMap((step) => step.toolCalls);
     const hasUsedReminderTool = allToolCalls.some((toolCall) =>
