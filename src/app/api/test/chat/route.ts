@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getTimeZoneFromCountryCode } from "@/lib/utils";
-import { processMessageByUser } from "@/lib/ai";
+import { getUserByPhone } from "@/db/queries/users";
+import { handleWebhook } from "@/controllers/webhook-messages.controller";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -10,17 +10,43 @@ export async function POST(req: Request): Promise<NextResponse> {
   const data = await req.json();
   const { phone, message } = data;
 
-  const result = await processMessageByUser({
-    message,
-    phone,
-  });
+  const user = await getUserByPhone(phone);
+  if (!user) {
+    return NextResponse.json(
+      {
+        ok: false,
+        status: 401,
+        message: "User not found",
+      },
+      { status: 401 },
+    );
+  }
 
+  if (typeof message !== "string" || typeof phone !== "string") {
+    return NextResponse.json(
+      {
+        ok: false,
+        status: 400,
+        message: "Invalid data",
+      },
+      { status: 400 },
+    );
+  }
+
+  const result = await handleWebhook({
+    from: phone,
+    message: {
+      text: message,
+      type: "TEXT",
+    },
+    messageId: crypto.randomUUID(),
+  });
 
   return NextResponse.json(
     {
       ok: true,
       status: 200,
-      message: result,
+      message: result.message,
     },
     { status: 200 },
   );

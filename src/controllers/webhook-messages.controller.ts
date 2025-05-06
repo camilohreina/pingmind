@@ -1,4 +1,4 @@
-import { createLogMessage, getLogMessage } from "@/db/queries/log-messages";
+import { createLogMessage, getLogMessage, getLogMessagesContext } from "@/db/queries/log-messages";
 
 import { getUserByPhone } from "@/db/queries/users";
 import { processMessageByUser } from "@/lib/ai";
@@ -40,6 +40,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     const type_message = data.message?.type;
 
     let result = { status: "success", ok: true };
+    let content = message;
 
     if (type_message === "TEXT") {
       result = await handleReminder({
@@ -59,6 +60,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         message: audioMessage,
       });
       if (message_audio) {
+        content = message_audio;
         result = await handleReminder({
           userId: user.id,
           message: message_audio,
@@ -78,6 +80,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         message: imageMessage,
       });
       if (message_image) {
+        content = message_image;
         result = await handleReminder({
           userId: user.id,
           message: message_image,
@@ -87,16 +90,19 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         return result;
       }
     }
+    createLogMessage({
+      id: crypto.randomUUID(),
+      message_id: data?.messageId,
+      user_id: user.id,
+      content,
+    });
 
     return result;
   } catch (error) {
     console.log(error);
     throw new AiError("Error processing message with AI");
   } finally {
-    createLogMessage({
-      id: crypto.randomUUID(),
-      messageId: data?.messageId,
-    });
+ 
   }
 };
 
@@ -107,16 +113,20 @@ export const handleReminder = async ({
   timezone,
 }: reminderReview) => {
   try {
+    const context = await getLogMessagesContext(userId);
+    const format_context = context.map((item) => ({id: item.id, content: item.content, is_reply: item.is_reply})); 
     const response_user = await processMessageByUser({
+      userId,
       message,
       phone: phone,
+      context_messages: format_context
     });
 
     if (response_user) {
-      await sendReplyReminder({
+   /*    await sendReplyReminder({
         phone,
         message: response_user,
-      });
+      }); */
 
       return { ok: true, status: "success", message: response_user };
     }
