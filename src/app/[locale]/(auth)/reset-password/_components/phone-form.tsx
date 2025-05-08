@@ -16,13 +16,19 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { useTranslations } from "next-intl";
 import { PhoneFormValues, phoneSchema } from "@/schemas/auth.schema";
 import { Loader2 } from "lucide-react";
+import { Country } from "react-phone-number-input";
 
 interface PhoneFormProps {
   onSubmit: (phone: string) => void;
   isLoading: boolean;
+  countryCode: Country;
 }
 
-export default function PhoneForm({ onSubmit, isLoading }: PhoneFormProps) {
+export default function PhoneForm({
+  onSubmit,
+  isLoading,
+  countryCode,
+}: PhoneFormProps) {
   const t = useTranslations("reset_password_page.phone_form");
   const form = useForm<PhoneFormValues>({
     resolver: zodResolver(phoneSchema),
@@ -45,7 +51,7 @@ export default function PhoneForm({ onSubmit, isLoading }: PhoneFormProps) {
             <FormItem>
               <FormLabel>{t("title")}</FormLabel>
               <FormControl>
-                <PhoneInput {...field} />
+                <PhoneInput defaultCountry={countryCode} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

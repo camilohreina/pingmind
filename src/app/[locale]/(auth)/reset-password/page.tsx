@@ -11,8 +11,12 @@ import OtpForm from "./_components/otp-form";
 import NewPasswordForm from "./_components/new-password-form";
 import { useTranslations } from "next-intl";
 import { usePasswordReset } from "./hooks/usePasswordReset";
+import { useEffect, useState } from "react";
+import { detectUserCountry } from "@/services/utils.services";
+import { Country } from "react-phone-number-input";
 
 export default function ResetPassword() {
+  const [countryCode, setCountryCode] = useState<Country>("US"); 
   const t = useTranslations("reset_password_page");
 
   const {
@@ -23,6 +27,14 @@ export default function ResetPassword() {
     handleOtpSubmit,
     handlePasswordReset,
   } = usePasswordReset();
+
+  useEffect(() => {
+    detectUserCountry().then((country_code: Country) => {
+      if (country_code) {
+        setCountryCode(country_code);
+      }
+    });
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -37,7 +49,7 @@ export default function ResetPassword() {
         </CardHeader>
         <CardContent>
           {step === "phone" && (
-            <PhoneForm onSubmit={handlePhoneSubmit} isLoading={isLoading} />
+            <PhoneForm onSubmit={handlePhoneSubmit} isLoading={isLoading} countryCode={countryCode} />
           )}
           {step === "otp" && (
             <OtpForm

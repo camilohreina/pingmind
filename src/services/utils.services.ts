@@ -13,3 +13,16 @@ export const createPricingSessionService = async (slug: slugPlan) => {
     return null
   }
 };
+
+export const detectUserCountry = async () => {
+  try {
+    // Usamos un servicio de geolocalización por IP
+    const response = await axios.get('https://ipapi.co/json/');
+    const { country_code } = response.data;
+    return country_code; // Devuelve el código del país (ej. 'US', 'ES', etc.)
+  } catch (error) {
+    console.error('Error al detectar el país:', error);
+    return 'US'; // Valor por defecto si ocurre un error
+  }
+};
+

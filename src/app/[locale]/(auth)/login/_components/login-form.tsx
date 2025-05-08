@@ -1,10 +1,7 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { loginSchema, LoginFormData } from "@/schemas/auth.schema";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,8 +28,12 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { detectUserCountry } from "@/services/utils.services";
+import { Country } from "react-phone-number-input";
 
 export function LoginForm() {
+  const [countryCode, setCountryCode] = useState<Country>("US"); 
   const { toast } = useToast();
   const t = useTranslations("login_page.form");
   const router = useRouter();
@@ -43,6 +44,14 @@ export function LoginForm() {
       password: "",
     },
   });
+
+    useEffect(() => {
+      detectUserCountry().then((country_code: Country) => {
+        if (country_code) {
+          setCountryCode(country_code);
+        }
+      });
+    }, []);
 
   const toastSuccessLogin = () => {
     toast({
@@ -106,7 +115,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>{t("phone_label")}</FormLabel>
                   <FormControl>
-                    <PhoneInput defaultCountry="CO" {...field} />
+                    <PhoneInput defaultCountry={countryCode} {...field} />
                   </FormControl>
                   <FormDescription>{t("phone_placeholder")}</FormDescription>
                   <FormMessage />
