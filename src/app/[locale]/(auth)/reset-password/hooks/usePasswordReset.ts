@@ -7,6 +7,7 @@ import {
   updatePassword,
 } from "@/services/auth";
 import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 type ResetStep = "phone" | "otp" | "newPassword";
 
@@ -21,7 +22,7 @@ export const usePasswordReset = () => {
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
+  const  t  = useTranslations("reset_password_page");
   const router = useRouter();
 
   const handleAsyncAction = async <T>(
@@ -67,7 +68,7 @@ export const usePasswordReset = () => {
         return response;
       },
       {
-        successMessage: "Verification code sent successfully",
+        successMessage: t("phone_form.success_message"),
         onSuccess: () => {
           setPhone(phoneNumber);
           setStep("otp");
@@ -80,7 +81,7 @@ export const usePasswordReset = () => {
     await handleAsyncAction(
       () => verifyCodeResetPassword({ phone, code: otp }),
       {
-        successMessage: "Code verified successfully",
+        successMessage: t("otp_form.success_message"),
         onSuccess: () => setStep("newPassword"),
       },
     );
@@ -95,7 +96,7 @@ export const usePasswordReset = () => {
           confirmPassword: newPassword,
         }),
       {
-        successMessage: "Password updated successfully",
+        successMessage: t("new_password_form.success_message"),
         onSuccess: () => {
           router.push("/login");
           setStep("phone");

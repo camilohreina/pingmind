@@ -286,19 +286,22 @@
     "phone_form": {
       "title": "Ingresa tu número de teléfono",
       "submit_button": "Enviar código",
-      "submitting_button": "Enviando código..."
+      "submitting_button": "Enviando código...",
+      "success_message": "El código ha sido enviado exitosamente a tu número de teléfono."
     },
     "otp_form": {
       "label": "Código OTP",
       "description": "Por favor, ingrese la contraseña de un solo uso enviada a su teléfono.",
       "phone_message": "Se ha enviado un código a",
       "verify_button": "Verificar código",
-      "submitting_button": "Verificando código..."
+      "submitting_button": "Verificando código...",
+      "success_message": "El código OTP ha sido verificado exitosamente."
     },
     "new_password_form": {
       "newPasswordLabel": "Nueva Contraseña",
       "confirmPasswordLabel": "Confirmar Contraseña",
-      "submitButton": "Restablecer Contraseña"
+      "submitButton": "Restablecer Contraseña",
+      "success_message": "Tu contraseña ha sido restablecida exitosamente."
     }
   }
 }

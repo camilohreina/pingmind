@@ -218,29 +218,32 @@
       }
     }
   },
-  "reset_password_page":{
+  "reset_password_page": {
     "title": "Reset Password",
     "description": {
       "phone": "Enter your phone number to receive a code",
       "otp": "Enter the OTP code sent to your phone",
       "newPassword": "Enter your new password"
     },
-    "phone_form":{
+    "phone_form": {
       "title": "Enter your phone number",
       "submit_button": "Send code",
-      "submitting_button": "Sending code..."
+      "submitting_button": "Sending code...",
+      "success_message": "The code has been successfully sent to your phone number."
     },
     "otp_form": {
       "label": "OTP Code",
-      "description": "Enter the OTP code sent to your phone",
-      "phone_message": "We have sent a code to your phone number",
+      "description": "Please enter the one-time password sent to your phone.",
+      "phone_message": "A code has been sent to",
       "verify_button": "Verify code",
-      "submitting_button": "Verifying code..."
+      "submitting_button": "Verifying code...",
+      "success_message": "The OTP code has been successfully verified."
     },
     "new_password_form": {
       "newPasswordLabel": "New Password",
       "confirmPasswordLabel": "Confirm Password",
-      "submitButton": "Reset Password"
+      "submitButton": "Reset Password",
+      "success_message": "Your password has been successfully reset."
     }
   },
   "dashboard": {
