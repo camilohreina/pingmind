@@ -43,7 +43,10 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
 
     const type_message = data.message?.type;
 
-    let result: { status: string; ok: boolean; used_tool?: boolean } = { status: "success", ok: true };
+    let result: { status: string; ok: boolean; used_tool?: boolean } = {
+      status: "success",
+      ok: true,
+    };
     let content = message;
 
     if (type_message === "TEXT") {
@@ -101,7 +104,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       content,
       used_context: false,
     };
-    
+
     if (result.ok && result.used_tool) {
       log_message.used_context = true;
     }
@@ -136,10 +139,10 @@ export const handleReminder = async ({
     });
 
     if (text) {
-      /*    await sendReplyReminder({
+      await sendReplyReminder({
         phone,
         message: text,
-      }); */
+      });
 
       return {
         ok: true,

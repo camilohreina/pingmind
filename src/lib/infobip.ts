@@ -32,7 +32,7 @@ export const sendReplyReminder = async ({
 }) => {
   console.log("llegando al reply");
   try {
-    const response = await client.channels.whatsapp.send({
+    await client.channels.whatsapp.send({
       type: "text",
       from: process.env.INFOBIP_PHONE_NUMBER!,
       to: phone,

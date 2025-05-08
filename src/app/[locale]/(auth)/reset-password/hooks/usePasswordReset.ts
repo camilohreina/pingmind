@@ -6,6 +6,7 @@ import {
   verifyCodeResetPassword,
   updatePassword,
 } from "@/services/auth";
+import { useRouter } from "@/i18n/routing";
 
 type ResetStep = "phone" | "otp" | "newPassword";
 
@@ -20,6 +21,8 @@ export const usePasswordReset = () => {
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const router = useRouter();
 
   const handleAsyncAction = async <T>(
     action: () => Promise<T>,
@@ -94,7 +97,7 @@ export const usePasswordReset = () => {
       {
         successMessage: "Password updated successfully",
         onSuccess: () => {
-          // Aquí podrías agregar navegación o reseteo del estado
+          router.push("/login");
           setStep("phone");
           setPhone("");
         },
