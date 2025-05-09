@@ -1,8 +1,11 @@
-'use client'
+"use client";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PlanNumber from "./_components/plan-number";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/routing";
+import { ArrowRight } from "lucide-react";
 
 export default function Page({ params }: { params: { locale: string } }) {
   const t = useTranslations("account_page");
@@ -28,9 +31,12 @@ function PlanCard() {
       </CardHeader>
       <CardContent>
         <p className="text-left">{t("description")}</p>
+        <Button asChild variant="secondary" className="w-full mt-3" size="sm">
+          <Link href="/plans">
+            {t("action_button")} <ArrowRight className="ml-1.5 size-5" />
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );
 }
-
-

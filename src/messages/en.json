@@ -304,7 +304,14 @@
     "title": "Your Account",
     "plan_card": {
       "title": "Your Plan",
-      "description": "You don't have any active plan yet. Try PingMind today!"
+      "description": "You don't have any active plan yet. Try PingMind today!",
+      "phone_placeholder": "WhatsApp Number",
+      "action_button": "Upgrade Now"
+    },
+    "number_card": {
+      "title": "Your phone number",
+      "description": "Your phone number is used to send reminders.",
+      "phone_placeholder": "Phone number"
     }
   }
 }

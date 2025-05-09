@@ -308,7 +308,14 @@
     "title": "Tu Cuenta",
     "plan_card": {
       "title": "Tu Plan",
-      "description": "Aún no tienes ningún plan activo. ¡Animate a probar PingMind!"
+      "description": "Aún no tienes ningún plan activo. ¡Animate a probar PingMind!",
+      "phone_placeholder": "Número de WhatsApp",
+      "action_button": "Ver Planes"
+    },
+    "number_card": {
+      "title": "Número de Teléfono",
+      "description": "Tu número de teléfono es utilizado para enviar recordatorios.",
+      "phone_placeholder": "Número de teléfono"
     }
   }
 }
