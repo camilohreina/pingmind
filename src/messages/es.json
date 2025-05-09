@@ -303,5 +303,12 @@
       "submitButton": "Restablecer Contraseña",
       "success_message": "Tu contraseña ha sido restablecida exitosamente."
     }
+  },
+  "account_page": {
+    "title": "Tu Cuenta",
+    "plan_card": {
+      "title": "Tu Plan",
+      "description": "Aún no tienes ningún plan activo. ¡Animate a probar PingMind!"
+    }
   }
 }

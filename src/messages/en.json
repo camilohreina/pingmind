@@ -299,5 +299,12 @@
       "create": "Create reminder",
       "update": "Update reminder"
     }
+  },
+  "account_page": {
+    "title": "Your Account",
+    "plan_card": {
+      "title": "Your Plan",
+      "description": "You don't have any active plan yet. Try PingMind today!"
+    }
   }
 }

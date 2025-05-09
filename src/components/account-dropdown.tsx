@@ -43,7 +43,7 @@ export default async function UserAccountNav({ email, imageUrl, name }: Props) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href="/dashboard">Holaaaa</Link>
+          <Link href="/account">Mi cuenta</Link>
         </DropdownMenuItem>
         {/*         <DropdownMenuItem asChild>
           {subscriptionPlan?.isSubscribed ? (
