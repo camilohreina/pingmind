@@ -26,17 +26,17 @@ interface reminderReview {
 export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
   try {
     const message = data.message?.text || "";
-    const fromNumber = data.from;
+    const from_number = data.from;
 
-    const messageProcessed = await getLogMessage(data?.messageId);
+    const message_processed = await getLogMessage(data?.messageId);
 
-    if (messageProcessed) {
+    if (message_processed) {
       return { status: "success", action: "message_already_processed" };
     }
 
-    const user = await getUserByPhone(fromNumber);
+    const user = await getUserByPhone(from_number);
     if (!user) {
-      await sendRegisterMessage(fromNumber);
+      await sendRegisterMessage(from_number, message);
       return { status: "success", action: "send_register_user" };
     }
     //TODO: aqui la logica para verificar si tiene un plan activo
@@ -53,7 +53,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       result = await handleReminder({
         userId: user.id,
         message,
-        phone: fromNumber,
+        phone: from_number,
         timezone: user.timezone,
       });
     }
@@ -71,7 +71,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         result = await handleReminder({
           userId: user.id,
           message: message_audio,
-          phone: fromNumber,
+          phone: from_number,
           timezone: user.timezone,
         });
         return result;
@@ -91,7 +91,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         result = await handleReminder({
           userId: user.id,
           message: message_image,
-          phone: fromNumber,
+          phone: from_number,
           timezone: user.timezone,
         });
         return result;

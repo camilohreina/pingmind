@@ -1,6 +1,7 @@
 import { AUTO_REPLY_REGISTER } from "@/config/constants";
 import { TemplateDataProps } from "@/types/whatsapp";
 import { Infobip, AuthType } from "@infobip-api/sdk";
+import { translateRegistrationMessage } from "./ai";
 
 const client = new Infobip({
   baseUrl: process.env.INFOBIP_BASE_URL!,
@@ -8,14 +9,20 @@ const client = new Infobip({
   authType: AuthType.ApiKey,
 });
 
-export const sendRegisterMessage = async (phone: string) => {
+export const sendRegisterMessage = async (phone: string, userMessage?: string) => {
   try {
-    const response = await client.channels.whatsapp.send({
+
+    const welcome_message =  AUTO_REPLY_REGISTER(phone)
+    const translated_message = userMessage 
+      ? await translateRegistrationMessage(userMessage, welcome_message)
+      : welcome_message;
+
+    await client.channels.whatsapp.send({
       type: "text",
       from: process.env.INFOBIP_PHONE_NUMBER!,
-      to: phone,
+      to: "573224354004",
       content: {
-        text: AUTO_REPLY_REGISTER(phone),
+        text: translated_message,
       },
     });
   } catch (error) {

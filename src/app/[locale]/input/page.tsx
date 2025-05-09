@@ -20,7 +20,7 @@ export default function Chat() {
         },
         body: JSON.stringify({
           message: input,
-          phone: "+573224354004",
+          phone: "+57123456789",
           timezone: "America/Bogota",
         }),
       });

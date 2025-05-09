@@ -10,7 +10,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   const data = await req.json();
   const { phone, message } = data;
 
-  const user = await getUserByPhone(phone);
+/*   const user = await getUserByPhone(phone);
   if (!user) {
     return NextResponse.json(
       {
@@ -20,7 +20,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       },
       { status: 401 },
     );
-  }
+  } */
 
   if (typeof message !== "string" || typeof phone !== "string") {
     return NextResponse.json(
