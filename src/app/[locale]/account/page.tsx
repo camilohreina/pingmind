@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { ArrowRight } from "lucide-react";
 
-export default function Page({ params }: { params: { locale: string } }) {
+export default function Page() {
   const t = useTranslations("account_page");
 
   return (
