@@ -30,7 +30,7 @@ export function customMetaDataGenerator({
     'text reminders',
     'reminder automation',
   ],
-  ogImage = 'https://pingmind.vercel.app/og-image.png',
+  ogImage = 'https://pingmind.vercel.app/og-image.webp',
   twitterCard = 'summary_large_image',
 }: PageSEOProps): Metadata {
   // Create Site Title
