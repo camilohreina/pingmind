@@ -1,5 +1,6 @@
 export const TRIGGER_REGISTER_WORDS = ["hi", "hola", "buenas", "hello"];
 
+
 export const AUTO_REPLY_REGISTER = (phone: string) =>
   `¡Hola! 👋 Este es un mensaje de Camilo, el creador de PingMind:\n
 ¡Tengo buenas noticias! Ahora puedes probar pingmind gratis por 3 días y descubrir todas sus funcionalidades 🎉
@@ -57,4 +58,4 @@ export const locales = ["en", "es"];
 
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-export const APP_NAME = "PingMind";
+export const APP_NAME = "Pingmind";
