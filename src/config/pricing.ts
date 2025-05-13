@@ -15,7 +15,7 @@ export const PLANS = [
       },
     },
     price: {
-      amount: 1.99,
+      amount: 2.99,
       priceIds: {
         test: "",
         production: "",
@@ -25,7 +25,7 @@ export const PLANS = [
   {
     name: "Pro",
     slug: "pro",
-    quota: 9999,
+    quota: 200,
     earlyFeatures: true,
     voiceRecognition: true,
     imageRecognition: true,
@@ -38,7 +38,7 @@ export const PLANS = [
       },
     },
     price: {
-      amount: 5.99,
+      amount: 4.99,
       priceIds: {
         test: "",
         production: "",

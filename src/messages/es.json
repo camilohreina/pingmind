@@ -265,6 +265,7 @@
       },
       "tooltips": {
         "upgrade_now": "Actualizar Ahora",
+        "due_time": "por mes", 
         "reminders_included": {
           "unlimited": "Recordatorios ilimitados.",
           "limited": "{quota} recordatorios incluidos."
