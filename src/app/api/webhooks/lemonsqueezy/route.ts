@@ -35,6 +35,7 @@ export async function POST(request: Request) {
         stripeCustomerId: subscription.customer_id.toString(),
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
+        stripeCurrentPeriodStart: new Date(subscription.created_at),
         stripePlanId: subscription.variant_id.toString(),
         userId,
       });
@@ -46,6 +47,7 @@ export async function POST(request: Request) {
       await updateSubscription({
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
+        stripeCurrentPeriodStart: new Date(subscription.updated_at),
         stripePlanId: subscription.variant_id.toString(),
         userId,
       });

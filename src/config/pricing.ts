@@ -18,7 +18,7 @@ export const PLANS = [
       amount: 2.99,
       priceIds: {
         test: "",
-        production: "",
+        live: "",
       },
     },
   },
@@ -41,7 +41,7 @@ export const PLANS = [
       amount: 4.99,
       priceIds: {
         test: "",
-        production: "",
+        live: "",
       },
     },
   },

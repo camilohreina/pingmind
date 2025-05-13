@@ -1,4 +1,4 @@
-import { and, db, eq, gte, lte, users } from "..";
+import { and, db, eq, gte, lte, sql, users } from "..";
 import { reminders } from "../schema/reminders";
 import { getUserByPhone } from "./users";
 
@@ -100,7 +100,6 @@ export const updateReminder = async ({
   status: (typeof reminders.status.enumValues)[number];
 }) => {
   try {
-
     // Verificar primero si el recordatorio existe
     const existingReminder = await db.query.reminders.findFirst({
       where: eq(reminders.id, id),
@@ -122,4 +121,26 @@ export const updateReminder = async ({
     console.error("DB: Error al actualizar recordatorio:", error);
     throw error;
   }
+};
+
+export const getCompletedRemindersByUser = ({
+  userId,
+  startDate,
+  endDate,
+}: {
+  userId: string;
+  startDate: Date;
+  endDate: Date;
+}) => {
+  return db
+    .select({ count: sql<number>`count(*)`.as("count") })
+    .from(reminders)
+    .where(
+      and(
+        eq(reminders.userId, userId),
+        eq(reminders.status, "COMPLETED"),
+        gte(reminders.scheduledAt, startDate),
+        lte(reminders.scheduledAt, endDate),
+      ),
+    );
 };

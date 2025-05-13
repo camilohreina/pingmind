@@ -19,6 +19,7 @@ export const users = pgTable("user", {
   stripe_price_id: text("stripe_price_id"),
   stripe_plan_id: text("stripe_plan_id"),
   stripe_current_period_end: timestamp("stripe_current_period_end", {mode: "date"}),
+  stripe_current_period_start: timestamp("stripe_current_period_start", {mode: "date"}),
   reset_password_code: text("reset_password_token"),
   reset_password_expires: timestamp("reset_password_expires", {mode: "date"}),
 });

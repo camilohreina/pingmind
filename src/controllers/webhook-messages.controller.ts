@@ -4,7 +4,7 @@ import {
   getLogMessagesContext,
 } from "@/db/queries/log-messages";
 
-import { getUserByPhone } from "@/db/queries/users";
+import { getUserByPhone, UserI } from "@/db/queries/users";
 import { processMessageByUser } from "@/lib/ai";
 import { AiError } from "@/lib/error";
 import {
@@ -16,6 +16,9 @@ import { WhatsAppMessage } from "@/types/whatsapp";
 import { extractMediaId } from "@/lib/utils";
 import { getTextFromAudio, getTextFromImage } from "./ai.controller";
 import { PLANS } from "@/config/pricing";
+import crypto from "crypto";
+import { getCompletedRemindersByUser } from "@/db/queries/reminders";
+import { LEMON_PATH_OBJ } from "@/config/constants";
 
 interface reminderReview {
   userId: string;
@@ -24,22 +27,44 @@ interface reminderReview {
   timezone: string;
 }
 
-const verifySubscriptionFeatures = (user: any, messageType: string): boolean => {
-  const isSubscribed = Boolean(
+const hasActiveSubscription = (user: UserI): boolean => {
+  return Boolean(
     user.stripe_price_id &&
-    user.stripe_current_period_end && 
-    user.stripe_current_period_end.getTime() > Date.now()
+      user.stripe_current_period_end &&
+      user.stripe_current_period_end.getTime() + 86_400_000 > Date.now(),
   );
+};
 
-  if (!isSubscribed) return false;
-
-  const plan = PLANS.find((plan) => plan.mode.test === user.stripe_plan_id);
+const hasFeatureAccess = (user: UserI, messageType: string): boolean => {
+  const plan = PLANS.find(
+    (plan) => plan.mode[LEMON_PATH_OBJ].variantId === user.stripe_plan_id,
+  );
   if (!plan) return false;
 
   if (messageType === "AUDIO" && !plan.voiceRecognition) return false;
   if (messageType === "IMAGE" && !plan.imageRecognition) return false;
 
   return true;
+};
+
+const hasQuotaAvailable = async (user: UserI): Promise<boolean> => {
+  const plan = PLANS.find(
+    (plan) => plan.mode[LEMON_PATH_OBJ].variantId === user.stripe_plan_id,
+  );
+  
+  if (!plan) return false;
+
+  if (!user.stripe_current_period_start) {
+    return false;
+  }
+
+  const monthlyMessages = await getCompletedRemindersByUser({
+    userId: user.id,
+    startDate: user.stripe_current_period_start,
+    endDate: new Date(),
+  });
+
+  return monthlyMessages.length < plan.quota;
 };
 
 export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
@@ -60,12 +85,36 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     }
 
     const type_message = data.message?.type;
-    
-    // Verify subscription for audio and image messages
-    if ((type_message === "AUDIO" || type_message === "IMAGE") && !verifySubscriptionFeatures(user, type_message)) {
+
+    // First verify active subscription for all message types
+    if (!hasActiveSubscription(user)) {
       await sendReplyReminder({
         phone: from_number,
-        message: `This feature is not available in your current plan. Please upgrade to use ${type_message.toLowerCase()} messages.`
+        message:
+          "You need an active subscription to use this feature. Please subscribe to continue.",
+      });
+      return { status: "error", action: "no_active_subscription" };
+    }
+
+    // Check quota for all message types
+    const hasQuota = await hasQuotaAvailable(user);
+    if (!hasQuota) {
+      await sendReplyReminder({
+        phone: from_number,
+        message:
+          "You have reached your monthly message quota. Please upgrade your plan to continue using the service.",
+      });
+      return { status: "error", action: "quota_exceeded" };
+    }
+
+    // Then verify specific feature access for audio/image
+    if (
+      (type_message === "AUDIO" || type_message === "IMAGE") &&
+      !hasFeatureAccess(user, type_message)
+    ) {
+      await sendReplyReminder({
+        phone: from_number,
+        message: `This feature is not available in your current plan. Please upgrade to use ${type_message.toLowerCase()} messages.`,
       });
       return { status: "error", action: "subscription_feature_not_available" };
     }

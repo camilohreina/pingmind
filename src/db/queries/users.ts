@@ -1,9 +1,9 @@
 import { and, db, eq, gte } from "..";
 import { users } from "../schema/users";
 
-type newUser = typeof users.$inferInsert;
+export type UserI = typeof users.$inferInsert;
 
-export const dbCreateUser = async (user: newUser) => {
+export const dbCreateUser = async (user: UserI) => {
   return db.insert(users).values(user).execute();
 };
 
@@ -63,6 +63,7 @@ type subscriptionData = {
   stripeCustomerId: string;
   stripePriceId: string;
   stripeCurrentPeriodEnd: Date;
+  stripeCurrentPeriodStart: Date;
   stripePlanId: string;
   userId: string;
 };
@@ -72,6 +73,7 @@ export const createSubscription = async ({
   stripeCustomerId,
   stripePriceId,
   stripeCurrentPeriodEnd,
+  stripeCurrentPeriodStart,
   stripePlanId,
   userId,
 }: subscriptionData) => {
@@ -82,6 +84,7 @@ export const createSubscription = async ({
       stripe_customer_id: stripeCustomerId,
       stripe_price_id: stripePriceId,
       stripe_current_period_end: stripeCurrentPeriodEnd,
+      stripe_current_period_start: stripeCurrentPeriodStart,
       stripe_plan_id: stripePlanId,
     })
     .where(eq(users.id, userId));
@@ -91,6 +94,7 @@ interface updateSubscriptionData {
   stripePriceId: string;
   stripePlanId: string;
   stripeCurrentPeriodEnd: Date;
+  stripeCurrentPeriodStart: Date;
   userId: string;
 }
 

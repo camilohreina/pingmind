@@ -1,18 +1,19 @@
-import { PLANS } from '@/config/pricing';
+import { PLANS } from "@/config/pricing";
 import {
   createCheckout,
   getSubscription,
   lemonSqueezySetup,
   listProducts,
-} from '@lemonsqueezy/lemonsqueezy.js';
-import crypto from 'node:crypto';
-import { getUserServerSession } from './auth';
-import { getUserById } from '@/db/queries/users';
+} from "@lemonsqueezy/lemonsqueezy.js";
+import crypto from "node:crypto";
+import { getUserServerSession } from "./auth";
+import { getUserById } from "@/db/queries/users";
+import { LEMON_PATH_OBJ } from "@/config/constants";
 
 export const setupLemonConfig = () => {
   return lemonSqueezySetup({
-    apiKey: process.env.LEMON_SQUEEZY_API_KEY ?? '',
-    onError: (error) => console.log('[Lemon Squeezy] Error', error),
+    apiKey: process.env.LEMON_SQUEEZY_API_KEY ?? "",
+    onError: (error) => console.log("[Lemon Squeezy] Error", error),
   });
 };
 
@@ -31,7 +32,7 @@ export async function getUserSubscriptionPlan() {
   }
 
   const dbUser = await getUserById(user.id);
-  
+
   if (!dbUser) {
     return {
       ...PLANS[0],
@@ -45,11 +46,14 @@ export async function getUserSubscriptionPlan() {
   const isSubscribed = Boolean(
     dbUser.stripe_price_id &&
       dbUser.stripe_current_period_end && // 86400000 = 1 day
-      dbUser.stripe_current_period_end.getTime() + 86_400_000 > Date.now()
+      dbUser.stripe_current_period_end.getTime() + 86_400_000 > Date.now(),
   );
 
   const plan = isSubscribed
-    ? PLANS.find((plan) => plan.price.priceIds.test === dbUser.stripe_price_id)
+    ? PLANS.find(
+        (plan) =>
+          plan.mode[LEMON_PATH_OBJ].variantId === dbUser.stripe_plan_id,
+      )
     : null;
 
   let isCanceled = false;
@@ -57,7 +61,7 @@ export async function getUserSubscriptionPlan() {
   if (isSubscribed && dbUser.stripe_subscription_id) {
     const { data } = await getSubscription(dbUser.stripe_subscription_id);
     isCanceled = data?.data?.attributes?.cancelled || false;
-    portalUrl = data?.data?.attributes?.urls?.customer_portal ?? '';
+    portalUrl = data?.data?.attributes?.urls?.customer_portal ?? "";
   }
 
   return {
@@ -73,11 +77,11 @@ export async function getUserSubscriptionPlan() {
 
 export async function createCheckoutSession(
   variantId: string | number,
-  userId: string
+  userId: string,
 ) {
   setupLemonConfig();
   const { data } = await createCheckout(
-    process.env.LEMON_SQUEEZY_STORE_ID ?? '',
+    process.env.LEMON_SQUEEZY_STORE_ID ?? "",
     variantId,
     {
       checkoutOptions: {},
@@ -86,19 +90,19 @@ export async function createCheckoutSession(
           userId,
         },
       },
-    }
+    },
   );
   return data;
 }
 
 export const verifySignature = (
   rawBody: string,
-  headerSignature: string
+  headerSignature: string,
 ): boolean => {
   const secret = process.env.LEMON_SQUEEZY_WEBHOOKS_KEY!;
-  const hmac = crypto.createHmac('sha256', secret);
-  const digest = Buffer.from(hmac.update(rawBody).digest('hex'), 'utf8');
-  const signature = Buffer.from(headerSignature, 'utf8');
+  const hmac = crypto.createHmac("sha256", secret);
+  const digest = Buffer.from(hmac.update(rawBody).digest("hex"), "utf8");
+  const signature = Buffer.from(headerSignature, "utf8");
 
   if (digest.length !== signature.length) {
     return false;

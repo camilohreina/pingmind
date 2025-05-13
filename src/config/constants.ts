@@ -1,6 +1,10 @@
 export const TRIGGER_REGISTER_WORDS = ["hi", "hola", "buenas", "hello"];
 
 
+export const LEMON_PATH_OBJ = process.env.NODE_ENV === "development"
+  ? "test"
+  : "live";
+  
 export const AUTO_REPLY_REGISTER = (phone: string) =>
   `¡Hola! 👋 Este es un mensaje de Camilo, el creador de PingMind:\n
 ¡Tengo buenas noticias! Ahora puedes probar pingmind gratis por 3 días y descubrir todas sus funcionalidades 🎉
