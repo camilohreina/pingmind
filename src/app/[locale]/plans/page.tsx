@@ -103,6 +103,7 @@ const PlanCard = ({
 
 export default async function Page({}: Props) {
   const user = await getUserServerSession();
+  console.log(user);
   const t = await import("next-intl/server").then((mod) =>
     mod.getTranslations("pricing_page"),
   );
@@ -117,10 +118,6 @@ export default async function Page({}: Props) {
         {
           text: t("plans.starter.features.voice_recognition.text"),
           footnote: t("plans.starter.features.voice_recognition.footnote"),
-        },
-        {
-          text: t("plans.starter.features.list_creation.text"),
-          footnote: t("plans.starter.features.list_creation.footnote"),
         },
         {
           text: t("plans.starter.features.image_recognition.text"),
@@ -146,10 +143,6 @@ export default async function Page({}: Props) {
         {
           text: t("plans.pro.features.voice_recognition.text"),
           footnote: t("plans.pro.features.voice_recognition.footnote"),
-        },
-        {
-          text: t("plans.pro.features.list_creation.text"),
-          footnote: t("plans.pro.features.list_creation.footnote"),
         },
         {
           text: t("plans.pro.features.image_recognition.text"),

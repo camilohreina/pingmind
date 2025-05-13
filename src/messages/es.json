@@ -306,11 +306,13 @@
   },
   "account_page": {
     "title": "Tu Cuenta",
+    "subtitle": "Administra tus recordatorios y notificaciones",
     "plan_card": {
       "title": "Tu Plan",
       "description": "Aún no tienes ningún plan activo. ¡Animate a probar PingMind!",
       "phone_placeholder": "Número de WhatsApp",
-      "action_button": "Ver Planes"
+      "action_button": "Ver Planes",
+      "admin_button": "Administra tu plan actual"
     },
     "number_card": {
       "title": "Número de Teléfono",

@@ -302,11 +302,13 @@
   },
   "account_page": {
     "title": "Your Account",
+    "subtitle": "Manage your account settings",
     "plan_card": {
       "title": "Your Plan",
       "description": "You don't have any active plan yet. Try PingMind today!",
       "phone_placeholder": "WhatsApp Number",
-      "action_button": "Upgrade Now"
+      "action_button": "Upgrade Now",
+      "admin_button": "Manage your plan"
     },
     "number_card": {
       "title": "Your phone number",

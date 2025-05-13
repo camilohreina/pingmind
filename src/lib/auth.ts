@@ -12,11 +12,13 @@ import authConfig from "./auth.config";
 declare module "next-auth" {
   interface User {
     id?: string;
+    phone?: string;
   }
 
   interface Session {
     user: {
       id: string;
+      phone: string;
     } & DefaultSession["user"];
   }
 }
@@ -64,6 +66,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             name: user.name,
             email: user.email,
             image: user.image,
+            phone: user.phone,
           };
         }
 
@@ -79,6 +82,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (user?.id) {
           token.id = user.id;
         }
+        // Añadir el teléfono del usuario al token
+        if (user?.phone) {
+          token.phone = user.phone;
+        }
       }
       return token;
     },
@@ -86,6 +93,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // Añadir el id del token a la sesión
       if (token?.id) {
         session.user.id = token.id as string;
+      }
+      // Añadir el teléfono del token a la sesión
+      if (token?.phone) {
+        session.user.phone = token.phone as string;
       }
       return session;
     },
@@ -123,6 +134,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
 export const session = async ({ session, token }: any) => {
   session.user.id = token.id;
+  session.user.phone = token.phone;
   return session;
 };
 
@@ -139,5 +151,6 @@ export async function getUserServerSession() {
     first_name: user?.name,
     last_name: "",
     picture: user?.image,
+    phone: user?.phone,
   };
 }
