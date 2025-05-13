@@ -15,6 +15,7 @@ import {
 import { WhatsAppMessage } from "@/types/whatsapp";
 import { extractMediaId } from "@/lib/utils";
 import { getTextFromAudio, getTextFromImage } from "./ai.controller";
+import { PLANS } from "@/config/pricing";
 
 interface reminderReview {
   userId: string;
@@ -22,6 +23,24 @@ interface reminderReview {
   phone: string;
   timezone: string;
 }
+
+const verifySubscriptionFeatures = (user: any, messageType: string): boolean => {
+  const isSubscribed = Boolean(
+    user.stripe_price_id &&
+    user.stripe_current_period_end && 
+    user.stripe_current_period_end.getTime() > Date.now()
+  );
+
+  if (!isSubscribed) return false;
+
+  const plan = PLANS.find((plan) => plan.mode.test === user.stripe_plan_id);
+  if (!plan) return false;
+
+  if (messageType === "AUDIO" && !plan.voiceRecognition) return false;
+  if (messageType === "IMAGE" && !plan.imageRecognition) return false;
+
+  return true;
+};
 
 export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
   try {
@@ -39,9 +58,17 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       await sendRegisterMessage(from_number, message);
       return { status: "success", action: "send_register_user" };
     }
-    //TODO: aqui la logica para verificar si tiene un plan activo
 
     const type_message = data.message?.type;
+    
+    // Verify subscription for audio and image messages
+    if ((type_message === "AUDIO" || type_message === "IMAGE") && !verifySubscriptionFeatures(user, type_message)) {
+      await sendReplyReminder({
+        phone: from_number,
+        message: `This feature is not available in your current plan. Please upgrade to use ${type_message.toLowerCase()} messages.`
+      });
+      return { status: "error", action: "subscription_feature_not_available" };
+    }
 
     let result: { status: string; ok: boolean; used_tool?: boolean } = {
       status: "success",
