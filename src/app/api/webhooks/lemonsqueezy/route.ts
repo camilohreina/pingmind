@@ -1,17 +1,16 @@
-import { BILLING_WEBHOOK_EVENTS } from '@/config/pricing';
-import { createSubscription, updateSubscription } from '@/db/queries/users';
-import { verifySignature } from '@/lib/lemonsqueezy';
-import { headers } from 'next/headers';
+import { BILLING_WEBHOOK_EVENTS } from "@/config/pricing";
+import { createSubscription, updateSubscription } from "@/db/queries/users";
+import { verifySignature } from "@/lib/lemonsqueezy";
 
 export async function POST(request: Request) {
-  const eventType = request.headers.get('X-Event-Name');
+  const eventType = request.headers.get("X-Event-Name");
   try {
     const clonedReq = request.clone();
     const body = await request?.json();
-    const requestBody = (await clonedReq.text()) || '';
+    const requestBody = (await clonedReq.text()) || "";
     const isValidSignature = verifySignature(
       requestBody,
-      request.headers.get('X-Signature') ?? ''
+      request.headers.get("X-Signature") ?? "",
     );
     if (!isValidSignature) {
       return Response.json({ ok: false }, { status: 400 });
@@ -19,22 +18,26 @@ export async function POST(request: Request) {
 
     if (!body?.meta?.custom_data?.user_id) {
       return Response.json(
-        { ok: false, message: 'Invalid user id' },
-        { status: 200 }
+        { ok: false, message: "Invalid user id" },
+        { status: 200 },
       );
     }
 
     const userId: string = body.meta.custom_data.user_id;
 
+    console.log(eventType);
+
     if (eventType === BILLING_WEBHOOK_EVENTS.subscription_created) {
-      const subscription = body.data.attributes; 
+      const subscription = body.data.attributes;
       await createSubscription({
-        stripeSubscriptionId: subscription.first_subscription_item.subscription_id.toString(),
+        stripeSubscriptionId:
+          subscription.first_subscription_item.subscription_id.toString(),
         stripeCustomerId: subscription.customer_id.toString(),
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
+        stripePlanId: subscription.variant_id.toString(),
         userId,
-      })
+      });
     }
 
     if (eventType === BILLING_WEBHOOK_EVENTS.subscription_updated) {
@@ -43,8 +46,9 @@ export async function POST(request: Request) {
       await updateSubscription({
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
+        stripePlanId: subscription.variant_id.toString(),
         userId,
-      })
+      });
     }
 
     console.log(userId);

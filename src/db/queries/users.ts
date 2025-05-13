@@ -63,6 +63,7 @@ type subscriptionData = {
   stripeCustomerId: string;
   stripePriceId: string;
   stripeCurrentPeriodEnd: Date;
+  stripePlanId: string;
   userId: string;
 };
 
@@ -71,6 +72,7 @@ export const createSubscription = async ({
   stripeCustomerId,
   stripePriceId,
   stripeCurrentPeriodEnd,
+  stripePlanId,
   userId,
 }: subscriptionData) => {
   return db
@@ -80,18 +82,21 @@ export const createSubscription = async ({
       stripe_customer_id: stripeCustomerId,
       stripe_price_id: stripePriceId,
       stripe_current_period_end: stripeCurrentPeriodEnd,
+      stripe_plan_id: stripePlanId,
     })
     .where(eq(users.id, userId));
 };
 
 interface updateSubscriptionData {
   stripePriceId: string;
+  stripePlanId: string;
   stripeCurrentPeriodEnd: Date;
   userId: string;
 }
 
 export const updateSubscription = async ({
   stripePriceId,
+  stripePlanId,
   stripeCurrentPeriodEnd,
   userId,
 }: updateSubscriptionData) => {
@@ -100,6 +105,7 @@ export const updateSubscription = async ({
     .set({
       stripe_price_id: stripePriceId,
       stripe_current_period_end: stripeCurrentPeriodEnd,
+      stripe_plan_id: stripePlanId,
     })
     .where(eq(users.id, userId));
 };
