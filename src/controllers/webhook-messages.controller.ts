@@ -51,20 +51,19 @@ const hasQuotaAvailable = async (user: UserI): Promise<boolean> => {
   const plan = PLANS.find(
     (plan) => plan.mode[LEMON_PATH_OBJ].variantId === user.stripe_plan_id,
   );
-  
+
   if (!plan) return false;
 
   if (!user.stripe_current_period_start) {
     return false;
   }
 
-  const monthlyMessages = await getCompletedRemindersByUser({
+  const [monthlyMessages] = await getCompletedRemindersByUser({
     userId: user.id,
     startDate: user.stripe_current_period_start,
     endDate: new Date(),
   });
-
-  return monthlyMessages.length < plan.quota;
+  return monthlyMessages.count < plan.quota;
 };
 
 export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
