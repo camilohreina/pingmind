@@ -1,13 +1,11 @@
-import React from "react";
+import React, { Suspense } from "react";
 import MaxWidthWrapper from "./max-width-wrapper";
-
 import { buttonVariants } from "./ui/button";
-import UserAccountNav from "./account-dropdown";
 import MobileNav from "./mobile-nav";
 import { getUserServerSession } from "@/lib/auth";
-import SignInButton from "./sign-in-button";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+import { HeaderAuth } from "./header-auth";
 
 type Props = {};
 
@@ -34,30 +32,7 @@ export default async function Navbar({}: Props) {
             >
               {t("pricing")}
             </Link>
-            {!user ? (
-              <SignInButton />
-            ) : (
-              <>
-                {/*            <Link
-                  href="/dashboard"
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "sm",
-                  })}
-                >
-                  Dashboard
-                </Link> */}
-                <UserAccountNav
-                  name={
-                    !user.first_name && !user.last_name
-                      ? "Your account"
-                      : `${user.first_name} ${user.last_name}`
-                  }
-                  email={user.email ?? ""}
-                  imageUrl={user.picture ?? ""}
-                />
-              </>
-            )}
+            <HeaderAuth />
           </div>
         </div>
       </MaxWidthWrapper>
