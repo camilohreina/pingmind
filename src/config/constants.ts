@@ -6,12 +6,12 @@ export const LEMON_PATH_OBJ = process.env.NODE_ENV === "development"
   : "live";
   
 export const AUTO_REPLY_REGISTER = (phone: string) =>
-  `¡Hola! 👋 Este es un mensaje de Camilo, el creador de PingMind:\n
-¡Tengo buenas noticias! Ahora puedes probar pingmind gratis por 3 días y descubrir todas sus funcionalidades 🎉
-Ingresa a la web para registrarte y elegir uno de nuestros planes. Tranqui, puedes cancelar en cualquier momento 🤝
-https://pingmind.vercel.app/es/signup?phone=${phone} \n
-Una vez tengas un plan, vuelve a esta conversación y envía un mensaje para seguir conversando.\n
-¡Gracias por ser parte de esta aventura! 🚀`;
+  `Hello! 👋 This is a message from Camilo, the creator of PingMind:\n
+Great news! You can now try pingmind free for 3 days and discover all its features 🎉
+Visit our website to register and choose one of our plans. Don't worry, you can cancel anytime 🤝
+https://pingmind.vercel.app/en/signup?phone=${phone} \n
+Once you have a plan, come back to this conversation and send a message to continue chatting.\n
+Thanks for being part of this adventure! 🚀`;
 
 export const getInfobipConfig = () => ({
   apiKey: process.env.INFOBIP_API_KEY || "",

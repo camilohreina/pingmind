@@ -11,8 +11,7 @@ const client = new Infobip({
 
 export const sendRegisterMessage = async (phone: string, userMessage?: string) => {
   try {
-
-    const welcome_message =  AUTO_REPLY_REGISTER(phone)
+    const welcome_message = AUTO_REPLY_REGISTER(phone)
     const translated_message = userMessage 
       ? await translateRegistrationMessage(userMessage, welcome_message)
       : welcome_message;
@@ -20,7 +19,7 @@ export const sendRegisterMessage = async (phone: string, userMessage?: string) =
     await client.channels.whatsapp.send({
       type: "text",
       from: process.env.INFOBIP_PHONE_NUMBER!,
-      to: "573224354004",
+      to: phone,
       content: {
         text: translated_message,
       },
@@ -37,7 +36,6 @@ export const sendReplyReminder = async ({
   phone: string;
   message: string;
 }) => {
-  console.log("llegando al reply");
   try {
     await client.channels.whatsapp.send({
       type: "text",
@@ -52,7 +50,7 @@ export const sendReplyReminder = async ({
   }
 };
 
-const sendWhatsAppTemplate = async ({
+export const sendWhatsAppTemplate = async ({
   phone,
   template_name,
   parameters,
@@ -65,7 +63,6 @@ const sendWhatsAppTemplate = async ({
   withButtons?: boolean;
 }): Promise<string | null> => {
   try {
-    //SMS
     const templateData: TemplateDataProps = {
       body: {
         placeholders: parameters,
@@ -79,7 +76,7 @@ const sendWhatsAppTemplate = async ({
         },
       ];
     }
-    const response = await client.channels.whatsapp.send({
+    await client.channels.whatsapp.send({
       type: "template",
       messages: [
         {
@@ -115,7 +112,7 @@ export const verificationCodeMessage = async ({
       withButtons: true,
     });
   } catch (error) {
-    throw new Error("Error al enviar el mensaje de verificación");
+    throw new Error("Error sending verification message");
   }
 };
 
@@ -127,6 +124,7 @@ export const getMediaInfobip = async ({ mediaId }: { mediaId: string }) => {
     );
     return response.data;
   } catch (error) {
-    console.log({ error });
+    console.log(error);
+    return null;
   }
 };

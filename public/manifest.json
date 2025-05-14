@@ -1,0 +1,22 @@
+{
+    "name": "Pingmind",
+    "short_name": "Pingmind",
+    "theme_color": "#0a0a0a",
+    "background_color": "#0a0a0a",
+    "display": "standalone",
+    "orientation": "portrait",
+    "description": "Pingmind: Manage your reminders through WhatsApp effortlessly. Schedule messages, receive notifications, and keep your contacts automatically informed.",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "/icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+}
