@@ -8,6 +8,7 @@ export async function GET() {
       slug: subscription.slug,
       is_subscribed: subscription.isSubscribed,
       is_cancelled: subscription.isCanceled,
+      portal_url: subscription.portalUrl,
       stripe_current_period_end: subscription.stripe_current_period_end,
     });
   } catch (error) {

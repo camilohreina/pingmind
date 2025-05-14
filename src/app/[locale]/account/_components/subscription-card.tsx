@@ -11,6 +11,7 @@ import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
 import React from "react";
+import AdminSubButton from "@/components/admin-sub-button";
 
 type Props = {
   subscription: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
@@ -31,16 +32,28 @@ export default function SubscriptionCard({ subscription }: Props) {
       </CardHeader>
       <CardContent className="flex flex-col items-start">
         <p className="text-3xl font-bold">USD ${subscription.price?.amount}</p>
-        {subscription.isSubscribed ? (
-          <p className="text-xs font-medium">
-            {subscription.isCanceled
-              ? t("cancellation", { date: format(subscription.stripe_current_period_end!, "dd.MM.yyyy") })
-              : t("renewal", { date: format(subscription.stripe_current_period_end!, "dd.MM.yyyy") })}
-          </p>
-        ) : null}
-        <Button asChild variant="secondary" className="w-full mt-3" size="sm">
+        <div className="mb-3">
+          {subscription.isSubscribed ? (
+            <p className="text-xs font-medium">
+              {subscription.isCanceled
+                ? t("cancellation", {
+                    date: format(
+                      subscription.stripe_current_period_end!,
+                      "dd.MM.yyyy",
+                    ),
+                  })
+                : t("renewal", {
+                    date: format(
+                      subscription.stripe_current_period_end!,
+                      "dd.MM.yyyy",
+                    ),
+                  })}
+            </p>
+          ) : null}
+        </div>
+        <Button asChild variant="secondary" className="w-full" size="sm">
           {subscription.portalUrl ? (
-            <Link href={subscription.portalUrl}>{t("manage_subscription")}</Link>
+            <AdminSubButton portal_url={subscription.portalUrl} size="sm"/>
           ) : (
             <Link href="/plans">{t("upgrade_plan")}</Link>
           )}

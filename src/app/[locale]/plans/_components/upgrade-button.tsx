@@ -8,6 +8,7 @@ import {
   getSubscriptionUser,
   slugPlan,
 } from "@/services/utils.services";
+import AdminSubButton from "@/components/admin-sub-button";
 
 type Props = {
   slug: slugPlan;
@@ -17,6 +18,7 @@ type SubscriptionData = {
   slug: string;
   is_subscribed: boolean;
   is_cancelled: boolean;
+  portal_url: string ;
   stripe_current_period_end: string | null;
 };
 
@@ -55,15 +57,21 @@ export default function UpgradeButton({ slug }: Props) {
   const t = useTranslations("pricing_page.plans.button");
 
   return (
-    <Button
-      onClick={() => create_pricing_session(slug)}
-      className="w-full"
-      disabled={isLoading}
-    >
-      {subscriptionData?.is_subscribed && subscriptionData.slug === slug
-        ? t("manageSubscription")
-        : t("upgradeNow")}
-      <ArrowRight className="size-5 ml-1.5" />
-    </Button>
+    <>
+      {subscriptionData?.is_subscribed && subscriptionData.slug === slug ? (
+        <AdminSubButton portal_url={subscriptionData.portal_url} />
+      ) : (
+        <Button
+          onClick={() => create_pricing_session(slug)}
+          className="w-full"
+          disabled={isLoading}
+        >
+          <>
+            {t("upgradeNow")}
+            <ArrowRight className="size-5 ml-1.5" />
+          </>
+        </Button>
+      )}
+    </>
   );
 }
