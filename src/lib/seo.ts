@@ -62,7 +62,7 @@ export function customMetaDataGenerator({
     alternates: {
       canonical: canonicalUrl,
     },
-    manifest: '/manifest.json',
+    manifest: '/manifest-og.json',
     icons: {
       apple: icon,
     },
