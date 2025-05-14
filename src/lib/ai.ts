@@ -198,15 +198,15 @@ export async function getTranscriptionFromImage(
         {
           role: "system",
           content: `You are an assistant that helps extract event details from images. 
-Return ONLY the extracted information in the following format:
-"<event title>: <event description> | <date-time>".
+          Return ONLY the extracted information in the following format:
+          "<event title>: <event description> | <date-time>".
 
-If there is no event information, return an empty string.
+          If there is no event information, return an empty string.
 
-Rules:
-- Return ONLY the extracted text, no additional notes or explanations
-- Format date-times in a readable, natural language format
-- If no clear event is in the image, return an empty string`,
+          Rules:
+          - Return ONLY the extracted text, no additional notes or explanations
+          - Format date-times in a readable, natural language format
+          - If no clear event is in the image, return an empty string`,
         },
         {
           role: "user",
