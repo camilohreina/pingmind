@@ -28,12 +28,16 @@ import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { signup } from "@/services/auth";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { detectUserCountry } from "@/services/utils.services";
+import { Country } from "react-phone-number-input";
 
 interface Props {
   phone: null | string;
 }
 
 export default function SignUpForm({ phone }: Props) {
+  const [countryCode, setCountryCode] = useState<Country>("US");
   const t = useTranslations("signup_page.form");
   const router = useRouter();
   const { mutateAsync: signupFn, isPending } = useMutation({
@@ -51,6 +55,14 @@ export default function SignUpForm({ phone }: Props) {
       country: "",
     },
   });
+
+  useEffect(() => {
+    detectUserCountry().then((country_code: Country) => {
+      if (country_code) {
+        setCountryCode(country_code);
+      }
+    });
+  }, []);
 
   async function onSubmit(data: SignUpFormData) {
     try {
@@ -95,6 +107,7 @@ export default function SignUpForm({ phone }: Props) {
                         form.setValue("country", country ? country : "");
                       }}
                       {...field}
+                      defaultCountry={countryCode}
                     />
                   </FormControl>
                   <FormDescription>{t("phoneDescription")}</FormDescription>

@@ -5,6 +5,8 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PlanCard from "./_components/plan-card";
 import PlanNumber from "./_components/plan-number";
 import { getTranslations } from "next-intl/server";
+import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
+import SubscriptionCard from "./_components/subscription-card";
 
 export default async function Page() {
   const user = await getUserServerSession();
@@ -12,7 +14,8 @@ export default async function Page() {
     redirect("/login");
   }
   const t = await getTranslations("account_page");
-
+  const subscription_plan = await getUserSubscriptionPlan();
+  console.log(subscription_plan);
   return (
     <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
       <div className="mb-10">
@@ -20,7 +23,7 @@ export default async function Page() {
         <p className="text-base text-muted-foreground ">{t("subtitle")}</p>
       </div>
       <div className="mx-auto mb-10 sm:max-w-lg flex flex-col gap-10">
-        <PlanCard />
+        {subscription_plan?.isSubscribed ?  <SubscriptionCard subscription={subscription_plan}/>: <PlanCard />}
         <PlanNumber number={user.phone} />
       </div>
     </MaxWidthWrapper>

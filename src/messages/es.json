@@ -265,7 +265,7 @@
       },
       "tooltips": {
         "upgrade_now": "Actualizar Ahora",
-        "due_time": "por mes", 
+        "due_time": "por mes",
         "reminders_included": {
           "unlimited": "Recordatorios ilimitados.",
           "limited": "{quota} recordatorios incluidos."
@@ -273,7 +273,8 @@
       },
       "button": {
         "signUp": "Registrarse",
-        "upgradeNow": "Mejorar ahora"
+        "upgradeNow": "Mejorar ahora",
+        "manageSubscription": "Administrar suscripción" 
       }
     }
   },

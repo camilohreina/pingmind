@@ -59,7 +59,9 @@ export async function getUserSubscriptionPlan() {
   let isCanceled = false;
   let portalUrl: string | null = null;
   if (isSubscribed && dbUser.stripe_subscription_id) {
-    const { data } = await getSubscription(dbUser.stripe_subscription_id);
+    console.log(dbUser.stripe_subscription_id);
+    const { data} = await getSubscription(dbUser.stripe_subscription_id);
+    console.log({data});
     isCanceled = data?.data?.attributes?.cancelled || false;
     portalUrl = data?.data?.attributes?.urls?.customer_portal ?? "";
   }

@@ -215,7 +215,8 @@
       },
       "button": {
         "signUp": "Sign Up",
-        "upgradeNow": "Upgrade Now"
+        "upgradeNow": "Upgrade Now",
+        "manageSubscription": "Manage your plan"
       }
     }
   },

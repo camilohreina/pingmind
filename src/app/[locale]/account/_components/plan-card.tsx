@@ -20,11 +20,6 @@ export default function PlanCard() {
               {t("action_button")} <ArrowRight className="ml-1.5 size-5" />
             </Link>
           </Button>
-          <Button asChild variant="default" className="w-full mt-3" size="sm">
-            <Link href="/plans">
-              {t("admin_button")} <ArrowRight className="ml-1.5 size-5" />
-            </Link>
-          </Button>
         </CardContent>
       </Card>
     );

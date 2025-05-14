@@ -14,6 +14,16 @@ export const createPricingSessionService = async (slug: slugPlan) => {
   }
 };
 
+export const getSubscriptionUser = async () => {
+  try {
+    const response = await axios.get("/api/subscription");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null
+  }
+};
+
 export const detectUserCountry = async () => {
   try {
     // Usamos un servicio de geolocalización por IP

@@ -33,7 +33,7 @@ import { detectUserCountry } from "@/services/utils.services";
 import { Country } from "react-phone-number-input";
 
 export function LoginForm() {
-  const [countryCode, setCountryCode] = useState<Country>("US"); 
+  const [countryCode, setCountryCode] = useState<Country>("US");
   const { toast } = useToast();
   const t = useTranslations("login_page.form");
   const router = useRouter();
@@ -45,13 +45,13 @@ export function LoginForm() {
     },
   });
 
-    useEffect(() => {
-      detectUserCountry().then((country_code: Country) => {
-        if (country_code) {
-          setCountryCode(country_code);
-        }
-      });
-    }, []);
+  useEffect(() => {
+    detectUserCountry().then((country_code: Country) => {
+      if (country_code) {
+        setCountryCode(country_code);
+      }
+    });
+  }, []);
 
   const toastSuccessLogin = () => {
     toast({
@@ -133,7 +133,7 @@ export function LoginForm() {
                       href="/reset-password"
                       className="ml-auto inline-block text-sm underline"
                     >
-                     {t("reset_password")}
+                      {t("reset_password")}
                     </Link>
                   </div>
                   <FormControl>

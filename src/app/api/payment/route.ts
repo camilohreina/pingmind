@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     const user_info = await getUserById(user.id);
     const subscription_plan = await getUserSubscriptionPlan();
-
+    
     if (subscription_plan?.isSubscribed && user_info?.stripe_customer_id) {
       return NextResponse.json(
         { ok: true, url: subscription_plan?.portalUrl },
