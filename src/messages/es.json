@@ -320,6 +320,14 @@
       "title": "Número de Teléfono",
       "description": "Tu número de teléfono es utilizado para enviar recordatorios.",
       "phone_placeholder": "Número de teléfono"
+    },
+    "subscription_card": {
+      "title": "Plan de Suscripción",
+      "description": "Actualmente estás en el plan {planName}.",
+      "cancellation": "Tu suscripción se cancela el {date}",
+      "renewal": "Tu plan se renueva el {date}",
+      "manage_subscription": "Administrar suscripción",
+      "upgrade_plan": "Mejorar plan"
     }
   }
 }

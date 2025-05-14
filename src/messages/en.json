@@ -316,6 +316,14 @@
       "title": "Your phone number",
       "description": "Your phone number is used to send reminders.",
       "phone_placeholder": "Phone number"
+    },
+    "subscription_card": {
+      "title": "Subscription Plan",
+      "description": "You are currently on the {planName} plan.",
+      "cancellation": "Your subscription is canceled on {date}",
+      "renewal": "Your plan renews on {date}",
+      "manage_subscription": "Manage your subscription",
+      "upgrade_plan": "Upgrade your plan"
     }
   }
 }
