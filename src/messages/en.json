@@ -207,14 +207,14 @@
       },
       "tooltips": {
         "upgrade_now": "Upgrade Now",
-        "due_time": "per month", 
+        "due_time": "per month",
         "reminders_included": {
           "unlimited": "Unlimited reminders.",
           "limited": "{quota} reminders included."
         }
       },
       "button": {
-        "signUp": "Sign Up",
+        "signUp": "Try for free for 3 days",
         "upgradeNow": "Upgrade Now",
         "manageSubscription": "Manage your plan"
       }

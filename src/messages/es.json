@@ -272,9 +272,9 @@
         }
       },
       "button": {
-        "signUp": "Registrarse",
+        "signUp": "Probar gratis por 3 días",
         "upgradeNow": "Mejorar ahora",
-        "manageSubscription": "Administrar suscripción" 
+        "manageSubscription": "Administrar suscripción"
       }
     }
   },
