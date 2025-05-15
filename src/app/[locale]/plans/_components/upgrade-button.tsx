@@ -18,7 +18,7 @@ type SubscriptionData = {
   slug: string;
   is_subscribed: boolean;
   is_cancelled: boolean;
-  portal_url: string ;
+  portal_url: string;
   stripe_current_period_end: string | null;
 };
 
@@ -67,7 +67,7 @@ export default function UpgradeButton({ slug }: Props) {
           disabled={isLoading}
         >
           <>
-            {t("upgradeNow")}
+            {subscriptionData?.is_subscribed ? t("upgradeNow") : t("signUp")}
             <ArrowRight className="size-5 ml-1.5" />
           </>
         </Button>
