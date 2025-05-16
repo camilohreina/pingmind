@@ -91,9 +91,48 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: 'hsl(var(--foreground))',
+            h1: {
+              color: 'hsl(var(--foreground))',
+              fontWeight: '700',
+            },
+            h2: {
+              color: 'hsl(var(--foreground))',
+              fontWeight: '600',
+            },
+            h3: {
+              color: 'hsl(var(--foreground))',
+              fontWeight: '600',
+            },
+            h4: {
+              color: 'hsl(var(--foreground))',
+              fontWeight: '600',
+            },
+            p: {
+              color: 'hsl(var(--muted-foreground))',
+            },
+            li: {
+              color: 'hsl(var(--muted-foreground))',
+            },
+            a: {
+              color: 'hsl(var(--primary))',
+              '&:hover': {
+                color: 'hsl(var(--primary))',
+                opacity: '0.8',
+              },
+            },
+            strong: {
+              color: 'hsl(var(--foreground))',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 
 export default config;
