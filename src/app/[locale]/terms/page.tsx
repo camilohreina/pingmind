@@ -1,58 +1,96 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { Metadata } from 'next';
-import MaxWidthWrapper from '@/components/max-width-wrapper';
-import ReactMarkdown from 'react-markdown';
-import { cn } from '@/lib/utils';
+import { promises as fs } from "fs";
+import path from "path";
+import { Metadata } from "next";
+import MaxWidthWrapper from "@/components/max-width-wrapper";
+import ReactMarkdown from "react-markdown";
+import { getTranslations } from "next-intl/server";
+import { customMetaDataGenerator } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: 'Términos y Condiciones',
-  description: 'Términos y condiciones de uso de RecordAi',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("terms");
 
-interface CustomHeadingProps {
-  level: 1 | 2 | 3;
-  children: React.ReactNode;
+  return {
+    title: t("meta.title"),
+    description: t("meta.description"),
+  };
 }
 
-const CustomHeading = ({ level, children }: CustomHeadingProps) => {
-  const styles = {
-    1: 'text-4xl font-extrabold mb-6 text-white',
-    2: 'text-2xl font-bold mt-8 mb-4 text-green-400',
-    3: 'text-xl font-semibold mt-6 mb-3 text-gray-200',
-  };
+interface Props {
+  params: Promise<{ locale: string }>;
+}
 
-  const Component = `h${level}` as keyof JSX.IntrinsicElements;
-  
-  return (
-    <Component className={styles[level] || ''}>
-      {children}
-    </Component>
-  );
-};
+export default async function TermsPage({ params }: Props) {
+  // Intentar cargar el archivo en el idioma actual
 
-export default async function TermsPage() {
-  const termsPath = path.join(process.cwd(), 'public', 'terms.md');
-  const content = await fs.readFile(termsPath, 'utf8');
+  const { locale } = await params;
+  const fileName = `terms.${locale}.md`;
+
+  const termsPath = path.join(process.cwd(), "public", fileName);
+  let content: string;
+
+  try {
+    content = await fs.readFile(termsPath, "utf8");
+  } catch (error) {
+    // Si no existe el archivo en el idioma actual, cargar el inglés por defecto
+    const defaultTermsPath = path.join(process.cwd(), "public", "terms.en.md");
+    content = await fs.readFile(defaultTermsPath, "utf8");
+  }
 
   return (
     <MaxWidthWrapper className="mb-8 mt-24">
       <article className="mx-auto max-w-4xl">
         <ReactMarkdown
           components={{
-            h1: ({node, children, ...props}) => <CustomHeading level={1} {...props}>{children}</CustomHeading>,
-            h2: ({node, children, ...props}) => <CustomHeading level={2} {...props}>{children}</CustomHeading>,
-            h3: ({node, children, ...props}) => <CustomHeading level={3} {...props}>{children}</CustomHeading>,
-            p: ({node, children, ...props}) => <p className="text-gray-300 text-lg mb-4" {...props}>{children}</p>,
-            ul: ({node, children, ...props}) => <ul className="my-4 space-y-2" {...props}>{children}</ul>,
-            li: ({node, children, ...props}) => (
+            h1: ({ node, children, ...props }) => (
+              <h1
+                className="text-4xl font-extrabold mb-6 text-white"
+                {...props}
+              >
+                {children}
+              </h1>
+            ),
+            h2: ({ node, children, ...props }) => (
+              <h2
+                className="text-2xl font-bold mt-8 mb-4 text-green-400"
+                {...props}
+              >
+                {children}
+              </h2>
+            ),
+            h3: ({ node, children, ...props }) => (
+              <h3
+                className="text-xl font-semibold mt-6 mb-3 text-gray-200"
+                {...props}
+              >
+                {children}
+              </h3>
+            ),
+            p: ({ node, children, ...props }) => (
+              <p className="text-gray-300 text-lg mb-4" {...props}>
+                {children}
+              </p>
+            ),
+            ul: ({ node, children, ...props }) => (
+              <ul className="my-4 space-y-2" {...props}>
+                {children}
+              </ul>
+            ),
+            li: ({ node, children, ...props }) => (
               <li className="text-gray-300 text-lg flex items-start">
-                <span className="mr-2">•</span> 
+                <span className="mr-2">•</span>
                 <span {...props}>{children}</span>
               </li>
             ),
-            strong: ({node, children, ...props}) => <strong className="font-bold text-white" {...props}>{children}</strong>,
-            em: ({node, children, ...props}) => <em className="text-gray-400 italic" {...props}>{children}</em>,
+            strong: ({ node, children, ...props }) => (
+              <strong className="font-bold text-white" {...props}>
+                {children}
+              </strong>
+            ),
+            em: ({ node, children, ...props }) => (
+              <em className="text-gray-400 italic" {...props}>
+                {children}
+              </em>
+            ),
           }}
         >
           {content}

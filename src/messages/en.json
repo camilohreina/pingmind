@@ -325,5 +325,11 @@
       "manage_subscription": "Manage your subscription",
       "upgrade_plan": "Upgrade your plan"
     }
+  },
+  "terms": {
+    "meta": {
+      "title": "Pingmind | Terms and conditions ",
+      "description": "Terms and conditions of use for Pingmind"
+    }
   }
 }
