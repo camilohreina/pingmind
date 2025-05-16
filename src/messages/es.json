@@ -203,7 +203,11 @@
       "submittingButton": "Registrándose...",
       "loginPrompt": "¿Ya tienes una cuenta?",
       "loginLink": "Iniciar sesión",
-      "rootErrorMessage": "El registro falló. Por favor, inténtalo de nuevo."
+      "rootErrorMessage": "El registro falló. Por favor, inténtalo de nuevo.",
+      "termsText": "Al registrarte, estás aceptando nuestros",
+      "termsLink": "Términos y Condiciones",
+      "andText": "y",
+      "privacyLink": "Política de Privacidad"
     }
   },
   "pricing_page": {

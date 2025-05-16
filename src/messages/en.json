@@ -145,7 +145,11 @@
       "submittingButton": "Signing up...",
       "loginPrompt": "Already have an account?",
       "loginLink": "Log in",
-      "rootErrorMessage": "Sign up failed. Please try again."
+      "rootErrorMessage": "Sign up failed. Please try again.",
+      "termsText": "By signing up, you agree to our",
+      "termsLink": "Terms and Conditions",
+      "andText": "and",
+      "privacyLink": "Privacy Policy"
     }
   },
   "pricing_page": {

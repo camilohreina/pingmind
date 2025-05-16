@@ -31,6 +31,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { detectUserCountry } from "@/services/utils.services";
 import { Country } from "react-phone-number-input";
+import TermsAcceptance from "@/components/terms-acceptance";
 
 interface Props {
   phone: null | string;
@@ -136,11 +137,12 @@ export default function SignUpForm({ phone }: Props) {
               {isPending && <Loader2 className="animate-spin mr-2" size={20} />}
               {isPending ? t("submittingButton") : t("submitButton")}
             </Button>
+            <TermsAcceptance />
           </CardContent>
           <CardFooter>
             <div className="w-full text-center text-sm text-gray-400">
               {t("loginPrompt")}{" "}
-              <Link className="underline" href="/login">
+              <Link className="text-primary hover:underline" href="/login">
                 {t("loginLink")}
               </Link>
             </div>
