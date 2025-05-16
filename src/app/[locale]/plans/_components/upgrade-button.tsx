@@ -9,9 +9,11 @@ import {
   slugPlan,
 } from "@/services/utils.services";
 import AdminSubButton from "@/components/admin-sub-button";
+import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
 
 type Props = {
   slug: slugPlan;
+  subscription_plan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
 };
 
 type SubscriptionData = {
@@ -22,7 +24,7 @@ type SubscriptionData = {
   stripe_current_period_end: string | null;
 };
 
-export default function UpgradeButton({ slug }: Props) {
+export default function UpgradeButton({ slug, subscription_plan }: Props) {
   const [subscriptionData, setSubscriptionData] =
     useState<SubscriptionData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,8 +60,8 @@ export default function UpgradeButton({ slug }: Props) {
 
   return (
     <>
-      {subscriptionData?.is_subscribed && subscriptionData.slug === slug ? (
-        <AdminSubButton portal_url={subscriptionData.portal_url} />
+      {subscription_plan?.isSubscribed && subscription_plan.slug === slug ? (
+        <AdminSubButton portal_url={subscription_plan.portalUrl || ""} />
       ) : (
         <Button
           onClick={() => create_pricing_session(slug)}
@@ -67,7 +69,7 @@ export default function UpgradeButton({ slug }: Props) {
           disabled={isLoading}
         >
           <>
-            {subscriptionData?.is_subscribed ? t("upgradeNow") : t("signUp")}
+            {subscription_plan?.isSubscribed ? t("upgradeNow") : t("signUp")}
             <ArrowRight className="size-5 ml-1.5" />
           </>
         </Button>

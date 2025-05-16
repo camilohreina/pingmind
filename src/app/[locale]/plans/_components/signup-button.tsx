@@ -6,13 +6,15 @@ import { ArrowRight } from "lucide-react";
 import { signIn } from "next-auth/react";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
 
 type Props = {
   plan: string;
   user: Awaited<ReturnType<typeof getUserServerSession>>;
+  subscription_plan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
 };
 
-export default function SignUpButton({ plan, user }: Props) {
+export default function SignUpButton({ plan, user, subscription_plan }: Props) {
   const t = useTranslations("pricing_page.plans.button");
 
   return (
@@ -20,7 +22,10 @@ export default function SignUpButton({ plan, user }: Props) {
       {plan === "Starter" ? (
         <>
           {user ? (
-            <UpgradeButton slug="starter" />
+            <UpgradeButton
+              slug="starter"
+              subscription_plan={subscription_plan}
+            />
           ) : (
             <Button
               className={buttonVariants({
@@ -37,7 +42,7 @@ export default function SignUpButton({ plan, user }: Props) {
       ) : (
         <>
           {user ? (
-            <UpgradeButton slug="pro" />
+            <UpgradeButton slug="pro" subscription_plan={subscription_plan} />
           ) : (
             <Button
               className={buttonVariants({

@@ -3,11 +3,13 @@ import { PLANS } from "@/config/pricing";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getUserServerSession } from "@/lib/auth";
 import PlanCard from "./_components/plan-card";
+import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
 
 type Props = {};
 
 export default async function Page({}: Props) {
   const user = await getUserServerSession();
+  const subscription_plan = await getUserSubscriptionPlan();
   const t = await import("next-intl/server").then((mod) =>
     mod.getTranslations("pricing_page"),
   );
@@ -80,6 +82,7 @@ export default async function Page({}: Props) {
                 price={price}
                 isPro={plan === t("plans.pro.name")}
                 user={user}
+                subscription_plan={subscription_plan}
                 t={t}
               />
             );

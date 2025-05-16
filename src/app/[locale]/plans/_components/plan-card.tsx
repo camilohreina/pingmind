@@ -7,6 +7,27 @@ import SignUpButton from "./signup-button";
 import { Check, HelpCircle, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LocalPricing from "./local-pricing";
+import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
+import { getUserServerSession } from "@/lib/auth";
+
+interface Feature {
+  text: string;
+  footnote?: string;
+  negative?: boolean;
+}
+
+interface PlanCardProps {
+  plan: string;
+  tagline: string;
+  quota: number;
+  features: Feature[];
+  price: number;
+  isPro: boolean;
+  user:  Awaited<ReturnType<typeof getUserServerSession>>; // This could be more specific based on your user type
+  subscription_plan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
+  t: (key: string, values?: Record<string, any>) => string;
+
+}
 
 const PlanCard = ({
   plan,
@@ -16,8 +37,9 @@ const PlanCard = ({
   price,
   isPro,
   user,
+  subscription_plan,
   t,
-}: any) => {
+}: PlanCardProps) => {
   return (
     <div
       className={cn("relative rounded-2xl shadow-lg", {
@@ -35,7 +57,10 @@ const PlanCard = ({
         <p className="text-gray-500">{tagline}</p>
         <p className="mt-5 text-4xl font-semibold">USD ${price} </p>
         <p className=" text-gray-500"> {t("plans.tooltips.due_time")}</p>
-        <LocalPricing price={price} className="flex my-3 items-center flex-col" />
+        <LocalPricing
+          price={price}
+          className="flex my-3 items-center flex-col"
+        />
       </div>
       <div className="flex h-20 items-center justify-center border-b border-t border-gray-800">
         <div className="flex items-center space-x-1">
@@ -47,7 +72,7 @@ const PlanCard = ({
         </div>
       </div>
       <ul className="my-10 space-y-5 px-8">
-        {features.map(({ text, footnote, negative }: any) => (
+        {features.map(({ text, footnote, negative }: Feature) => (
           <li key={text} className="flex space-x-5">
             <div className="flex-shrink-0">
               {negative ? (
@@ -88,7 +113,7 @@ const PlanCard = ({
       </ul>
       <div className="border-t border-gray-600"></div>
       <div className="p-5">
-        <SignUpButton plan={plan} user={user} />
+        <SignUpButton plan={plan} user={user} subscription_plan={subscription_plan} />
       </div>
     </div>
   );

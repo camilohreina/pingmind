@@ -13,8 +13,8 @@ export function useExchangeRates() {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const data = await getExchangeRates();
-        setRates(data.rates);
+        const rates = await getExchangeRates();
+        setRates(rates);
         setError(null);
       } catch (err) {
         setError('Error fetching exchange rates');
