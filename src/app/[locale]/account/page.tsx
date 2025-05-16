@@ -7,8 +7,10 @@ import PlanNumber from "./_components/plan-number";
 import { getTranslations } from "next-intl/server";
 import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
 import SubscriptionCard from "./_components/subscription-card";
+import AccountSkeleton from "./_components/account-skeleton";
+import { Suspense } from "react";
 
-export default async function Page() {
+async function AccountContent() {
   const user = await getUserServerSession();
   if (!user) {
     redirect("/login");
@@ -23,9 +25,17 @@ export default async function Page() {
         <p className="text-base text-muted-foreground ">{t("subtitle")}</p>
       </div>
       <div className="mx-auto mb-10 sm:max-w-lg flex flex-col gap-10">
-        {subscription_plan?.isSubscribed ?  <SubscriptionCard subscription={subscription_plan}/>: <PlanCard />}
+        {subscription_plan?.isSubscribed ? <SubscriptionCard subscription={subscription_plan}/> : <PlanCard />}
         <PlanNumber number={user.phone} />
       </div>
     </MaxWidthWrapper>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<AccountSkeleton />}>
+      <AccountContent />
+    </Suspense>
   );
 }
