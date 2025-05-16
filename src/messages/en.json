@@ -328,8 +328,14 @@
   },
   "terms": {
     "meta": {
-      "title": "Pingmind | Terms and conditions ",
+      "title": "Terms and conditions ",
       "description": "Terms and conditions of use for Pingmind"
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy Policy",
+      "description": "Privacy and data protection policy for Pingmind"
     }
   }
 }

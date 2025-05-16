@@ -332,8 +332,14 @@
   },
   "terms": {
     "meta": {
-      "title": "Pingmind | Términos y condiciones",
+      "title": "Términos y condiciones",
       "description": "Términos y condiciones de uso de Pingmind."
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Política de Privacidad",
+      "description": "Política de privacidad y protección de datos de Pingmind"
     }
   }
 }

@@ -10,7 +10,9 @@ const publicPages = [
   '/plans',
   '/reset-password',
   '/input',
-  '/voice'
+  '/voice',
+  '/terms',
+  '/privacy'
 ]
 
 const intlMiddleware = createMiddleware(routing)

@@ -7,7 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { customMetaDataGenerator } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("terms");
+  const t = await getTranslations("privacy");
 
   return customMetaDataGenerator({
     title: t("meta.title"),
@@ -15,26 +15,26 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-
 interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export default async function TermsPage({ params }: Props) {
-  // Intentar cargar el archivo en el idioma actual
-
+export default async function PrivacyPage({ params }: Props) {
   const { locale } = await params;
-  const fileName = `terms.${locale}.md`;
-
-  const termsPath = path.join(process.cwd(), "public", fileName);
+  const fileName = `privacy.${locale}.md`;
+  const privacyPath = path.join(process.cwd(), "public", fileName);
   let content: string;
 
   try {
-    content = await fs.readFile(termsPath, "utf8");
+    content = await fs.readFile(privacyPath, "utf8");
   } catch (error) {
-    // Si no existe el archivo en el idioma actual, cargar el inglés por defecto
-    const defaultTermsPath = path.join(process.cwd(), "public", "terms.en.md");
-    content = await fs.readFile(defaultTermsPath, "utf8");
+    // If file doesn't exist in current language, load English by default
+    const defaultPrivacyPath = path.join(
+      process.cwd(),
+      "public",
+      "privacy.en.md",
+    );
+    content = await fs.readFile(defaultPrivacyPath, "utf8");
   }
 
   return (
