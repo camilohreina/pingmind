@@ -23,9 +23,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const userId: string = body.meta.custom_data.user_id;
-
-    console.log(eventType);
+    const userId: string = body?.meta?.custom_data?.user_id;
 
     if (eventType === BILLING_WEBHOOK_EVENTS.subscription_created) {
       const subscription = body.data.attributes;

@@ -35,7 +35,7 @@ export function customMetaDataGenerator({
 }: PageSEOProps): Metadata {
   // Create Site Title
   const siteTitle = APP_NAME;
-  const fullTitle = `${title} | ${siteTitle}`;
+  const fullTitle = `${siteTitle} | ${title}`;
 
   return {
     title: fullTitle,

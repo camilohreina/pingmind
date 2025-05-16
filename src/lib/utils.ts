@@ -24,8 +24,17 @@ export function extractMediaId(url: string) {
 }
 
 export function absoluteUrl(path: string) {
-  if (typeof window === 'undefined') return path;
+  if (typeof window === "undefined") return path;
   if (process.env.NEXT_PUBLIC_VERCEL_URL)
     return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}${path}`;
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
+}
+
+export function formatCurrency(amount: number, currency: string) {
+  return amount.toLocaleString("es-ES", {
+    style: "currency",
+    currency: currency,
+    maximumFractionDigits: 0,
+    notation: "standard",
+  });
 }

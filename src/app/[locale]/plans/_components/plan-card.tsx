@@ -6,6 +6,7 @@ import {
 import SignUpButton from "./signup-button";
 import { Check, HelpCircle, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import LocalPricing from "./local-pricing";
 
 const PlanCard = ({
   plan,
@@ -32,8 +33,9 @@ const PlanCard = ({
       <div className="p-5">
         <h3 className="my-3 text-center text-3xl font-bold">{plan}</h3>
         <p className="text-gray-500">{tagline}</p>
-        <p className="my-5 text-4xl font-semibold">USD ${price}</p>
-        <p className="text-gray-500"> {t("plans.tooltips.due_time")}</p>
+        <p className="mt-5 text-4xl font-semibold">USD ${price} </p>
+        <p className=" text-gray-500"> {t("plans.tooltips.due_time")}</p>
+        <LocalPricing price={price} className="flex my-3 items-center flex-col" />
       </div>
       <div className="flex h-20 items-center justify-center border-b border-t border-gray-800">
         <div className="flex items-center space-x-1">
