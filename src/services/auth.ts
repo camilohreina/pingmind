@@ -19,7 +19,6 @@ export const login = async (data: LoginFormData) => {
     phone: data.phone,
     password: data.password,
   });
-  console.log(response);
   return response;
 };
 

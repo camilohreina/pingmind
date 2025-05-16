@@ -9,7 +9,7 @@ export default async function SignUpPage({ searchParams }: Props) {
   const user = await getUserServerSession();
 
   if (user) {
-    redirect('/plans');
+    redirect("/account");
   }
 
   const { phone = null } = await searchParams;

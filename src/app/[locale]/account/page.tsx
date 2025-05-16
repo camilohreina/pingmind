@@ -15,7 +15,7 @@ export default async function Page() {
   }
   const t = await getTranslations("account_page");
   const subscription_plan = await getUserSubscriptionPlan();
-  console.log(subscription_plan);
+
   return (
     <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
       <div className="mb-10">

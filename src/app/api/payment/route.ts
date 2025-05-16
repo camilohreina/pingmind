@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
     const user = await getUserServerSession();
     //TODO: no esta llegando el user id en la session
-    console.log(user);
+
     const pricingUrl = absoluteUrl("/pricing");
 
     if (!user?.id) {
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     const user_info = await getUserById(user.id);
     const subscription_plan = await getUserSubscriptionPlan();
-    
+
     if (subscription_plan?.isSubscribed && user_info?.stripe_customer_id) {
       return NextResponse.json(
         { ok: true, url: subscription_plan?.portalUrl },
@@ -54,7 +54,6 @@ export async function POST(req: NextRequest) {
     }
 
     const pricing_session = await createCheckoutSession(variant_id, user?.id);
-    console.log(pricing_session);
 
     return NextResponse.json(
       { ok: true, url: pricing_session?.data?.attributes?.url },

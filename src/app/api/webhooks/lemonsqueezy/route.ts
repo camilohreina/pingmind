@@ -41,7 +41,6 @@ export async function POST(request: Request) {
 
     if (eventType === BILLING_WEBHOOK_EVENTS.subscription_updated) {
       const subscription = body.data.attributes;
-      console.log(body);
       await updateSubscription({
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
@@ -50,8 +49,6 @@ export async function POST(request: Request) {
         userId,
       });
     }
-
-    console.log(userId);
 
     return Response.json({ ok: true });
   } catch (error) {

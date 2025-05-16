@@ -7,7 +7,7 @@ export default async function Login() {
   const user = await getUserServerSession();
 
   if (user) {
-    redirect("/plans");
+    redirect("/account");
   }
   return (
     <main className="flex min-h-screen items-center justify-center">
