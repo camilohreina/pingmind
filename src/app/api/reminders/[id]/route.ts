@@ -39,6 +39,7 @@ export async function PUT(
     await updateReminder({
       id,
       text: validatedData.text,
+      localDate: validatedData.scheduledAt || new Date(),
       scheduledAt: validatedData.scheduledAt || new Date(),
       status: "PENDING" as const,
     });
