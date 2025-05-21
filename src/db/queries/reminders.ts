@@ -92,15 +92,16 @@ export const updateReminder = async ({
   id,
   text,
   scheduledAt,
+  localDate,
   status,
 }: {
   id: string;
   text: string;
   scheduledAt: Date;
+  localDate: Date;
   status: (typeof reminders.status.enumValues)[number];
 }) => {
   try {
-    // Verificar primero si el recordatorio existe
     const existingReminder = await db.query.reminders.findFirst({
       where: eq(reminders.id, id),
     });
@@ -112,7 +113,7 @@ export const updateReminder = async ({
 
     const result = await db
       .update(reminders)
-      .set({ text, scheduledAt, status })
+      .set({ text, scheduledAt, localDate, status })
       .where(eq(reminders.id, id))
       .execute();
 

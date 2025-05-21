@@ -54,17 +54,26 @@ export const addNewReminder = async ({
       return { status: "error", error: "user_not_found", ok: false };
     }
 
+    // Convertir la fecha UTC a fecha local usando el timezone del usuario
+    const localDate = new Date(reminder_user.localDate);
+    const scheduledAt = new Date(reminder_user.reminderDate);
+
     const reminder = await createReminder({
       id: crypto.randomUUID(),
       userId: user.id,
       text: reminder_user.message,
-      scheduledAt: new Date(reminder_user.reminderDate),
+      scheduledAt: scheduledAt,
       status: "PENDING",
       response: reminder_user.response,
       alert: reminder_user.alert,
-      localDate: new Date(reminder_user.localDate),
+      localDate: localDate, // Guardamos explícitamente la fecha local
     });
-  } catch (error) {}
+
+    return { status: "success", ok: true, reminder };
+  } catch (error) {
+    console.error("Error creating reminder:", error);
+    return { status: "error", error: "internal_server_error", ok: false };
+  }
 };
 
 export const updatePendingReminder = async ({
@@ -74,13 +83,18 @@ export const updatePendingReminder = async ({
   reminderId: string;
   reminder_user: ReminderUser;
 }) => {
+  const localDate = new Date(reminder_user.localDate);
+  const scheduledAt = new Date(reminder_user.reminderDate);
+
   const response = await updateReminder({
     id: reminderId,
     text: reminder_user.message,
-    scheduledAt: new Date(reminder_user.reminderDate),
+    scheduledAt: scheduledAt,
+    localDate: localDate,
     status: "PENDING",
   });
 
+  return response;
 };
 
 export const cancelReminder = async ({
