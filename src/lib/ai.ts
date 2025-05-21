@@ -308,10 +308,16 @@ const createReminderUser = tool({
     alert,
     timezone,
   }) => {
-    const reminderDate = chrono.parseDate(dueDate, {
-      instant: new Date(),
-      timezone,
-    });
+    const reminderDate = chrono.parseDate(
+      dueDate,
+      {
+        instant: new Date(),
+        timezone,
+      },
+      {
+        forwardDate: true,
+      },
+    );
     if (!reminderDate) {
       throw new AiError("Error parsing date");
     }
@@ -404,10 +410,16 @@ const updateReminderUser = tool({
     alert,
     timezone,
   }) => {
-    const reminderDate = chrono.parseDate(dueDate, {
-      instant: new Date(),
-      timezone,
-    });
+    const reminderDate = chrono.parseDate(
+      dueDate,
+      {
+        instant: new Date(),
+        timezone,
+      },
+      {
+        forwardDate: true,
+      },
+    );
     if (!reminderDate) {
       throw new AiError("Error parsing date");
     }
