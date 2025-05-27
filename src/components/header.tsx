@@ -6,6 +6,7 @@ import { getUserServerSession } from "@/lib/auth";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { HeaderAuth } from "./header-auth";
+import  LocaleSwitcher  from "./locale-switcher-select";
 
 type Props = {};
 
@@ -33,6 +34,7 @@ export default async function Navbar({}: Props) {
               {t("pricing")}
             </Link>
             <HeaderAuth />
+            <LocaleSwitcher/>
           </div>
         </div>
       </MaxWidthWrapper>

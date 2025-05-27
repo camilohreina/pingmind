@@ -1,71 +1,48 @@
-"use client";
+"use client"
 
-import { locales } from "@/config/constants";
-import { usePathname, useRouter } from "@/i18n/routing";
-import clsx from "clsx";
-import { useLocale, useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import React, { useTransition } from "react";
+import { useLocale, useTranslations } from "next-intl"
+import { useRouter, usePathname } from "next/navigation"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Globe } from "lucide-react"
 
-type Props = {
-  children: React.ReactNode;
-  defaultValue: string;
-  label: string;
-};
+const locales = [
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+]
 
-export default function LocalSwitcherSelect({
-  children,
-  defaultValue,
-  label,
-}: Props) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const pathname = usePathname();
-  const params = useParams();
+export default function LocaleSwitcher() {
+  const t = useTranslations("LocaleSwitcher")
+  const locale = useLocale()
+  const router = useRouter()
+  const pathname = usePathname()
 
-  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const nextLocale = event.target.value;
-    startTransition(() => {
-      router.replace(
-        //@ts-ignore
-        { pathname, params },
-        { locale: nextLocale },
-      );
-    });
+  const handleLocaleChange = (newLocale: string) => {
+    // Remove the current locale from the pathname
+    const pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/"
+
+    // Navigate to the new locale
+    router.push(`/${newLocale}${pathWithoutLocale}`)
   }
 
-  return (
-    <label
-      className={clsx(
-        "relative text-gray-400",
-        isPending && "transition-opacity [&:disabled] opacity-50",
-      )}
-    >
-      <p className="sr-only">{label}</p>
-      <select
-        defaultValue={defaultValue}
-        disabled={isPending}
-        onChange={handleChange}
-        className="inline-flex appearance-none bg-transparent py-3 pl-2 pr-6"
-      >
-        {children}
-      </select>
-      <span className="pointer-events-none absolute right-2 top-[8px]"></span>
-    </label>
-  );
-}
-
-export function LocaleSwitcher() {
-  const t = useTranslations("home_page.locale_switcher");
-  const local = useLocale();
 
   return (
-    <LocalSwitcherSelect defaultValue={local} label={t("label")}>
-      {locales.map((cur) => (
-        <option key={cur} value={cur}>
-          {t("locale", { locale: cur })}
-        </option>
-      ))}
-    </LocalSwitcherSelect>
-  );
+    <Select value={locale} onValueChange={handleLocaleChange}>
+      <SelectTrigger className="">
+        <div className="flex items-center gap-2">
+          <Globe className="h-4 w-4" />
+        </div>
+      </SelectTrigger>
+      <SelectContent>
+        {locales.map((localeOption) => (
+          <SelectItem key={localeOption.code} value={localeOption.code}>
+            <div className="flex items-center gap-2">
+              <span>{localeOption.flag}</span>
+              <span>{localeOption.name}</span>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
 }
+

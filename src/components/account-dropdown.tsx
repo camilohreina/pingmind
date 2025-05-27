@@ -41,7 +41,7 @@ export function UserAccountNav({ email, imageUrl, name }: Props) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href="/account">Mi cuenta</Link>
+          <Link href="/account">{t("account")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer">
           <SignOutButton />
