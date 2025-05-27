@@ -6,6 +6,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import SignOutButton from "./sign-out-button";
 import { useTranslations, useLocale } from "next-intl";
+import { useSession } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -151,7 +152,10 @@ function MobileNavContent({ isAuth }: { isAuth: boolean }) {
   );
 }
 
-export default function MobileNav({ isAuth }: Props) {
+export default function MobileNav({ isAuth: initialIsAuth }: Props) {
+  const { data: session } = useSession();
+  const isAuth = session?.user ? true : initialIsAuth;
+
   return (
     <div className="sm:hidden">
       <DropdownMenu>
