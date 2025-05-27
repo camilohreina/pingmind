@@ -9,7 +9,7 @@ export default function Title() {
   return (
     <h1
       className={cn(
-        "inline-block w-full px-3 text-center text-3xl font-bold md:max-w-4xl md:text-6xl lg:text-6xl",
+        "inline-block w-full px-3 text-center text-2xl font-bold md:max-w-4xl md:text-6xl lg:text-6xl",
         fontHead.className,
       )}
     >
