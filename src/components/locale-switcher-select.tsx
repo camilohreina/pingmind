@@ -26,7 +26,7 @@ export default function LocaleSwitcher() {
 
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
-      <SelectTrigger className="">
+      <SelectTrigger className="cursor-pointer">
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4" />
         </div>
