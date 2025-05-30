@@ -45,10 +45,13 @@ export function dateFromHumanWithTimezone(
   dueDate: string,
   timezone: string,
 ): Date | null {
+  
+  const nowInUserTimezone = toZonedTime(new Date(), timezone);
+
   const date_converted = chrono.parseDate(
     dueDate,
     {
-      instant: new Date(),
+      instant: nowInUserTimezone,
       timezone,
     },
     {
@@ -59,17 +62,13 @@ export function dateFromHumanWithTimezone(
   if (!date_converted) {
     return null;
   }
-  
-  // Primero convertimos a la zona horaria local
-  const localDate = fromZonedTime(date_converted, timezone);
   // Luego convertimos a UTC
-  const utcDate = toZonedTime(localDate, 'UTC');
+  const utcDate = toZonedTime(date_converted, 'UTC');
   
   console.log({
     dueDate,
     timezone,
     date_converted,
-    localDate,
     utcDate,
   });
   

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getUserByPhone } from "@/db/queries/users";
 import { handleWebhook } from "@/controllers/webhook-messages.controller";
+import { getTimeZoneFromCountryCode } from "@/lib/utils";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -33,20 +34,23 @@ export async function POST(req: Request): Promise<NextResponse> {
     );
   }
 
-  const result = await handleWebhook({
+/*   const result = await handleWebhook({
     from: phone,
     message: {
       text: message,
       type: "TEXT",
     },
     messageId: crypto.randomUUID(),
-  });
+  }); */
+
+  const country = getTimeZoneFromCountryCode('CO')
+  console.log(country);
 
   return NextResponse.json(
     {
       ok: true,
       status: 200,
-      message: result.message,
+      message: 'bien',
     },
     { status: 200 },
   );
