@@ -1,8 +1,16 @@
 import { sendAlertReminder } from "@/controllers/reminder.controller";
 
 export async function GET() {
-  sendAlertReminder();
-  return Response.json({ ok: true, status: "success" }, { status: 200 });
+  try {
+    await sendAlertReminder();
+    return Response.json({ ok: true, status: "success" }, { status: 200 });
+  } catch (error) {
+    console.error("Error in GET /api/init:", error);
+    return Response.json(
+      { ok: false, status: "error", error: "internal_server_error" },
+      { status: 500 },
+    );
+  }
 }
 
 /* const reminders = [
