@@ -1,6 +1,6 @@
 import { sendAlertReminder } from "@/controllers/reminder.controller";
 
-export async function POST() {
+export async function GET() {
   sendAlertReminder();
   return Response.json({ ok: true, status: "success" }, { status: 200 });
 }
