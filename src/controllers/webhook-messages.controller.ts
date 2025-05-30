@@ -211,6 +211,7 @@ export const handleReminder = async ({
       message,
       phone: phone,
       context_messages: format_context,
+      timezone
     });
 
     if (text) {

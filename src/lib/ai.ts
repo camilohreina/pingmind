@@ -484,11 +484,13 @@ export async function processMessageByUser({
   message,
   phone,
   context_messages,
+  timezone
 }: {
   userId: string;
   message: string;
   phone: string;
   context_messages?: ContextMessagesI[];
+  timezone: string;
 }) {
   try {
     let context: UserMessageI[] = [];
@@ -502,7 +504,7 @@ export async function processMessageByUser({
     }
     const userMessage: UserMessageI = { role: "user", content: message };
     const tools = await getTools();
-    const SYSTEM_PROMPT = SYSTEM_PROMPT_MCP(phone);
+    const SYSTEM_PROMPT = SYSTEM_PROMPT_MCP(phone, timezone);
     const { text, steps } = await generateText({
       model: openai("gpt-4o"),
       tools,
