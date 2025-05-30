@@ -59,14 +59,15 @@ export function dateFromHumanWithTimezone(
   if (!date_converted) {
     return null;
   }
-  const zonedDate = toZonedTime(date_converted, timezone);
-  const utcDate = fromZonedTime(zonedDate, timezone);
+  
+  const utcDate = toZonedTime(date_converted, 'UTC');
+  
   console.log({
     dueDate,
     timezone,
     date_converted,
-    zonedDate,
     utcDate,
   });
+  
   return utcDate;
 }
