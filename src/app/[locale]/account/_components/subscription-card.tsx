@@ -53,7 +53,10 @@ export default function SubscriptionCard({ subscription }: Props) {
         </div>
         <Button asChild variant="secondary" className="w-full" size="sm">
           {subscription.portalUrl && subscription.isSubscribed ? (
+            <>
             <AdminSubButton portal_url={subscription.portalUrl} size="sm"/>
+            <pre>{JSON.stringify(subscription)}</pre>
+            </>
           ) : (
             <Link href="/plans">{t("upgrade_plan")}</Link>
           )}
