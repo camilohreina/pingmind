@@ -45,7 +45,7 @@ export function dateFromHumanWithTimezone(
   dueDate: string,
   timezone: string,
 ): Date | null {
-  
+
   const nowInUserTimezone = toZonedTime(new Date(), timezone);
 
   const date_converted = chrono.parseDate(
@@ -63,7 +63,7 @@ export function dateFromHumanWithTimezone(
     return null;
   }
   // Luego convertimos a UTC
-  const utcDate = toZonedTime(date_converted, 'UTC');
+  const utcDate = fromZonedTime(date_converted, 'UTC');
   
   console.log({
     dueDate,
