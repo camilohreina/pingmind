@@ -60,12 +60,16 @@ export function dateFromHumanWithTimezone(
     return null;
   }
   
-  const utcDate = toZonedTime(date_converted, 'UTC');
+  // Primero convertimos a la zona horaria local
+  const localDate = fromZonedTime(date_converted, timezone);
+  // Luego convertimos a UTC
+  const utcDate = toZonedTime(localDate, 'UTC');
   
   console.log({
     dueDate,
     timezone,
     date_converted,
+    localDate,
     utcDate,
   });
   
