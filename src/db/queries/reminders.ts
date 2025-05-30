@@ -32,7 +32,9 @@ export const getReminderSame = ({
 export const getReminderLastMinute = () => {
   const now = new Date();
   const utcNow = new Date(now.toUTCString());
+  utcNow.setSeconds(0, 0);
   const utcAfter = new Date(utcNow.getTime() + 60000);
+  utcAfter.setSeconds(0, 0);
   return db
     .select({
       reminder: reminders,
