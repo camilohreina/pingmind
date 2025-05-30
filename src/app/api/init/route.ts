@@ -1,8 +1,8 @@
-import { setupCronJobs } from "@/lib/cron";
+import { sendAlertReminder } from "@/controllers/reminder.controller";
 
 export async function POST() {
-  setupCronJobs();
-  return Response.json({ status: "initialized" });
+  sendAlertReminder();
+  return Response.json({ ok: true, status: "success" }, { status: 200 });
 }
 
 /* const reminders = [
