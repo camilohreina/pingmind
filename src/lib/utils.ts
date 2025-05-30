@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { getCountry } from "countries-and-timezones";
+import * as chrono from "chrono-node";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,4 +39,34 @@ export function formatCurrency(amount: number, currency: string) {
     maximumFractionDigits: 0,
     notation: "standard",
   });
+}
+
+export function dateFromHumanWithTimezone(
+  dueDate: string,
+  timezone: string,
+): Date | null {
+  const date_converted = chrono.parseDate(
+    dueDate,
+    {
+      instant: new Date(),
+      timezone,
+    },
+    {
+      forwardDate: true,
+    },
+  );
+
+  if (!date_converted) {
+    return null;
+  }
+  const zonedDate = toZonedTime(date_converted, timezone);
+  const utcDate = fromZonedTime(zonedDate, timezone);
+  console.log({
+    dueDate,
+    timezone,
+    date_converted,
+    zonedDate,
+    utcDate,
+  });
+  return utcDate;
 }

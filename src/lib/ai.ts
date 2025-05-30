@@ -4,7 +4,7 @@ import { generateObject, generateText, tool } from "ai";
 import { z } from "zod";
 import { AiError } from "./error";
 import fs from "fs";
-import * as chrono from "chrono-node";
+
 import {
   addNewReminder,
   cancelReminder,
@@ -16,6 +16,7 @@ import {
   createLogMessage,
   finishContextMessage,
 } from "@/db/queries/log-messages";
+import { dateFromHumanWithTimezone } from "./utils";
 const openaiLib = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -308,16 +309,7 @@ const createReminderUser = tool({
     alert,
     timezone,
   }) => {
-    const reminderDate = chrono.parseDate(
-      dueDate,
-      {
-        instant: new Date(),
-        timezone,
-      },
-      {
-        forwardDate: true,
-      },
-    );
+    const reminderDate = dateFromHumanWithTimezone(dueDate, timezone);
     if (!reminderDate) {
       throw new AiError("Error parsing date");
     }
@@ -410,16 +402,7 @@ const updateReminderUser = tool({
     alert,
     timezone,
   }) => {
-    const reminderDate = chrono.parseDate(
-      dueDate,
-      {
-        instant: new Date(),
-        timezone,
-      },
-      {
-        forwardDate: true,
-      },
-    );
+    const reminderDate = dateFromHumanWithTimezone(dueDate, timezone);
     if (!reminderDate) {
       throw new AiError("Error parsing date");
     }
@@ -484,7 +467,7 @@ export async function processMessageByUser({
   message,
   phone,
   context_messages,
-  timezone
+  timezone,
 }: {
   userId: string;
   message: string;
