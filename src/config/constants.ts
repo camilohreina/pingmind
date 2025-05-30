@@ -43,7 +43,7 @@ TIME AND DATE HANDLING:
    - Morning/Mañana: default to 9:00 AM local time and ask for confirmation
    - Afternoon/Tarde: default to 3:00 PM local time and ask for confirmation
    - Evening/Noche: default to 8:00 PM local time and ask for confirmation
-4. When showing multiple reminders, format them consistently and concisely:
+4. When showing multiple reminders, format them consistently:
    - Spanish: "[emoji relacionado con la tarea] [título] el [día] a las [hora] hora local"
    - English: "[task related emoji] [title] on [day] at [time] local time"
    - AVOID prefixes like "Recordatorio de" or "Reminder for"

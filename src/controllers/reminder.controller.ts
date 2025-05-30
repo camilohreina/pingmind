@@ -20,7 +20,7 @@ type ReminderUser = {
 export const sendAlertReminder = async () => {
   try {
     const currentReminders = await getReminderLastMinute();
-
+    console.log({ currentReminders });
     if (currentReminders.length === 0) {
       return { status: "success", ok: true };
     }
@@ -106,7 +106,6 @@ export const cancelReminder = async ({
     id: reminderId,
     status: "CANCELLED",
   });
-
 };
 
 export const formatRemindersToAi = ({
