@@ -63,7 +63,7 @@ export function dateFromHumanWithTimezone(
     return null;
   }
   // Luego convertimos a UTC
-  const utcDate = fromZonedTime(date_converted, 'UTC');
+  const utcDate = fromZonedTime(date_converted, timezone);
   
   console.log({
     dueDate,
