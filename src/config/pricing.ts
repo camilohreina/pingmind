@@ -11,7 +11,7 @@ export const PLANS = [
         variantId: "683605",
       },
       live: {
-        variantId: "812713",
+        variantId: "683605",
       },
     },
     price: {
@@ -34,7 +34,7 @@ export const PLANS = [
         variantId: "683622",
       },
       live: {
-        variantId: "812714",
+        variantId: "683622",
       },
     },
     price: {
