@@ -217,9 +217,9 @@
     "plans": {
       "starter": {
         "name": "Starter",
-        "tagline": "Para uso personal con necesidades básicas.",
+        "tagline": "Para necesidades básicas.",
         "features": {
-          "whatsapp_reminders": "Soporte de recordatorios de WhatsApp.",
+          "whatsapp_reminders": "Soporte de WhatsApp.",
           "voice_recognition": {
             "text": "Reconocimiento de voz",
             "footnote": "Transcribe contenido de audio a texto con nuestra IA."
@@ -245,9 +245,9 @@
       },
       "pro": {
         "name": "Pro",
-        "tagline": "Para recordatorios con necesidades superiores.",
+        "tagline": "Para necesidades superiores.",
         "features": {
-          "whatsapp_reminders": "Soporte de recordatorios de WhatsApp.",
+          "whatsapp_reminders": "Soporte de WhatsApp.",
           "voice_recognition": {
             "text": "Reconocimiento de voz",
             "footnote": "Transcribe contenido de audio a texto con nuestra IA."
@@ -261,7 +261,7 @@
             "footnote": "Extrae texto de imágenes y administra recordatorios."
           },
           "early_access": {
-            "text": "Características de acceso anticipado"
+            "text": "Acceso anticipado"
           },
           "priority_support": {
             "text": "Soporte prioritario"
