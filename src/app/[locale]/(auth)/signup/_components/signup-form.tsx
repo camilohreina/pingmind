@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 import { detectUserCountry } from "@/services/utils.services";
 import { Country } from "react-phone-number-input";
 import TermsAcceptance from "@/components/terms-acceptance";
+import { TimezoneCombobox } from "@/components/ui/timezone-combobox";
 
 interface Props {
   phone: null | string;
@@ -39,6 +40,7 @@ interface Props {
 
 export default function SignUpForm({ phone }: Props) {
   const [countryCode, setCountryCode] = useState<Country>("US");
+  const [currentCountryForTimezone, setCurrentCountryForTimezone] = useState<string>("US");
   const t = useTranslations("signup_page.form");
   const router = useRouter();
   const { mutateAsync: signupFn, isPending } = useMutation({
@@ -54,6 +56,7 @@ export default function SignUpForm({ phone }: Props) {
       phone: phone ? `+${phone}` : "",
       password: "",
       country: "",
+      timezone: "",
     },
   });
 
@@ -61,9 +64,11 @@ export default function SignUpForm({ phone }: Props) {
     detectUserCountry().then((country_code: Country) => {
       if (country_code) {
         setCountryCode(country_code);
+        setCurrentCountryForTimezone(country_code);
+        form.setValue("country", country_code);
       }
     });
-  }, []);
+  }, [form]);
 
   async function onSubmit(data: SignUpFormData) {
     try {
@@ -105,7 +110,10 @@ export default function SignUpForm({ phone }: Props) {
                   <FormControl>
                     <PhoneInput
                       onCountryChange={(country) => {
-                        form.setValue("country", country ? country : "");
+                        console.log('Country changed to:', country);
+                        const countryStr = country ? country : "";
+                        form.setValue("country", countryStr);
+                        setCurrentCountryForTimezone(countryStr);
                       }}
                       {...field}
                       defaultCountry={countryCode}
@@ -115,6 +123,28 @@ export default function SignUpForm({ phone }: Props) {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <FormField
+              control={form.control}
+              name="timezone"
+              render={({ field }) => {
+                console.log('Current country in timezone field:', currentCountryForTimezone);
+                return (
+                  <FormItem>
+                    <FormLabel>{t("timezoneLabel")}</FormLabel>
+                    <FormControl>
+                      <TimezoneCombobox
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        countryCode={currentCountryForTimezone}
+                        placeholder={t("timezonePlaceholder")}
+                      />
+                    </FormControl>
+                    <FormDescription>{t("timezoneDescription")}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <FormField
               control={form.control}

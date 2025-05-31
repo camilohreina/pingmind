@@ -27,6 +27,7 @@ export const signUpSchema = z.object({
       "Password must contain at least one special character",
     ),
   country: z.string().min(1, "Country is required"),
+  timezone: z.string().min(1, "Timezone is required"),
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

@@ -5,7 +5,7 @@ import { SignUpFormData } from "@/schemas/auth.schema";
 import { hash } from "bcrypt";
 
 export const createUser = async (data: SignUpFormData) => {
-  const { name, phone, password, country } = data;
+  const { name, phone, password, country, timezone } = data;
   try {
     // Verify if the user already exists
     const existingUser = await getUserByPhone(phone);
@@ -15,7 +15,6 @@ export const createUser = async (data: SignUpFormData) => {
     }
     // Hash the password
     const hashedPassword = await hash(password, 10);
-    const timezone = getTimeZoneFromCountryCode(country);
 
     // Create the user
     await dbCreateUser({
