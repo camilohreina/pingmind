@@ -14,7 +14,7 @@ interface PageSEOProps {
 
 export function customMetaDataGenerator({
   title,
-  description = 'PingMind simplifies your life with smart reminders: manage your tasks through WhatsApp, receive timely notifications, and let our AI handle the rest!',
+  description = 'Pingmind simplifies your life with smart reminders: manage your tasks through WhatsApp, receive timely notifications, and let our AI handle the rest!',
   canonicalUrl = 'https://pingmind.vercel.app',
   icon = '/icons/apple-touch-icon.png',
   ogType = 'website',

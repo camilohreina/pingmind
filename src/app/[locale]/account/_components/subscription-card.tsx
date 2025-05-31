@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import { format } from "date-fns";
 import React from "react";
 import AdminSubButton from "@/components/admin-sub-button";
+import WhatsAppInvitation from "@/components/whatsapp-invitation";
 
 type Props = {
   subscription: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
@@ -53,7 +54,10 @@ export default function SubscriptionCard({ subscription }: Props) {
         </div>
         <Button asChild variant="secondary" className="w-full" size="sm">
           {subscription.portalUrl && subscription.isSubscribed ? (
-            <AdminSubButton portal_url={subscription.portalUrl} size="sm"/>
+            <>
+              <AdminSubButton portal_url={subscription.portalUrl} size="sm" />
+              <WhatsAppInvitation />
+            </>
           ) : (
             <Link href="/plans">{t("upgrade_plan")}</Link>
           )}

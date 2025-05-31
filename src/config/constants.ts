@@ -6,7 +6,7 @@ export const LEMON_PATH_OBJ = process.env.NODE_ENV === "development"
   : "live";
   
 export const AUTO_REPLY_REGISTER = (phone: string) =>
-  `Hello! 👋 This is a message from Camilo, the creator of PingMind:\n
+  `Hello! 👋 This is a message from Camilo, the creator of Pingmind:\n
 Great news! You can now try pingmind free for 3 days and discover all its features 🎉
 Visit our website to register and choose one of our plans. Don't worry, you can cancel anytime 🤝
 https://pingmind.vercel.app/en/signup?phone=${phone} \n

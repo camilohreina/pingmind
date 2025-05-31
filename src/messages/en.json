@@ -19,7 +19,7 @@
       }
     },
     "header": {
-      "title": "PingMind",
+      "title": "Pingmind",
       "login": "Login",
       "logout": "Log out",
       "signup": "Get Started",
@@ -325,7 +325,7 @@
     "subtitle": "Manage your account settings",
     "plan_card": {
       "title": "Your Plan",
-      "description": "You don't have any active plan yet. Try PingMind today!",
+      "description": "You don't have any active plan yet. Try Pingmind today!",
       "phone_placeholder": "WhatsApp Number",
       "action_button": "Upgrade Now",
       "admin_button": "Manage your plan"
@@ -341,7 +341,12 @@
       "cancellation": "Your subscription is canceled on {date}",
       "renewal": "Your plan renews on {date}",
       "manage_subscription": "Manage your subscription",
-      "upgrade_plan": "Upgrade your plan"
+      "upgrade_plan": "Upgrade your plan",
+      "whatsapp_invitation": {
+        "title": "Start using Pingmind!",
+        "description": "Send a message to our WhatsApp to start creating reminders.",
+        "button": "Open WhatsApp Chat"
+      }
     },
     "timezone_card": {
       "title": "Timezone",

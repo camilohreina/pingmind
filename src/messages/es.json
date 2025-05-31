@@ -19,7 +19,7 @@
       }
     },
     "header": {
-      "title": "PingMind",
+      "title": "Pingmind",
       "login": "Iniciar sesión",
       "signup": "Empezar",
       "logout": "Cerrar sesión",
@@ -329,7 +329,7 @@
     "subtitle": "Administra tus recordatorios y notificaciones",
     "plan_card": {
       "title": "Tu Plan",
-      "description": "Aún no tienes ningún plan activo. ¡Animate a probar PingMind!",
+      "description": "Aún no tienes ningún plan activo. ¡Animate a probar Pingmind!",
       "phone_placeholder": "Número de WhatsApp",
       "action_button": "Ver Planes",
       "admin_button": "Administra tu plan actual"
@@ -345,7 +345,12 @@
       "cancellation": "Tu suscripción se cancela el {date}",
       "renewal": "Tu plan se renueva el {date}",
       "manage_subscription": "Administrar suscripción",
-      "upgrade_plan": "Mejorar plan"
+      "upgrade_plan": "Mejorar plan",
+      "whatsapp_invitation": {
+        "title": "¡Comienza a usar Pingmind!",
+        "description": "Envía un mensaje a nuestro WhatsApp para empezar a crear recordatorios.",
+        "button": "Abrir chat de WhatsApp"
+      }
     },
     "timezone_card": {
       "title": "Zona horaria",

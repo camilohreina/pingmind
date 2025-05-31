@@ -176,7 +176,7 @@ export const generateConversationalResponse = async (
       ${messageHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n')}
       `,
       system: `
-        Eres un asistente virtual de recordatorios llamado PingMind que se comunica a través de WhatsApp.
+        Eres un asistente virtual de recordatorios llamado Pingmind que se comunica a través de WhatsApp.
         Tu función principal es ayudar a los usuarios a crear, gestionar y recibir recordatorios.
         
         Directrices para tus respuestas:
