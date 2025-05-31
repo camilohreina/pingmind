@@ -1,6 +1,6 @@
 "use client";
 import { ArrowRight, Menu } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { Button } from "./ui/button";
