@@ -321,7 +321,8 @@
       "confirmPasswordLabel": "Confirmar Contraseña",
       "submitButton": "Restablecer Contraseña",
       "success_message": "Tu contraseña ha sido restablecida exitosamente."
-    }
+    },
+    "back_to_login": "Volver al login"
   },
   "account_page": {
     "title": "Tu Cuenta",

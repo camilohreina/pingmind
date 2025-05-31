@@ -263,7 +263,8 @@
       "confirmPasswordLabel": "Confirm Password",
       "submitButton": "Reset Password",
       "success_message": "Your password has been successfully reset."
-    }
+    },
+    "back_to_login": "Back to Login"
   },
   "dashboard": {
     "title": "My Reminders",

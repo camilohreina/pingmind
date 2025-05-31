@@ -131,7 +131,7 @@ export function LoginForm() {
                     <FormLabel>{t("password_label")}</FormLabel>
                     <Link
                       href="/reset-password"
-                      className="ml-auto inline-block text-sm underline"
+                      className="ml-auto inline-block text-sm hover:underline"
                     >
                       {t("reset_password")}
                     </Link>
@@ -155,7 +155,7 @@ export function LoginForm() {
           <CardFooter>
             <div className="w-full text-center text-sm text-gray-400">
               {t("signup_prompt")}{" "}
-              <Link className="underline" href="/signup">
+              <Link className="hover:underline text-primary" href="/signup">
                 {t("signup_link")}
               </Link>
             </div>

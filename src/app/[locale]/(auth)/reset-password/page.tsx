@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -14,6 +15,7 @@ import { usePasswordReset } from "./hooks/usePasswordReset";
 import { useEffect, useState } from "react";
 import { detectUserCountry } from "@/services/utils.services";
 import { Country } from "react-phone-number-input";
+import { Link } from "@/i18n/routing";
 
 export default function ResetPassword() {
   const [countryCode, setCountryCode] = useState<Country>("US"); 
@@ -65,6 +67,13 @@ export default function ResetPassword() {
             />
           )}
         </CardContent>
+        <CardFooter>
+          <div className="w-full text-center text-sm text-gray-400">
+            <Link className="text-primary hover:underline" href="/login">
+              {t("back_to_login")}
+            </Link>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );
