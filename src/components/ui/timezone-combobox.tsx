@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useTranslations } from "next-intl";
 
 interface TimezoneComboboxProps {
   value?: string;
@@ -30,9 +31,10 @@ export function TimezoneCombobox({
   value,
   onValueChange,
   countryCode = "",
-  placeholder = "Seleccionar timezone...",
+  placeholder,
   disabled = false,
 }: TimezoneComboboxProps) {
+  const t = useTranslations("signup_page.form.timezoneCombobox");
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const previousCountryCode = React.useRef<string>("");
@@ -175,26 +177,26 @@ export function TimezoneCombobox({
           className="w-full justify-between"
           disabled={disabled}
         >
-          {selectedTimezone ? selectedTimezone.label : placeholder}
+          {selectedTimezone ? selectedTimezone.label : (placeholder || t("placeholder"))}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
         <Command shouldFilter={false}>
           <CommandInput
-            placeholder="Buscar timezone..."
+            placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
           <CommandList>
             <CommandEmpty>
               {searchQuery
-                ? "No se encontraron timezones."
-                : "Escribe para buscar timezones..."}
+                ? t("noResults")
+                : t("searchPrompt")}
             </CommandEmpty>
             {/* Mostrar otros timezones solo cuando hay búsqueda */}
             {searchQuery && searchResults.length > 0 && (
-              <CommandGroup heading="Otros timezones">
+              <CommandGroup heading={t("otherTimezones")}>
                 {searchResults
                   .filter(
                     (tz) =>
@@ -226,7 +228,7 @@ export function TimezoneCombobox({
             {/* Mostrar timezones del país cuando no hay búsqueda o cuando hay búsqueda pero también coinciden */}
             {countryTimezones.length > 0 && (
               <CommandGroup
-                heading={searchQuery ? "De tu país" : "Basado en tu país"}
+                heading={searchQuery ? t("countryTimezones") : t("countryTimezonesDefault")}
               >
                 {countryTimezones.map((timezone) => (
                   <CommandItem

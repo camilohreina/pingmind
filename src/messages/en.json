@@ -143,6 +143,15 @@
       "timezoneLabel": "Timezone",
       "timezonePlaceholder": "Select your timezone...",
       "timezoneDescription": "Choose your timezone for accurate reminder notifications.",
+      "timezoneCombobox": {
+        "placeholder": "Select timezone...",
+        "searchPlaceholder": "Search timezone...",
+        "noResults": "No timezones found.",
+        "searchPrompt": "Type to search timezones...",
+        "countryTimezones": "From your country",
+        "countryTimezonesDefault": "Based on your country",
+        "otherTimezones": "Other timezones"
+      },
       "passwordLabel": "Password",
       "passwordDescription": "Password must be at least 8 characters and include lowercase, uppercase, number, and special character.",
       "submitButton": "Sign Up",

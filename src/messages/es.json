@@ -201,6 +201,15 @@
       "timezoneLabel": "Zona horaria",
       "timezonePlaceholder": "Selecciona tu zona horaria...",
       "timezoneDescription": "Elige tu zona horaria para notificaciones precisas de recordatorios.",
+      "timezoneCombobox": {
+        "placeholder": "Seleccionar timezone...",
+        "searchPlaceholder": "Buscar timezone...",
+        "noResults": "No se encontraron timezones.",
+        "searchPrompt": "Escribe para buscar timezones...",
+        "countryTimezones": "De tu país",
+        "countryTimezonesDefault": "Basado en tu país",
+        "otherTimezones": "Otros timezones"
+      },
       "passwordLabel": "Contraseña",
       "passwordDescription": "La contraseña debe tener al menos 8 caracteres e incluir minúsculas, mayúsculas, números y un carácter especial.",
       "submitButton": "Registrarse",
