@@ -110,7 +110,6 @@ export default function SignUpForm({ phone }: Props) {
                   <FormControl>
                     <PhoneInput
                       onCountryChange={(country) => {
-                        console.log('Country changed to:', country);
                         const countryStr = country ? country : "";
                         form.setValue("country", countryStr);
                         setCurrentCountryForTimezone(countryStr);
@@ -128,7 +127,6 @@ export default function SignUpForm({ phone }: Props) {
               control={form.control}
               name="timezone"
               render={({ field }) => {
-                console.log('Current country in timezone field:', currentCountryForTimezone);
                 return (
                   <FormItem>
                     <FormLabel>{t("timezoneLabel")}</FormLabel>

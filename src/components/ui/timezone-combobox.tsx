@@ -89,13 +89,6 @@ export function TimezoneCombobox({
 
   // Manejar cambios de país y auto-selección
   React.useEffect(() => {
-    console.log("Country effect triggered:", {
-      countryCode,
-      previousCountry: previousCountryCode.current,
-      countryTimezones: countryTimezones.length,
-      value,
-    });
-
     // Verificar si realmente cambió el país
     const countryChanged = previousCountryCode.current !== countryCode;
 
@@ -111,13 +104,6 @@ export function TimezoneCombobox({
 
     // Solo procesar si el país realmente cambió
     if (countryChanged) {
-      console.log(
-        "Country actually changed from",
-        previousCountryCode.current,
-        "to",
-        countryCode,
-      );
-
       // Si hay un timezone seleccionado, verificar si pertenece al nuevo país
       if (value) {
         const belongsToCountry = countryTimezones.some(
@@ -127,16 +113,8 @@ export function TimezoneCombobox({
           // El timezone actual no pertenece al nuevo país
           // Si el nuevo país tiene solo un timezone, seleccionarlo
           if (countryTimezones.length === 1) {
-            console.log(
-              "Auto-selecting single timezone for new country:",
-              countryTimezones[0].value,
-            );
             onValueChange(countryTimezones[0].value);
           } else {
-            // Si tiene múltiples timezones, resetear para que el usuario elija
-            console.log(
-              "Resetting timezone for country with multiple timezones",
-            );
             onValueChange("");
           }
         }
@@ -144,10 +122,6 @@ export function TimezoneCombobox({
       } else {
         // Si no hay timezone seleccionado, auto-seleccionar si solo hay uno disponible
         if (countryTimezones.length === 1) {
-          console.log(
-            "Auto-selecting timezone for country with single timezone:",
-            countryTimezones[0].value,
-          );
           onValueChange(countryTimezones[0].value);
         }
       }
@@ -177,7 +151,9 @@ export function TimezoneCombobox({
           className="w-full justify-between"
           disabled={disabled}
         >
-          {selectedTimezone ? selectedTimezone.label : (placeholder || t("placeholder"))}
+          {selectedTimezone
+            ? selectedTimezone.label
+            : placeholder || t("placeholder")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -190,9 +166,7 @@ export function TimezoneCombobox({
           />
           <CommandList>
             <CommandEmpty>
-              {searchQuery
-                ? t("noResults")
-                : t("searchPrompt")}
+              {searchQuery ? t("noResults") : t("searchPrompt")}
             </CommandEmpty>
             {/* Mostrar otros timezones solo cuando hay búsqueda */}
             {searchQuery && searchResults.length > 0 && (
@@ -228,7 +202,11 @@ export function TimezoneCombobox({
             {/* Mostrar timezones del país cuando no hay búsqueda o cuando hay búsqueda pero también coinciden */}
             {countryTimezones.length > 0 && (
               <CommandGroup
-                heading={searchQuery ? t("countryTimezones") : t("countryTimezonesDefault")}
+                heading={
+                  searchQuery
+                    ? t("countryTimezones")
+                    : t("countryTimezonesDefault")
+                }
               >
                 {countryTimezones.map((timezone) => (
                   <CommandItem
