@@ -24,6 +24,17 @@ export const getUserById = async (id: string) => {
   });
 };
 
+export const updateUserTimezone = async (userId: string, timezone: string) => {
+  return db
+    .update(users)
+    .set({
+      timezone,
+      updated_at: new Date(),
+    })
+    .where(eq(users.id, userId))
+    .execute();
+};
+
 export const saveResetPasswordCode = (phone: string, code: string) => {
   return db
     .update(users)

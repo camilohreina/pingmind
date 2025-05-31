@@ -341,6 +341,16 @@
       "renewal": "Your plan renews on {date}",
       "manage_subscription": "Manage your subscription",
       "upgrade_plan": "Upgrade your plan"
+    },
+    "timezone_card": {
+      "title": "Timezone",
+      "description": "Your timezone is used to schedule reminders accurately.",
+      "current_timezone": "Current timezone",
+      "update_button": "Update timezone",
+      "updating_button": "Updating...",
+      "disclaimer": "Note: Existing reminders will not be affected. Only new or updated reminders will use the new timezone.",
+      "success_message": "Timezone updated successfully",
+      "error_message": "Failed to update timezone. Please try again."
     }
   },
   "terms": {

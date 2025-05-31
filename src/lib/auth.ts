@@ -13,12 +13,14 @@ declare module "next-auth" {
   interface User {
     id?: string;
     phone?: string;
+    timezone?: string;
   }
 
   interface Session {
     user: {
       id: string;
       phone: string;
+      timezone: string;
     } & DefaultSession["user"];
   }
 }
@@ -50,7 +52,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const { phone, password } = credentials;
         const user = await getUserByPhone(phone as string);
-        
+
         if (!user) {
           return null;
         }
@@ -59,7 +61,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           password as string,
           user.password as string,
         );
-        console.log({ isValid, password, userPassword: user.password });
         if (isValid) {
           return {
             id: user.id,
@@ -67,6 +68,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             email: user.email,
             image: user.image,
             phone: user.phone,
+            timezone: user.timezone,
           };
         }
 
@@ -75,7 +77,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user, trigger, session }) {
       if (account?.provider === "credentials") {
         token.credentials = true;
         // Añadir el id del usuario al token
@@ -86,6 +88,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (user?.phone) {
           token.phone = user.phone;
         }
+
+        if (user?.timezone) {
+          token.timezone = user.timezone;
+        }
+      }
+      if (trigger === "update" && session.timezone) {
+        token.timezone = session.timezone;
       }
       return token;
     },
@@ -97,6 +106,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // Añadir el teléfono del token a la sesión
       if (token?.phone) {
         session.user.phone = token.phone as string;
+      }
+
+      if (token?.timezone) {
+        session.user.timezone = token.timezone as string;
       }
       return session;
     },
@@ -135,6 +148,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 export const session = async ({ session, token }: any) => {
   session.user.id = token.id;
   session.user.phone = token.phone;
+  session.user.timezone = token.timezone; // Default timezone if not set
   return session;
 };
 
@@ -152,5 +166,6 @@ export async function getUserServerSession() {
     last_name: "",
     picture: user?.image,
     phone: user?.phone,
+    timezone: user?.timezone || "America/New_York", // Default timezone if not set
   };
 }

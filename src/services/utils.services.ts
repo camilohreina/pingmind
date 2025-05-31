@@ -46,3 +46,16 @@ export const getExchangeRates = async () => {
     return null;
   }
 };
+
+export const updateUserTimezone = async (userId: string, timezone: string) => {
+  try {
+    const response = await axios.patch('/api/user/timezone', {
+      userId,
+      timezone,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar la zona horaria del usuario:', error);
+    throw new Error('Failed to update timezone');
+  }
+}

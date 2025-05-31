@@ -19,6 +19,13 @@ export default function AccountSkeleton() {
           <Skeleton className="h-5 w-[250px] mx-auto mb-6" />
           <Skeleton className="h-10 w-[200px] mx-auto" />
         </div>
+        <div className="rounded-lg border p-6">
+          <Skeleton className="h-7 w-[150px] mx-auto mb-3" />
+          <Skeleton className="h-5 w-[250px] mx-auto mb-6" />
+          <Skeleton className="h-5 w-[250px] mx-auto mb-6" />
+          <Skeleton className="h-5 w-[250px] mx-auto mb-6" />
+          <Skeleton className="h-10 w-[200px] mx-auto" />
+        </div>
       </div>
     </MaxWidthWrapper>
   );

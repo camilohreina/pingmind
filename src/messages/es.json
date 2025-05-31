@@ -334,17 +334,27 @@
       "admin_button": "Administra tu plan actual"
     },
     "number_card": {
-      "title": "Número de Teléfono",
+      "title": "Número de teléfono",
       "description": "Tu número de teléfono es utilizado para enviar recordatorios.",
       "phone_placeholder": "Número de teléfono"
     },
     "subscription_card": {
-      "title": "Plan de Suscripción",
+      "title": "Plan de suscripción",
       "description": "Actualmente estás en el plan {planName}.",
       "cancellation": "Tu suscripción se cancela el {date}",
       "renewal": "Tu plan se renueva el {date}",
       "manage_subscription": "Administrar suscripción",
       "upgrade_plan": "Mejorar plan"
+    },
+    "timezone_card": {
+      "title": "Zona horaria",
+      "description": "Tu zona horaria se usa para programar recordatorios con precisión.",
+      "current_timezone": "Zona horaria actual",
+      "update_button": "Actualizar zona horaria",
+      "updating_button": "Actualizando...",
+      "disclaimer": "Nota: Los recordatorios existentes no se verán afectados. Solo los recordatorios nuevos o actualizados usarán la nueva zona horaria.",
+      "success_message": "Zona horaria actualizada exitosamente",
+      "error_message": "Error al actualizar la zona horaria. Por favor, inténtalo de nuevo."
     }
   },
   "terms": {

@@ -4,6 +4,7 @@ import { getUserServerSession } from "@/lib/auth";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PlanCard from "./_components/plan-card";
 import PlanNumber from "./_components/plan-number";
+import TimezoneCard from "./_components/timezone-card";
 import { getTranslations } from "next-intl/server";
 import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
 import SubscriptionCard from "./_components/subscription-card";
@@ -27,6 +28,7 @@ async function AccountContent() {
       <div className="mx-auto mb-10 sm:max-w-lg flex flex-col gap-10">
         {subscription_plan?.isSubscribed ? <SubscriptionCard subscription={subscription_plan}/> : <PlanCard />}
         <PlanNumber number={user.phone} />
+        <TimezoneCard currentTimezone={user.timezone} userId={user.id} />
       </div>
     </MaxWidthWrapper>
   );
