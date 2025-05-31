@@ -38,7 +38,7 @@ export default async function PrivacyPage({ params }: Props) {
   }
 
   return (
-    <MaxWidthWrapper className="mb-8 mt-24">
+    <MaxWidthWrapper className="mb-8 mt-12 md:mt-24">
       <article className="mx-auto max-w-4xl">
         <ReactMarkdown
           components={{
