@@ -3,7 +3,7 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 export default function AccountSkeleton() {
   return (
-    <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
+    <MaxWidthWrapper className="mb-8 mt-12 md:mt-24 text-center max-w-5xl">
       <div className="mb-10">
         <Skeleton className="h-12 w-[200px] mx-auto mb-4" />
         <Skeleton className="h-5 w-[300px] mx-auto" />

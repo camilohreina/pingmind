@@ -20,7 +20,7 @@ async function AccountContent() {
   const subscription_plan = await getUserSubscriptionPlan();
 
   return (
-    <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
+    <MaxWidthWrapper className="mb-8 mt-12 md:mt-24 text-center max-w-5xl">
       <div className="mb-10">
         <h1 className="text-4xl font-bold sm:text-5xl">{t("title")}</h1>
         <p className="text-base text-muted-foreground ">{t("subtitle")}</p>

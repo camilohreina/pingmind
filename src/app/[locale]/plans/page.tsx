@@ -61,7 +61,7 @@ export default async function Page({}: Props) {
   ];
 
   return (
-    <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
+    <MaxWidthWrapper className="mb-8 mt-12 md:mt-24 text-center max-w-5xl">
       <div className="mx-auto mb-10 sm:max-w-lg">
         <h1 className="text-6xl font-bold sm:text-7xl">{t("title")}</h1>
         <p className="mt-5 text-gray-400 sm:text-lg">{t("subtitle")}</p>
