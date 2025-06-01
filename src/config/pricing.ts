@@ -8,10 +8,10 @@ export const PLANS = [
     imageRecognition: false,
     mode: {
       test: {
-        variantId: "683605",
+        variantId: "829180",
       },
       live: {
-        variantId: "683605",
+        variantId: "829180",
       },
     },
     price: {
