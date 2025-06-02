@@ -15,7 +15,7 @@ interface PageSEOProps {
 export function customMetaDataGenerator({
   title,
   description = 'Pingmind simplifies your life with smart reminders: manage your tasks through WhatsApp, receive timely notifications, and let our AI handle the rest!',
-  canonicalUrl = 'https://pingmind.vercel.app',
+  canonicalUrl = 'https://pingmind.app',
   icon = '/icons/apple-touch-icon.png',
   ogType = 'website',
   keywords = [
@@ -30,7 +30,7 @@ export function customMetaDataGenerator({
     'text reminders',
     'reminder automation',
   ],
-  ogImage = 'https://pingmind.vercel.app/og-image.webp',
+  ogImage = 'https://pingmind.app/og-image.webp',
   twitterCard = 'summary_large_image',
 }: PageSEOProps): Metadata {
   // Create Site Title

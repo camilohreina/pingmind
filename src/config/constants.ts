@@ -9,7 +9,7 @@ export const AUTO_REPLY_REGISTER = (phone: string) =>
   `Hello! 👋 This is a message from Camilo, the creator of Pingmind:\n
 Great news! You can now try pingmind free for 3 days and discover all its features 🎉
 Visit our website to register and choose one of our plans. Don't worry, you can cancel anytime 🤝
-https://pingmind.vercel.app/en/signup?phone=${phone} \n
+https://pingmind.app/en/signup?phone=${phone} \n
 Once you have a plan, come back to this conversation and send a message to continue chatting.\n
 Thanks for being part of this adventure! 🚀`;
 
