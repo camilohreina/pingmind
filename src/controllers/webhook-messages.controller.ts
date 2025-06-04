@@ -134,7 +134,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     }
 
     console.log({ type_message, data });
-
+    
     if (type_message === "AUDIO" && data.message?.url) {
       const audioMessage = {
         url: data.message.url,
@@ -143,6 +143,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       const message_audio = await handleAudioReminder({
         message: audioMessage,
       });
+      console.log({ message_audio, init: '2' });
       if (message_audio) {
         content = message_audio;
         result = await handleReminder({
