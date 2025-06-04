@@ -133,6 +133,8 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       });
     }
 
+    console.log({ type_message, data });
+
     if (type_message === "AUDIO" && data.message?.url) {
       const audioMessage = {
         url: data.message.url,
@@ -211,7 +213,7 @@ export const handleReminder = async ({
       message,
       phone: phone,
       context_messages: format_context,
-      timezone
+      timezone,
     });
 
     if (text) {
