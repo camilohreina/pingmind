@@ -1,17 +1,16 @@
 export const TRIGGER_REGISTER_WORDS = ["hi", "hola", "buenas", "hello"];
 
+export const LEMON_PATH_OBJ =
+  process.env.NODE_ENV === "development" ? "test" : "live";
 
-export const LEMON_PATH_OBJ = process.env.NODE_ENV === "development"
-  ? "test"
-  : "live";
-  
-export const AUTO_REPLY_REGISTER = (phone: string) =>
-  `Hello! 👋 This is a message from Camilo, the creator of Pingmind:\n
-Great news! You can now try pingmind free for 3 days and discover all its features 🎉
-Visit our website to register and choose one of our plans. Don't worry, you can cancel anytime 🤝
-https://pingmind.app/en/signup?phone=${phone} \n
-Once you have a plan, come back to this conversation and send a message to continue chatting.\n
-Thanks for being part of this adventure! 🚀`;
+export const AUTO_REPLY_REGISTER_EN = (phone: string) =>
+  `Hey there! 👋 Camilo here, founder of Pingmind\n
+Amazing that you've made it this far! 🌟 I'm genuinely excited you want to try what we've built.\n
+🎁 You've got 3 FREE days to explore everything Pingmind has to offer and see the magic happen\n
+Jump in here to register and pick the plan that feels right for you (zero commitment - cancel anytime):\n
+https://pingmind.app/en/signup?phone=${phone}\n
+Once you're all set up, come back to this chat and drop me a message to keep the conversation going 💬\n
+Thanks for believing in this journey with me! 🚀✨`;
 
 export const getInfobipConfig = () => ({
   apiKey: process.env.INFOBIP_API_KEY || "",
@@ -86,9 +85,7 @@ ACTION FLOW FOR CANCELLATION MENTIONS:
 You have no other capabilities beyond reminder management. If asked to perform any other function, always redirect to your reminder management capabilities, using the same language as the user's input.
 `;
 
-
 export const locales = ["en", "es"];
-
 
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
