@@ -250,7 +250,7 @@ export async function translateRegistrationMessage(
         },
         {
           role: "user",
-          content: `User's message: "${user_message}". Translate the following registration message to the same language as the user's message: "${welcome_message}". Only return the translated message, no additional notes or explanations.`,
+          content: `User's message: "${user_message}". Detect language and translate the following registration message to the same language as the user's message: "${welcome_message}". Only return the translated message, no additional notes or explanations.`,
         },
       ],
     });
