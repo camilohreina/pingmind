@@ -51,15 +51,14 @@ export async function getUserSubscriptionPlan() {
 
   const plan = isSubscribed
     ? PLANS.find(
-        (plan) =>
-          plan.mode[LEMON_PATH_OBJ].variantId === dbUser.stripe_plan_id,
+        (plan) => plan.mode[LEMON_PATH_OBJ].variantId === dbUser.stripe_plan_id,
       )
     : null;
 
   let isCanceled = false;
   let portalUrl: string | null = null;
   if (isSubscribed && dbUser.stripe_subscription_id) {
-    const { data} = await getSubscription(dbUser.stripe_subscription_id);
+    const { data } = await getSubscription(dbUser.stripe_subscription_id);
     isCanceled = data?.data?.attributes?.cancelled || false;
     portalUrl = data?.data?.attributes?.urls?.customer_portal ?? "";
   }
@@ -79,20 +78,26 @@ export async function createCheckoutSession(
   variantId: string | number,
   userId: string,
 ) {
-  setupLemonConfig();
-  const { data } = await createCheckout(
-    process.env.LEMON_SQUEEZY_STORE_ID ?? "",
-    variantId,
-    {
-      checkoutOptions: {},
-      checkoutData: {
-        custom: {
-          userId,
+  try {
+    setupLemonConfig();
+    const { data } = await createCheckout(
+      process.env.LEMON_SQUEEZY_STORE_ID ?? "",
+      variantId,
+      {
+        checkoutOptions: {},
+        checkoutData: {
+          custom: {
+            userId,
+          },
         },
       },
-    },
-  );
-  return data;
+    );
+
+    return data;
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    throw error;
+  }
 }
 
 export const verifySignature = (

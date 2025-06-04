@@ -44,7 +44,7 @@ export const processUserMessage = async ({
     const { object } = await generateObject({
       output: "object",
       temperature: 0.5,
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       schema: z.object({
         action: z.enum(["CREATE", "UPDATE", "DELETE", "NO ACTION"]),
         reminderId: z.string().optional().nullable(),
@@ -241,7 +241,7 @@ export async function translateRegistrationMessage(
 ): Promise<string> {
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       messages: [
       {
         role: "system",
@@ -350,7 +350,7 @@ const getReminderId = tool({
     const { object } = await generateObject({
       output: "object",
       temperature: 0.5,
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       schema: z.object({
         reminderId: z.string(),
       }),
@@ -489,7 +489,7 @@ export async function processMessageByUser({
     const tools = await getTools();
     const SYSTEM_PROMPT = SYSTEM_PROMPT_MCP(phone, timezone);
     const { text, steps } = await generateText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       tools,
       messages: [...context, userMessage],
       system: SYSTEM_PROMPT,

@@ -70,7 +70,7 @@ const saveMessageToConversation = (userId: string, role: 'user' | 'assistant', c
 export const classifyMessage = async (message: string, userId: string, previousMessages: Array<{ role: 'user' | 'assistant', content: string }> = []) => {
   try {
     const { object } = await generateObject({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       schema: conversationClassifierSchema,
       prompt: `
       ${previousMessages.length > 0 ? 
@@ -163,7 +163,7 @@ export const generateConversationalResponse = async (
 ) => {
   try {
     const { object } = await generateObject({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       schema: conversationalResponseSchema,
       prompt: `
       Contexto del usuario:
