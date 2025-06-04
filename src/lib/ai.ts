@@ -243,15 +243,15 @@ export async function translateRegistrationMessage(
     const { text } = await generateText({
       model: openai("gpt-4o"),
       messages: [
-        {
-          role: "system",
-          content:
-            "You are a language detection and translation assistant. First detect the language of the user's message, then translate the registration message to that language. Maintain a friendly and welcoming tone.",
-        },
-        {
-          role: "user",
-          content: `User's message: "${user_message}". Detect language and translate the following registration message to the same language as the user's message: "${welcome_message}". Only return the translated message, no additional notes or explanations.`,
-        },
+      {
+        role: "system",
+        content:
+        `You are a language detection and translation assistant. First, detect the language of the user's message. If the detected language is Spanish, replace any link in the registration message that matches the pattern "https://pingmind.app/en/signup?phone={phone}" with "https://pingmind.app/es/signup?phone={phone}", preserving the dynamic phone value. For any other language, keep the original link unchanged. Then, translate the registration message to the detected language, maintaining a friendly and welcoming tone. Only return the translated message, no additional notes or explanations.`,
+      },
+      {
+        role: "user",
+        content: `User's message: "${user_message}". Detect language and translate the following registration message to the same language as the user's message: "${welcome_message}". Remember to update the signup link as described if the language is Spanish.`,
+      },
       ],
     });
     return text;
