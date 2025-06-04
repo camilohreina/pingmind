@@ -265,7 +265,9 @@ export const handleAudioReminder = async ({
   const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
     mediaId: mediaId,
   });
+  console.log({response_audio_infobip: response});
   const transcription = await getTextFromAudio(response);
+  console.log({response_audio_openai: transcription});
   return transcription;
 };
 
