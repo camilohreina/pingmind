@@ -163,7 +163,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         message: imageMessage,
       });
       if (message_image) {
-        content = `${message}. ${message_image}`,
+        content = message_image,
         result = await handleReminder({
           userId: user.id,
           message: content,
