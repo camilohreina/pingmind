@@ -11,7 +11,6 @@ export const getTextFromAudio = async (
   const audioPath = path.join(tmpDir, "audio.webm");
   await saveBufferToFile(fileBuffer, audioPath);
   const transcription = await getTranscriptionFromAudio(audioPath);
-  console.log({ transcription });
   return transcription;
 };
 
@@ -21,7 +20,6 @@ export const getTextFromImage = async (
   const fileBuffer = await handleMediaDownload(imageFile);
   const base64Image = fileBuffer.toString("base64");
   const transcription = await getTranscriptionFromImage(base64Image);
-  console.log({ transcription });
   return transcription;
 };
 
