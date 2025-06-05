@@ -53,7 +53,13 @@ export async function POST(req: NextRequest) {
       variant_id = subscription_info?.mode?.test?.variantId!;
     }
 
-    const pricing_session = await createCheckoutSession(variant_id, user?.id);
+    const skipTrial = user_info?.has_used_trial || false;
+
+    const pricing_session = await createCheckoutSession({
+      variantId: variant_id,
+      userId: user.id,
+      skipTrial,
+    });
 
     return NextResponse.json(
       { ok: true, url: pricing_session?.data?.attributes?.url },

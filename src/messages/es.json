@@ -291,6 +291,7 @@
       "button": {
         "signUp": "Probar gratis por 3 días",
         "upgradeNow": "Actualizar Ahora",
+        "usedFreeTrial": "Activar ahora",
         "manageSubscription": "Administrar suscripción"
       }
     }

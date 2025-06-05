@@ -69,7 +69,11 @@ export default function UpgradeButton({ slug, subscription_plan }: Props) {
           disabled={isLoading}
         >
           <>
-            {subscription_plan?.isSubscribed ? t("upgradeNow") : t("signUp")}
+            {subscription_plan?.isSubscribed
+              ? t("upgradeNow")
+              : subscription_plan?.hasUsedTrial
+                ? t("usedFreeTrial")
+                : t("signUp")}
             <ArrowRight className="size-5 ml-1.5" />
           </>
         </Button>

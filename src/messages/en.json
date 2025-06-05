@@ -233,6 +233,7 @@
       "button": {
         "signUp": "Try for free for 3 days",
         "upgradeNow": "Upgrade Now",
+        "usedFreeTrial": "Active now",
         "manageSubscription": "Manage your plan"
       }
     }

@@ -18,73 +18,92 @@ export const setupLemonConfig = () => {
 };
 
 export async function getUserSubscriptionPlan() {
-  setupLemonConfig();
-  const user = await getUserServerSession();
+  try {
+    setupLemonConfig();
+    const user = await getUserServerSession();
 
-  if (!user?.id) {
+    if (!user?.id) {
+      return {
+        ...PLANS[0],
+        isSubscribed: false,
+        isCanceled: false,
+        portalUrl: null,
+        stripe_current_period_end: null,
+        hasUsedTrial: false,
+      };
+    }
+
+    const dbUser = await getUserById(user.id);
+
+    if (!dbUser) {
+      return {
+        ...PLANS[0],
+        isSubscribed: false,
+        isCanceled: false,
+        portalUrl: null,
+        stripe_current_period_end: null,
+        hasUsedTrial: false
+      };
+    }
+
+    const isSubscribed = Boolean(
+      dbUser.stripe_price_id &&
+        dbUser.stripe_current_period_end && // 86400000 = 1 day
+        dbUser.stripe_current_period_end.getTime() + 86_400_000 > Date.now(),
+    );
+
+    const plan = isSubscribed
+      ? PLANS.find(
+          (plan) =>
+            plan.mode[LEMON_PATH_OBJ].variantId === dbUser.stripe_plan_id,
+        )
+      : null;
+
+    let isCanceled = false;
+    let portalUrl: string | null = null;
+    if (isSubscribed && dbUser.stripe_subscription_id) {
+      const { data } = await getSubscription(dbUser.stripe_subscription_id);
+      if (data) {
+        isCanceled = data?.data?.attributes?.cancelled || false;
+        portalUrl = data?.data?.attributes?.urls?.customer_portal ?? "";
+      }
+    }
+
     return {
-      ...PLANS[0],
-      isSubscribed: false,
-      isCanceled: false,
-      portalUrl: null,
-      stripe_current_period_end: null,
+      ...plan,
+      stripe_subscription_id: dbUser.stripe_subscription_id,
+      stripe_current_period_end: dbUser.stripe_current_period_end,
+      stripeCustomerId: dbUser.stripe_customer_id,
+      hasUsedTrial: dbUser.has_used_trial,
+      portalUrl,
+      isSubscribed,
+      isCanceled,
     };
+  } catch (error) {
+    throw new Error(`Error fetching user subscription plan: ${error}`);
   }
-
-  const dbUser = await getUserById(user.id);
-
-  if (!dbUser) {
-    return {
-      ...PLANS[0],
-      isSubscribed: false,
-      isCanceled: false,
-      portalUrl: null,
-      stripe_current_period_end: null,
-    };
-  }
-
-  const isSubscribed = Boolean(
-    dbUser.stripe_price_id &&
-      dbUser.stripe_current_period_end && // 86400000 = 1 day
-      dbUser.stripe_current_period_end.getTime() + 86_400_000 > Date.now(),
-  );
-
-  const plan = isSubscribed
-    ? PLANS.find(
-        (plan) => plan.mode[LEMON_PATH_OBJ].variantId === dbUser.stripe_plan_id,
-      )
-    : null;
-
-  let isCanceled = false;
-  let portalUrl: string | null = null;
-  if (isSubscribed && dbUser.stripe_subscription_id) {
-    const { data } = await getSubscription(dbUser.stripe_subscription_id);
-    isCanceled = data?.data?.attributes?.cancelled || false;
-    portalUrl = data?.data?.attributes?.urls?.customer_portal ?? "";
-  }
-
-  return {
-    ...plan,
-    stripe_subscription_id: dbUser.stripe_subscription_id,
-    stripe_current_period_end: dbUser.stripe_current_period_end,
-    stripeCustomerId: dbUser.stripe_customer_id,
-    portalUrl,
-    isSubscribed,
-    isCanceled,
-  };
 }
 
-export async function createCheckoutSession(
-  variantId: string | number,
-  userId: string,
-) {
+type CreateCheckoutSessionParams = {
+  variantId: string;
+  userId: string;
+  skipTrial?: boolean;
+};
+
+export async function createCheckoutSession({
+  variantId,
+  userId,
+  skipTrial = false,
+}: CreateCheckoutSessionParams) {
   try {
     setupLemonConfig();
     const { data } = await createCheckout(
       process.env.LEMON_SQUEEZY_STORE_ID ?? "",
       variantId,
       {
-        checkoutOptions: {},
+        checkoutOptions: {
+          skipTrial,
+        },
         checkoutData: {
           custom: {
             userId,
