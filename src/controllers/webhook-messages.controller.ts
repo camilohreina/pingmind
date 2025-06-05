@@ -263,7 +263,7 @@ export const handleAudioReminder = async ({
 
   console.log({ message, url, mediaId });
   if (!mediaId) {
-    return null;
+    throw new Error("Media ID not found in the URL");
   }
   const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
     mediaId: mediaId,

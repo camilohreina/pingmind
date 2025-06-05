@@ -19,13 +19,12 @@ export function generateVerificationCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-export function extractMediaId(url: string) {
-  const mediaIdMatch = url.match(/\/media\/(\d+)$/);
-
+export function extractMediaId(url: string): string | null {
+  const mediaIdMatch = url.match(/\/media\/([^\/]+)/);
   return mediaIdMatch ? mediaIdMatch[1] : null;
 }
 
-export function absoluteUrl(path: string) {
+export function absoluteUrl(path: string): string {
   if (typeof window === "undefined") return path;
   if (process.env.NEXT_PUBLIC_VERCEL_URL)
     return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}${path}`;
