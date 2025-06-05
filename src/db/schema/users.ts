@@ -18,8 +18,11 @@ export const users = pgTable("user", {
   stripe_subscription_id: text("stripe_subscription_id").unique(),
   stripe_price_id: text("stripe_price_id"),
   stripe_plan_id: text("stripe_plan_id"),
+  stripe_status: text("stripe_status"),
   stripe_current_period_end: timestamp("stripe_current_period_end", {mode: "date"}),
   stripe_current_period_start: timestamp("stripe_current_period_start", {mode: "date"}),
+  stripe_trial_end: timestamp("stripe_trial_end", {mode: "date"}),
+  has_used_trial: boolean("has_used_trial").notNull().default(false),
   reset_password_code: text("reset_password_token"),
   reset_password_expires: timestamp("reset_password_expires", {mode: "date"}),
 });

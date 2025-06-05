@@ -1,0 +1,1 @@
+type subscription_status= 'on_trial' | 'active' | 'cancelled' | 'past_due' | 'paused' | 'expired' | 'unpaid';

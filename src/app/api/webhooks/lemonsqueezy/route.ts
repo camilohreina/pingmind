@@ -31,10 +31,14 @@ export async function POST(request: Request) {
         stripeSubscriptionId:
           subscription.first_subscription_item.subscription_id.toString(),
         stripeCustomerId: subscription.customer_id.toString(),
+        stripeStatus: subscription.status,
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
         stripeCurrentPeriodStart: new Date(subscription.created_at),
         stripePlanId: subscription.variant_id.toString(),
+        stripeTrialEnd: subscription.trial_ends_at
+          ? new Date(subscription.trial_ends_at)
+          : null,
         userId,
       });
     }
@@ -45,6 +49,10 @@ export async function POST(request: Request) {
         stripePriceId: subscription.first_subscription_item.price_id.toString(),
         stripeCurrentPeriodEnd: new Date(subscription.renews_at),
         stripeCurrentPeriodStart: new Date(subscription.updated_at),
+        stripeStatus: subscription.status,
+        stripeTrialEnd: subscription.trial_ends_at
+          ? new Date(subscription.trial_ends_at)
+          : null,
         stripePlanId: subscription.variant_id.toString(),
         userId,
       });

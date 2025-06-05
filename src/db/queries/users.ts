@@ -7,6 +7,8 @@ export const dbCreateUser = async (user: UserI) => {
   return db.insert(users).values(user).execute();
 };
 
+const ON_TRIAL_STATUS: subscription_status = "on_trial";
+
 export const getUserByPhone = async (phone: string) => {
   //si el phone incluye el + no se hace nada, sino se le agrega
   if (!phone.includes("+")) {
@@ -77,6 +79,8 @@ type subscriptionData = {
   stripeCurrentPeriodStart: Date;
   stripePlanId: string;
   userId: string;
+  stripeStatus: subscription_status;
+  stripeTrialEnd: Date | null;
 };
 
 export const createSubscription = async ({
@@ -87,18 +91,23 @@ export const createSubscription = async ({
   stripeCurrentPeriodStart,
   stripePlanId,
   userId,
+  stripeStatus,
+  stripeTrialEnd,
 }: subscriptionData) => {
-  return db
-    .update(users)
-    .set({
-      stripe_subscription_id: stripeSubscriptionId,
-      stripe_customer_id: stripeCustomerId,
-      stripe_price_id: stripePriceId,
-      stripe_current_period_end: stripeCurrentPeriodEnd,
-      stripe_current_period_start: stripeCurrentPeriodStart,
-      stripe_plan_id: stripePlanId,
-    })
-    .where(eq(users.id, userId));
+  const updateData: Partial<UserI> = {
+    stripe_subscription_id: stripeSubscriptionId,
+    stripe_customer_id: stripeCustomerId,
+    stripe_price_id: stripePriceId,
+    stripe_current_period_end: stripeCurrentPeriodEnd,
+    stripe_current_period_start: stripeCurrentPeriodStart,
+    stripe_plan_id: stripePlanId,
+    stripe_status: stripeStatus,
+    stripe_trial_end: stripeTrialEnd,
+  };
+  if (stripeStatus === ON_TRIAL_STATUS) {
+    updateData.has_used_trial = true;
+  }
+  return db.update(users).set(updateData).where(eq(users.id, userId));
 };
 
 interface updateSubscriptionData {
@@ -106,6 +115,8 @@ interface updateSubscriptionData {
   stripePlanId: string;
   stripeCurrentPeriodEnd: Date;
   stripeCurrentPeriodStart: Date;
+  stripeStatus: subscription_status;
+  stripeTrialEnd: Date | null;
   userId: string;
 }
 
@@ -114,13 +125,18 @@ export const updateSubscription = async ({
   stripePlanId,
   stripeCurrentPeriodEnd,
   userId,
+  stripeTrialEnd,
+  stripeStatus,
 }: updateSubscriptionData) => {
-  return db
-    .update(users)
-    .set({
-      stripe_price_id: stripePriceId,
-      stripe_current_period_end: stripeCurrentPeriodEnd,
-      stripe_plan_id: stripePlanId,
-    })
-    .where(eq(users.id, userId));
+  const updateData: Partial<UserI> = {
+    stripe_price_id: stripePriceId,
+    stripe_current_period_end: stripeCurrentPeriodEnd,
+    stripe_plan_id: stripePlanId,
+    stripe_status: stripeStatus,
+    stripe_trial_end: stripeTrialEnd,
+  };
+  if (stripeStatus === ON_TRIAL_STATUS) {
+    updateData.has_used_trial = true;
+  }
+  return db.update(users).set(updateData).where(eq(users.id, userId));
 };
