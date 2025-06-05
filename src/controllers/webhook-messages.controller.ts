@@ -134,7 +134,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     }
 
     console.log({ type_message, data });
-    
+
     if (type_message === "AUDIO" && data.message?.url) {
       const audioMessage = {
         url: data.message.url,
@@ -143,7 +143,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       const message_audio = await handleAudioReminder({
         message: audioMessage,
       });
-      console.log({ message_audio, init: '2' });
+      console.log({ message_audio, init: "2" });
       if (message_audio) {
         content = message_audio;
         result = await handleReminder({
@@ -260,15 +260,17 @@ export const handleAudioReminder = async ({
 }) => {
   const { url } = message;
   const mediaId = extractMediaId(url);
+
+  console.log({ message, url, mediaId });
   if (!mediaId) {
     return null;
   }
   const response: AsyncIterable<Uint8Array> = await getMediaInfobip({
     mediaId: mediaId,
   });
-  console.log({response_audio_infobip: response});
+  console.log({ response_audio_infobip: response });
   const transcription = await getTextFromAudio(response);
-  console.log({response_audio_openai: transcription});
+  console.log({ response_audio_openai: transcription });
   return transcription;
 };
 
