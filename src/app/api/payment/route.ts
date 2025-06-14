@@ -1,13 +1,14 @@
 import { PLANS } from "@/config/pricing";
-import { getUserById } from "@/db/queries/users";
+import { createTrial, getUserById } from "@/db/queries/users";
 import { getUserServerSession } from "@/lib/auth";
 import { ValidationDataError } from "@/lib/error";
 import {
   createCheckoutSession,
   getUserSubscriptionPlan,
 } from "@/lib/lemonsqueezy";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl, getTrialEndDate } from "@/lib/utils";
 import { initialPaymentSchema } from "@/schemas/utils.schema";
+import { en } from "chrono-node";
 import { NextRequest, NextResponse } from "next/server";
 
 // API handler for POST requests
@@ -23,7 +24,6 @@ export async function POST(req: NextRequest) {
     const { paymentId } = validated_data.data;
 
     const user = await getUserServerSession();
-    //TODO: no esta llegando el user id en la session
 
     const pricingUrl = absoluteUrl("/pricing");
 
@@ -35,6 +35,13 @@ export async function POST(req: NextRequest) {
     }
 
     const user_info = await getUserById(user.id);
+
+    if (!user_info?.has_used_trial) {
+      const trial_end = getTrialEndDate();
+      await createTrial({ user_id: user.id, end_trial: trial_end });
+      return NextResponse.json({ ok: true, trial: true,  end_trial: trial_end}, { status: 200 });
+    }
+    
     const subscription_plan = await getUserSubscriptionPlan();
 
     if (subscription_plan?.isSubscribed && user_info?.stripe_customer_id) {

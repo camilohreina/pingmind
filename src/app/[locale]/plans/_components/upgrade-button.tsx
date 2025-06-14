@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   createPricingSessionService,
@@ -10,6 +10,7 @@ import {
 } from "@/services/utils.services";
 import AdminSubButton from "@/components/admin-sub-button";
 import { getUserSubscriptionPlan } from "@/lib/lemonsqueezy";
+import TrialSuccessModal from "@/components/trial-success-modal";
 
 type Props = {
   slug: slugPlan;
@@ -24,10 +25,27 @@ type SubscriptionData = {
   stripe_current_period_end: string | null;
 };
 
+// Component for button text logic
+function ButtonText({ subscription_plan }: { subscription_plan: Awaited<ReturnType<typeof getUserSubscriptionPlan>> }) {
+  const t = useTranslations("pricing_page.plans.button");
+  
+  if (subscription_plan?.isSubscribed) {
+    return t("upgradeNow");
+  }
+  
+  if (subscription_plan?.hasUsedTrial) {
+    return t("usedFreeTrial");
+  }
+  
+  return t("signUp");
+}
+
 export default function UpgradeButton({ slug, subscription_plan }: Props) {
   const [subscriptionData, setSubscriptionData] =
     useState<SubscriptionData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTrialModal, setShowTrialModal] = useState(false);
+  const [trialEndDate, setTrialEndDate] = useState<Date>(new Date());
 
   useEffect(() => {
     const fetchSubscription = async () => {
@@ -49,14 +67,16 @@ export default function UpgradeButton({ slug, subscription_plan }: Props) {
       if (data?.url) {
         window.location.href = data.url;
       }
+      if (data.trial && data.end_trial) {
+        setTrialEndDate(new Date(data.end_trial));
+        setShowTrialModal(true);
+      }
     } catch (error) {
       console.error("Error creating pricing session:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const t = useTranslations("pricing_page.plans.button");
 
   return (
     <>
@@ -69,15 +89,17 @@ export default function UpgradeButton({ slug, subscription_plan }: Props) {
           disabled={isLoading}
         >
           <>
-            {subscription_plan?.isSubscribed
-              ? t("upgradeNow")
-              : subscription_plan?.hasUsedTrial
-                ? t("usedFreeTrial")
-                : t("signUp")}
-            <ArrowRight className="size-5 ml-1.5" />
+            <ButtonText subscription_plan={subscription_plan} />
+            {isLoading ? <Loader2 className="animate-spin size-3"/> : <ArrowRight className="size-5 ml-1.5" />}
           </>
         </Button>
       )}
+
+      <TrialSuccessModal
+        isOpen={showTrialModal}
+        onClose={() => setShowTrialModal(false)}
+        trialEndDate={trialEndDate}
+      />
     </>
   );
 }

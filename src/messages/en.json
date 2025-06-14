@@ -371,5 +371,17 @@
       "title": "Privacy Policy",
       "description": "Privacy and data protection policy for Pingmind"
     }
+  },
+  "trial_modal": {
+    "title": "🎉 Your Trial Has Started!",
+    "subtitle": "Welcome to Pingmind! Your free trial is now active.",
+    "trial_active": "Trial Active",
+    "enjoy_features": "Enjoy all premium features for free!",
+    "trial_ends": "Trial ends on:",
+    "days_remaining": "{days} days remaining",
+    "reminder": "Reminder",
+    "reminder_text": "You can upgrade to a paid plan at any time to continue enjoying all features.",
+    "start_exploring": "Start Exploring",
+    "close": "Close"
   }
 }
