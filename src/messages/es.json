@@ -375,5 +375,17 @@
       "title": "Política de Privacidad",
       "description": "Política de privacidad y protección de datos de Pingmind"
     }
+  },
+  "trial_modal": {
+    "title": "🎉 ¡Tu Prueba Ha Comenzado!",
+    "subtitle": "¡Bienvenido a Pingmind! Tu prueba gratuita ya está activa.",
+    "trial_active": "Prueba Activa",
+    "enjoy_features": "¡Disfruta de todas las funciones premium gratis!",
+    "trial_ends": "La prueba termina el:",
+    "days_remaining": "{days} días restantes",
+    "reminder": "Recordatorio",
+    "reminder_text": "Puedes actualizar a un plan pago en cualquier momento para continuar disfrutando de todas las funciones.",
+    "start_exploring": "Comenzar a Explorar",
+    "close": "Cerrar"
   }
 }

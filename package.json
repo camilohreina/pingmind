@@ -57,6 +57,7 @@
     "openai": "^4.83.0",
     "postcss": "^8.4.41",
     "react": "19.0.0",
+    "react-confetti": "^6.4.0",
     "react-day-picker": "8.8.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",

@@ -27,11 +27,15 @@ interface reminderReview {
   timezone: string;
 }
 
+const ONE_DAY_MS = 86_400_000;
+
 const hasActiveSubscription = (user: UserI): boolean => {
   return Boolean(
-    user.stripe_price_id &&
+    (user.stripe_price_id &&
       user.stripe_current_period_end &&
-      user.stripe_current_period_end.getTime() + 86_400_000 > Date.now(),
+      user.stripe_current_period_end.getTime() + ONE_DAY_MS > Date.now()) ||
+      (user.stripe_trial_end &&
+        user.stripe_trial_end.getTime() + ONE_DAY_MS > Date.now()),
   );
 };
 
@@ -141,7 +145,7 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
       const message_audio = await handleAudioReminder({
         message: audioMessage,
       });
-      
+
       if (message_audio) {
         content = message_audio;
         result = await handleReminder({
@@ -163,13 +167,13 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
         message: imageMessage,
       });
       if (message_image) {
-        content = message_image,
-        result = await handleReminder({
-          userId: user.id,
-          message: content,
-          phone: from_number,
-          timezone: user.timezone,
-        });
+        (content = message_image),
+          (result = await handleReminder({
+            userId: user.id,
+            message: content,
+            phone: from_number,
+            timezone: user.timezone,
+          }));
         return result;
       }
     }

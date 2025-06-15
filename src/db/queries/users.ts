@@ -140,3 +140,27 @@ export const updateSubscription = async ({
   }
   return db.update(users).set(updateData).where(eq(users.id, userId));
 };
+
+export const createTrial = async ({
+  user_id,
+  end_trial,
+  plan_id,
+}: {
+  user_id: string;
+  end_trial: Date;
+  plan_id: string;
+}) => {
+  //son 3 dias de prueba
+
+  return db
+    .update(users)
+    .set({
+      has_used_trial: true,
+      stripe_status: ON_TRIAL_STATUS,
+      stripe_current_period_end: end_trial,
+      stripe_trial_end: end_trial,
+      stripe_plan_id: plan_id,
+    })
+    .where(eq(users.id, user_id))
+    .execute();
+};

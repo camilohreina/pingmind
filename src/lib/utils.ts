@@ -62,7 +62,7 @@ export function dateFromHumanWithTimezone(
   }
   // Luego convertimos a UTC
   const utcDate = fromZonedTime(date_converted, timezone);
-  
+
   return utcDate;
 }
 
@@ -85,25 +85,30 @@ export const getTimezonesFromCountry = (countryCode: string) => {
       id: `${tz}-${country.id}`,
     });
   });
-  
+
   return timezones_format;
 };
 
 export const searchTimezones = (query: string) => {
   if (!query || query.trim() === "") return [];
-  
+
   const countries = getAllCountries();
-  const timezones: Array<{ value: string; label: string; country: string; id: string }> = [];
+  const timezones: Array<{
+    value: string;
+    label: string;
+    country: string;
+    id: string;
+  }> = [];
   const queryLower = query.toLowerCase().trim();
   const seen = new Set<string>(); // Para evitar duplicados
 
   Object.values(countries).forEach((country) => {
     // Buscar tanto por nombre de país como por timezone
     const countryMatches = country.name.toLowerCase().includes(queryLower);
-    
+
     country.timezones.forEach((tz) => {
       const timezoneMatches = tz.toLowerCase().includes(queryLower);
-      
+
       if ((countryMatches || timezoneMatches) && !seen.has(tz)) {
         seen.add(tz);
         timezones.push({
@@ -120,11 +125,16 @@ export const searchTimezones = (query: string) => {
   timezones.sort((a, b) => {
     const aTimezoneMatch = a.value.toLowerCase().includes(queryLower);
     const bTimezoneMatch = b.value.toLowerCase().includes(queryLower);
-    
+
     if (aTimezoneMatch && !bTimezoneMatch) return -1;
     if (!aTimezoneMatch && bTimezoneMatch) return 1;
     return a.value.localeCompare(b.value);
   });
 
   return timezones.slice(0, 20); // Limitar resultados
+};
+
+export const getTrialEndDate = (): Date => {
+  // 3 días de prueba
+  return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 };

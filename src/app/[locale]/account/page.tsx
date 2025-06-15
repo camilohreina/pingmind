@@ -18,7 +18,6 @@ async function AccountContent() {
   }
   const t = await getTranslations("account_page");
   const subscription_plan = await getUserSubscriptionPlan();
-
   return (
     <MaxWidthWrapper className="mb-8 mt-12 md:mt-24 text-center max-w-5xl">
       <div className="mb-10">
@@ -26,7 +25,11 @@ async function AccountContent() {
         <p className="text-base text-muted-foreground ">{t("subtitle")}</p>
       </div>
       <div className="mx-auto mb-10 sm:max-w-lg flex flex-col gap-10">
-        {subscription_plan?.isSubscribed ? <SubscriptionCard subscription={subscription_plan}/> : <PlanCard />}
+        {subscription_plan?.isSubscribed ? (
+          <SubscriptionCard subscription={subscription_plan} />
+        ) : (
+          <PlanCard />
+        )}
         <PlanNumber number={user.phone} />
         <TimezoneCard currentTimezone={user.timezone} userId={user.id} />
       </div>
