@@ -35,7 +35,7 @@ export default function WhatsAppInvitation({
       onClick={handleOpenWhatsApp}
       variant="outline"
       size="sm"
-      className="w-full bg-green-800 mt-4 border-green-800 text-green-200 hover:bg-green-200 hover:border-green-200 hover:text-green-800 transition-colors duration-300"
+      className="w-full bg-green-800 mt-4 border-green-800 text-white hover:bg-green-200 hover:border-green-200 hover:text-green-800 transition-colors duration-300"
     >
       {t("title")}
       <WhatsApp className="w-4 h-4 mr-2" />

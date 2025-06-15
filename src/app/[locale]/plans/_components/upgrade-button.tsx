@@ -26,17 +26,21 @@ type SubscriptionData = {
 };
 
 // Component for button text logic
-function ButtonText({ subscription_plan }: { subscription_plan: Awaited<ReturnType<typeof getUserSubscriptionPlan>> }) {
+function ButtonText({
+  subscription_plan,
+}: {
+  subscription_plan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
+}) {
   const t = useTranslations("pricing_page.plans.button");
-  
+
   if (subscription_plan?.isSubscribed) {
     return t("upgradeNow");
   }
-  
+
   if (subscription_plan?.hasUsedTrial) {
     return t("usedFreeTrial");
   }
-  
+
   return t("signUp");
 }
 
@@ -64,12 +68,11 @@ export default function UpgradeButton({ slug, subscription_plan }: Props) {
     try {
       setIsLoading(true);
       const data = await createPricingSessionService(slug);
-      if (data?.url) {
-        window.location.href = data.url;
-      }
       if (data.trial && data.end_trial) {
         setTrialEndDate(new Date(data.end_trial));
         setShowTrialModal(true);
+      } else if (data?.url) {
+        window.location.href = data.url;
       }
     } catch (error) {
       console.error("Error creating pricing session:", error);
@@ -90,7 +93,11 @@ export default function UpgradeButton({ slug, subscription_plan }: Props) {
         >
           <>
             <ButtonText subscription_plan={subscription_plan} />
-            {isLoading ? <Loader2 className="animate-spin size-3"/> : <ArrowRight className="size-5 ml-1.5" />}
+            {isLoading ? (
+              <Loader2 className="animate-spin size-3" />
+            ) : (
+              <ArrowRight className="size-5 ml-1.5" />
+            )}
           </>
         </Button>
       )}

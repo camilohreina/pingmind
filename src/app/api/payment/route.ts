@@ -36,12 +36,6 @@ export async function POST(req: NextRequest) {
 
     const user_info = await getUserById(user.id);
 
-    if (!user_info?.has_used_trial) {
-      const trial_end = getTrialEndDate();
-      await createTrial({ user_id: user.id, end_trial: trial_end });
-      return NextResponse.json({ ok: true, trial: true,  end_trial: trial_end}, { status: 200 });
-    }
-    
     const subscription_plan = await getUserSubscriptionPlan();
 
     if (subscription_plan?.isSubscribed && user_info?.stripe_customer_id) {
@@ -67,6 +61,24 @@ export async function POST(req: NextRequest) {
       userId: user.id,
       skipTrial,
     });
+
+    if (!user_info?.has_used_trial) {
+      const trial_end = getTrialEndDate();
+      await createTrial({
+        user_id: user.id,
+        end_trial: trial_end,
+        plan_id: variant_id,
+      });
+      return NextResponse.json(
+        {
+          ok: true,
+          trial: true,
+          end_trial: trial_end,
+          url: pricing_session?.data?.attributes?.url,
+        },
+        { status: 200 },
+      );
+    }
 
     return NextResponse.json(
       { ok: true, url: pricing_session?.data?.attributes?.url },
