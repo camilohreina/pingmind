@@ -157,6 +157,7 @@ export const createTrial = async ({
     .set({
       has_used_trial: true,
       stripe_status: ON_TRIAL_STATUS,
+      stripe_current_period_start: new Date(),
       stripe_current_period_end: end_trial,
       stripe_trial_end: end_trial,
       stripe_plan_id: plan_id,
