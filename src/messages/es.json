@@ -4,18 +4,37 @@
     "badge_sale": "<strong>¡Pruébalo ahora GRATIS!</strong>",
     "init_app": "Iniciar con WhatsApp",
     "add_contact": "o añade el contacto manualmente",
+    "description_trial": "✨ 3 días GRATIS • Luego solo $3/mes • Cancela en cualquier momento",
     "features": {
       "0": {
-        "title": "Recordatorios Puntuales",
-        "text": "Recibe notificaciones exactas en el momento indicado para que nunca olvides tus tareas importantes."
+        "title": "Olvidaste Esa Llamada Importante",
+        "text": "Prometiste llamar a tu mamá, hacer seguimiento con un cliente, o programar esa reunión... pero se te olvidó completamente."
       },
       "1": {
-        "title": "Automatización Inteligente",
-        "text": "Nuestra IA guarda tus mensajes y los transforma en recordatorios sin esfuerzo adicional."
+        "title": "Demasiadas Aplicaciones",
+        "text": "Ya estás manejando WhatsApp, email y aplicaciones de calendario. Lo último que necesitas es otra app de recordatorios que gestionar."
       },
       "2": {
-        "title": "Integración con WhatsApp",
-        "text": "Todo ocurre en tu chat favorito, sin necesidad de descargar más aplicaciones."
+        "title": "Recordatorios Manuales",
+        "text": "Configurar recordatorios manualmente es tedioso. Mencionas algo en el chat pero olvidas crear el recordatorio."
+      }
+    },
+    "how_it_works": {
+      "title": "Cómo funciona",
+      "description": "PingMind funciona donde ya chateas (WhatsApp). Solo menciona lo que necesitas recordar, y te avisaremos en el momento perfecto.",
+      "steps": {
+        "0": {
+          "title": "Conecta tu Chat",
+          "description": "Agrega PingMind a tu WhatsApp. Es gratis y no requiere permisos especiales."
+        },
+        "1": {
+          "title": "Chatea Naturalmente",
+          "description": "Menciona lo que necesitas recordar en nuestro chat. No es necesario un formato especial."
+        },
+        "2": {
+          "title": "Recibe Recordatorios",
+          "description": "Te enviaremos recordatorios en el momento perfecto, sin interrumpir tu flujo de trabajo."
+        }
       }
     },
     "header": {

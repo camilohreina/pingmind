@@ -1,5 +1,5 @@
 import React from "react";
-import { BellRing, Workflow, RefreshCcwDot } from "lucide-react";
+import { BellRing, Workflow, RefreshCcwDot, AlarmClock, Angry, LayoutDashboard } from "lucide-react";
 import SpotlightCard from "./ui/spotlight-card";
 import { cn } from "@/lib/utils";
 import { fontHead } from "@/ui/fonts";
@@ -20,19 +20,19 @@ const FEATURES_INFO = (): FeatureInfo[] => {
       id: "0",
       title: t("features.0.title"),
       text: t("features.0.text"),
-      icon: BellRing,
+      icon: Angry,
     },
     {
       id: "1",
       title: t("features.1.title"),
       text: t("features.1.text"),
-      icon: RefreshCcwDot,
+      icon: LayoutDashboard,
     },
     {
       id: "2",
       title: t("features.2.title"),
       text: t("features.2.text"),
-      icon: Workflow,
+      icon: AlarmClock,
     },
   ];
 };
@@ -57,16 +57,16 @@ type PropsInfoCard = {
 function InfoFeatureCard({ icon: Icon, title, text }: PropsInfoCard) {
   return (
     <SpotlightCard>
-      <div className="6 flex flex-col items-start justify-start">
+      <div className="flex flex-col items-start justify-start">
         <div className={cn("mb-10 rounded-lg border-gray-200 p-2.5")}>
-          <Icon className="size-8 text-white" />
+          <Icon className="size-10 text-white" />
         </div>
         <h3
           className={`${fontHead.className} mb-4 text-start text-2xl font-medium md:text-xl lg:text-2xl`}
         >
           {title}
         </h3>
-        <p className="text-slate text-start opacity-50">{text}</p>
+        <p className="text-start opacity-50">{text}</p>
       </div>
     </SpotlightCard>
   );
