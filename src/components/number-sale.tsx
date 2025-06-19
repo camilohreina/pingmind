@@ -26,32 +26,35 @@ export default function NumberSale({}: Props) {
   }, [hasCopied]);
 
   return (
-    <div className="flex flex-col gap-4 my-3 max-w-md mx-auto">
-      <Button
-        asChild
-        className="px-12 py-4 rounded-full bg-green-600 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-[#21e065] duration-200 transition-transform"
-      >
-        <Link
-          href="https://wa.me/447908679639?text=Hello!"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <div className="flex flex-col gap-4 my-3 max-w-md mx-auto">
+        <Button
+          asChild
+          className="px-12 py-4 rounded-full bg-green-600 font-bold text-white tracking-widest uppercase transform hover:scale-105 hover:bg-[#21e065] duration-200 transition-transform"
         >
-          {t("init_app")}
-          <WhatsApp />
-        </Link>
-      </Button>
-      <p className="text-gray-400 text-sm"> {t("add_contact")}</p>
-      <Button
-        variant="ghost"
-        className="flex cursor-pointer justify-center items-center border border-dashed border-gray-600 p-2 rounded-md transform hover:scale-105 duration-300 transition-all"
-        onClick={() => {
-          copyToClipboardWithMeta(PHONE_NUMBER);
-          setHasCopied(true);
-        }}
-      >
-        {PHONE_NUMBER}
-        {hasCopied ? <CheckIcon /> : <Files />}
-      </Button>
-    </div>
+          <Link
+            href="https://wa.me/447908679639?text=Hello!"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("init_app")}
+            <WhatsApp />
+          </Link>
+        </Button>
+        <p className="text-gray-400 text-sm"> {t("add_contact")}</p>
+        <Button
+          variant="ghost"
+          className="flex cursor-pointer justify-center items-center border border-dashed border-gray-600 p-2 rounded-md transform hover:scale-105 duration-300 transition-all"
+          onClick={() => {
+            copyToClipboardWithMeta(PHONE_NUMBER);
+            setHasCopied(true);
+          }}
+        >
+          {PHONE_NUMBER}
+          {hasCopied ? <CheckIcon /> : <Files />}
+        </Button>
+      </div>
+      <p className="text-sm text-gray-400">{t("description_trial")}</p>
+    </>
   );
 }

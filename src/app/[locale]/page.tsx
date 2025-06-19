@@ -1,5 +1,6 @@
 import BadgeSale from "@/components/badge-sale";
 import Features from "@/components/features";
+import HowItWorksSection from "@/components/how-it-works";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import NumberSale from "@/components/number-sale";
 import WhatsAppReminderDemo from "@/components/services";
@@ -19,8 +20,9 @@ export default async function HomePage() {
         <Title />
         <NumberSale />
       </section>
-      <WhatsAppReminderDemo />
       <Features />
+      <HowItWorksSection />
+      <WhatsAppReminderDemo />
     </MaxWidthWrapper>
   );
 }
