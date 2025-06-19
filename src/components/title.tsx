@@ -14,7 +14,7 @@ export default function Title() {
       )}
     >
       {t.rich("title", {
-        mark: (chunks) => <span className="text-green-400">{chunks}</span>,
+        mark: (chunks) => <span className="text-green-400">{chunks}<br/></span>,
       })}
     </h1>
   );

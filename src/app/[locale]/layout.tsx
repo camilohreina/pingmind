@@ -9,7 +9,7 @@ import Navbar from "@/components/header";
 import { customMetaDataGenerator } from "@/lib/seo";
 
 export const metadata: Metadata = customMetaDataGenerator({
-  title: "Smart Reminders",
+  title: "Your Personal AI That Never Forgets",
 });
 
 interface Props {
