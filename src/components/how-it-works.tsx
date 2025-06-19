@@ -1,4 +1,5 @@
 import { fontHead } from "@/ui/fonts";
+import { useTranslations } from "next-intl";
 
 interface StepCard {
   id: number;
@@ -6,24 +7,6 @@ interface StepCard {
   description: string;
   className?: string;
 }
-
-const steps: StepCard[] = [
-  {
-    id: 1,
-    title: "Conecta tu Chat",
-    description: "Agrega PingMind a tu WhatsApp. Es gratis y no requiere permisos especiales.",
-  },
-  {
-    id: 2,
-    title: "Chatea Naturalmente", 
-    description: "Menciona lo que necesitas recordar en nuestro chat. No es necesario un formato especial.",
-  },
-  {
-    id: 3,
-    title: "Recibe Recordatorios",
-    description: "Te enviaremos recordatorios en el momento perfecto, sin interrumpir tu flujo de trabajo.",
-  }
-];
 
 interface StepCardProps {
   step: StepCard;
@@ -48,17 +31,36 @@ function StepCard({ step }: StepCardProps) {
 }
 
 export default function HowItWorksSection() {
+  const t = useTranslations("home_page.how_it_works");
+
+  const steps: StepCard[] = [
+    {
+      id: 1,
+      title: t("steps.0.title"),
+      description: t("steps.0.description"),
+    },
+    {
+      id: 2,
+      title: t("steps.1.title"), 
+      description: t("steps.1.description"),
+    },
+    {
+      id: 3,
+      title: t("steps.2.title"),
+      description: t("steps.2.description"),
+    }
+  ];
+
   return (
     <section className="">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 md:mb-20">
           <h2 className={`${fontHead.className} text-3xl md:text-4xl lg:text-5xl font-bold text-gray-200 mb-6 leading-tight`}>
-            Como funciona
+            {t("title")}
           </h2>
-          <p className="text-lg md:text-xl opacity-50 max-w-3xl mx-auto leading-relaxed">
-            PingMind funciona donde ya chateas. Solo menciona lo que necesitas
-            recordar, y te avisaremos en el momento perfecto.
+          <p className="text-lg opacity-50 max-w-3xl mx-auto leading-relaxed">
+            {t("description")}
           </p>
         </div>
 

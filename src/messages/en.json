@@ -19,6 +19,24 @@
         "text": "Setting up reminders manually is tedious. You mention something in chat but forget to actually create the reminder."
       }
     },
+    "how_it_works": {
+      "title": "How it works",
+      "description": "PingMind works where you already chat. Just mention what you need to remember, and we'll notify you at the perfect moment.",
+      "steps": {
+        "0": {
+          "title": "Connect Your Chat",
+          "description": "Add PingMind to your WhatsApp. It's free and requires no special permissions."
+        },
+        "1": {
+          "title": "Chat Naturally",
+          "description": "Mention what you need to remember in our chat. No special format required."
+        },
+        "2": {
+          "title": "Get Reminders",
+          "description": "We'll send you reminders at the perfect moment, without interrupting your workflow."
+        }
+      }
+    },
     "header": {
       "title": "Pingmind",
       "login": "Login",
