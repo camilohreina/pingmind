@@ -57,7 +57,7 @@ type PropsInfoCard = {
 function InfoFeatureCard({ icon: Icon, title, text }: PropsInfoCard) {
   return (
     <SpotlightCard>
-      <div className="6 flex flex-col items-start justify-start">
+      <div className="flex flex-col items-start justify-start">
         <div className={cn("mb-10 rounded-lg border-gray-200 p-2.5")}>
           <Icon className="size-10 text-white" />
         </div>
