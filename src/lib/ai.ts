@@ -160,6 +160,13 @@ export const processUserMessage = async ({
               - ALL user communication must use local time
               - Internal processing uses UTC
               - Maintain timezone information for all conversions
+
+          CRITICAL LANGUAGE DETECTION REQUIREMENT:
+              - You MUST analyze the user's message language for EVERY response
+              - Generate 'response' and 'alert' messages in the SAME language as the user's input
+              - If user writes in Spanish → use Spanish for response and alert
+              - If user writes in English → use English for response and alert
+              - NEVER default to a specific language - always detect from the user's actual message
                       `,
 
       prompt: `Current reminders: ${JSON.stringify(reminders)}
@@ -284,6 +291,7 @@ const createReminderUser = tool({
   parameters: z.object({
     phone: z.string(),
     title: z.string().describe("Title of the reminder"),
+    language: z.string().describe("MUST detect language from user's message: 'es' for Spanish messages, 'en' for English messages. Analyze the user's actual message language, not a default."),
     message: z.string().describe("Description of the reminder"),
     response: z
       .string()
@@ -304,11 +312,25 @@ const createReminderUser = tool({
     phone,
     dueDate,
     message,
+    language,
     title,
     response,
     alert,
     timezone,
   }) => {
+if (process.env.DEBUG === "true") {
+  console.log({
+      phone,
+      language,
+      dueDate,
+      message,
+      title,
+      response,
+      alert,
+      timezone,
+  });
+}
+
     const reminderDate = dateFromHumanWithTimezone(dueDate, timezone);
     if (!reminderDate) {
       throw new AiError("Error parsing date");
@@ -489,6 +511,7 @@ export async function processMessageByUser({
     const userMessage: UserMessageI = { role: "user", content: message };
     const tools = await getTools();
     const SYSTEM_PROMPT = SYSTEM_PROMPT_MCP(phone, timezone);
+    console.log({context});
     const { text, steps } = await generateText({
       model: openai("gpt-4o-mini"),
       tools,
