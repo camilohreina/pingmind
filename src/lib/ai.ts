@@ -318,16 +318,18 @@ const createReminderUser = tool({
     alert,
     timezone,
   }) => {
-console.log({
-    phone,
-    language,
-    dueDate,
-    message,
-    title,
-    response,
-    alert,
-    timezone,
-});
+if (process.env.DEBUG === "true") {
+  console.log({
+      phone,
+      language,
+      dueDate,
+      message,
+      title,
+      response,
+      alert,
+      timezone,
+  });
+}
 
     const reminderDate = dateFromHumanWithTimezone(dueDate, timezone);
     if (!reminderDate) {
