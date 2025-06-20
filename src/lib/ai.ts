@@ -243,15 +243,14 @@ export async function translateRegistrationMessage(
     const { text } = await generateText({
       model: openai("gpt-4o-mini"),
       messages: [
-      {
-        role: "system",
-        content:
-        `You are a language detection and translation assistant. First, detect the language of the user's message. If the detected language is Spanish, replace any link in the registration message that matches the pattern "https://pingmind.app/en/signup?phone={phone}" with "https://pingmind.app/es/signup?phone={phone}", preserving the dynamic phone value. For any other language, keep the original link unchanged. Then, translate the registration message to the detected language, maintaining a friendly and welcoming tone. Only return the translated message, no additional notes or explanations.`,
-      },
-      {
-        role: "user",
-        content: `User's message: "${user_message}". Detect language and translate the following registration message to the same language as the user's message: "${welcome_message}". Remember to update the signup link as described if the language is Spanish.`,
-      },
+        {
+          role: "system",
+          content: `You are a language detection and translation assistant. First, detect the language of the user's message. If the detected language is Spanish, replace any link in the registration message that matches the pattern "https://pingmind.app/en/signup?phone={phone}" with "https://pingmind.app/es/signup?phone={phone}", preserving the dynamic phone value. For any other language, keep the original link unchanged. Then, translate the registration message to the detected language, maintaining a friendly and welcoming tone. Only return the translated message, no additional notes or explanations.`,
+        },
+        {
+          role: "user",
+          content: `User's message: "${user_message}". Detect language and translate the following registration message to the same language as the user's message: "${welcome_message}". Remember to update the signup link as described if the language is Spanish.`,
+        },
       ],
     });
     return text;
@@ -266,9 +265,10 @@ const getRemindersByUser = tool({
   description: "get reminders list by user",
   parameters: z.object({
     phone: z.string().describe("User phone number"),
+    timezone: z.string().describe("User's timezone by phone"),
   }),
-  execute: async ({ phone }) => {
-    const reminders = await getRemindersUserByPhone({ phone });
+  execute: async ({ phone, timezone }) => {
+    const reminders = await getRemindersUserByPhone({ phone, timezone });
     if (reminders.length === 0) {
       return { success: true, error: "No reminders found" };
     }
@@ -340,9 +340,10 @@ const getReminderId = tool({
   parameters: z.object({
     phone: z.string().describe("User phone number"),
     description: z.string().describe("Description of the reminder"),
+    timezone: z.string().describe("User's timezone by phone"),
   }),
-  execute: async ({ phone, description }) => {
-    const reminders = await getRemindersUserByPhone({ phone });
+  execute: async ({ phone, description, timezone }) => {
+    const reminders = await getRemindersUserByPhone({ phone, timezone });
     if (reminders.length === 0) {
       return { success: true, error: "No reminders found" };
     }
@@ -352,16 +353,16 @@ const getReminderId = tool({
       temperature: 0.5,
       model: openai("gpt-4o-mini"),
       schema: z.object({
-        reminderId: z.string(),
+      reminderId: z.string(),
       }),
-      system: `Eres un asistente especializado en interpretar cambios a recordatorios.
-      El usuario te proporcionará una instrucción para modificar un recordatorio existente.
-      Debes identificar qué recordatorio quiere modificar.
-      Responde en formato JSON con los siguientes campos:
-      - reminderId: ID del recordatorio a modificar`,
+      system: `You are an assistant specialized in interpreting changes to reminders.
+      The user will provide you with an instruction to modify an existing reminder.
+      You must identify which reminder the user wants to modify.
+      Respond in JSON format with the following fields:
+      - reminderId: ID of the reminder to modify`,
 
       prompt: `Current reminders: ${JSON.stringify(reminders)}
-          User message: ${description}`,
+        User message: ${description}`,
       mode: "json",
     });
 
