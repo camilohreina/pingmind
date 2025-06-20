@@ -219,6 +219,55 @@ export const generateConversationalResponse = async (
   }
 };
 
+// Función para detectar el idioma de un mensaje
+const detectLanguageFromMessage = async (message: string): Promise<string> => {
+  try {
+    // Palabras clave comunes en español e inglés para detección rápida
+    const spanishKeywords = ['hola', 'buenos', 'buenas', 'gracias', 'recordatorio', 'mañana', 'hoy', 'sí', 'no', 'por favor', 'ahora', 'después', 'antes', 'que', 'cuando', 'donde', 'como', 'porque', 'entonces', 'también', 'pero', 'con', 'sin', 'para', 'por', 'de', 'del', 'la', 'el', 'los', 'las', 'un', 'una', 'unos', 'unas', 'mi', 'mis', 'tu', 'tus', 'su', 'sus', 'nuestro', 'nuestra', 'vuestro', 'vuestra'];
+    const englishKeywords = ['hello', 'hi', 'good', 'thanks', 'thank', 'reminder', 'tomorrow', 'today', 'yes', 'no', 'please', 'now', 'after', 'before', 'what', 'when', 'where', 'how', 'because', 'then', 'also', 'but', 'with', 'without', 'for', 'by', 'of', 'the', 'a', 'an', 'my', 'your', 'his', 'her', 'its', 'our'];
+    
+    const messageLower = message.toLowerCase();
+    let spanishCount = 0;
+    let englishCount = 0;
+    
+    // Contar palabras clave en español
+    spanishKeywords.forEach(keyword => {
+      if (messageLower.includes(keyword)) {
+        spanishCount++;
+      }
+    });
+    
+    // Contar palabras clave en inglés
+    englishKeywords.forEach(keyword => {
+      if (messageLower.includes(keyword)) {
+        englishCount++;
+      }
+    });
+    
+    // Si hay coincidencias claras, devolver el idioma detectado
+    if (spanishCount > englishCount) {
+      return 'es';
+    } else if (englishCount > spanishCount) {
+      return 'en';
+    }
+    
+    // Si no hay coincidencias claras, usar AI para detectar el idioma
+    const { object } = await generateObject({
+      model: openai("gpt-4o-mini"),
+      schema: z.object({
+        language: z.string().describe("Detected language code (es for Spanish, en for English)")
+      }),
+      prompt: `Detect the language of this message: "${message}"`,
+      system: `You are a language detection expert. Analyze the given message and determine if it's written in Spanish (es) or English (en). Return only the language code.`
+    });
+    
+    return object.language === 'en' ? 'en' : 'es'; // Default to Spanish if uncertain
+  } catch (error) {
+    console.error('Error detecting language:', error);
+    return 'es'; // Default to Spanish if detection fails
+  }
+};
+
 // Manejador de mensajes entrantes con contexto de conversación
 export const handleConversationalMessage = async ({
   userId,
@@ -268,13 +317,16 @@ export const handleConversationalMessage = async ({
       messageHistoryForResponse.push({ role: 'user' as const, content: message });
     }
     
+    // Detectar el idioma del mensaje actual si no se proporcionó
+    const detectedLanguage = language || await detectLanguageFromMessage(message);
+    
     // Generar una respuesta conversacional basada en todo el historial
     const response = await generateConversationalResponse(
       messageHistoryForResponse,
       {
         name: userName,
         timezone: timezone,
-        language: language || 'es',
+        language: detectedLanguage,
         pendingReminders: pendingReminders || 0
       }
     );
@@ -306,4 +358,4 @@ export const handleConversationalMessage = async ({
     responseMessage,
     classification
   };
-}; 
+};
