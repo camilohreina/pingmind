@@ -8,6 +8,7 @@ import {
 } from "@/db/queries/reminders";
 import { getUserByPhone } from "@/db/queries/users";
 import { sendReplyReminder } from "@/lib/infobip";
+import { toZonedTimeReminder } from "@/lib/utils";
 
 type ReminderUser = {
   localDate: string;
@@ -109,8 +110,10 @@ export const cancelReminder = async ({
 
 export const formatRemindersToAi = ({
   reminders_list,
+  timezone,
 }: {
   reminders_list: (typeof reminders.$inferSelect)[];
+  timezone: string;
 }) => {
   if (reminders_list.length === 0) return [];
 
@@ -118,15 +121,24 @@ export const formatRemindersToAi = ({
     id: reminder.id,
     title: reminder.text,
     message: reminder.text,
-    date: reminder?.scheduledAt?.toISOString() || null,
+    date: toZonedTimeReminder(reminder?.scheduledAt, timezone),
   }));
 };
 
-export const getRemindersUserByPhone = async ({ phone }: { phone: string }) => {
+export const getRemindersUserByPhone = async ({
+  phone,
+  timezone,
+}: {
+  phone: string;
+  timezone: string;
+}) => {
   const pending_reminders = await getPendingRemindersByPhone(phone);
   if (pending_reminders.length === 0) {
     return [];
   }
-  const reminders = formatRemindersToAi({ reminders_list: pending_reminders });
+  const reminders = formatRemindersToAi({
+    reminders_list: pending_reminders,
+    timezone,
+  });
   return reminders;
 };

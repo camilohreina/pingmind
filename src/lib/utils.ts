@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { getCountry, getAllCountries } from "countries-and-timezones";
 import * as chrono from "chrono-node";
-import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { formatInTimeZone, fromZonedTime, toZonedTime } from "date-fns-tz";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -137,4 +137,12 @@ export const searchTimezones = (query: string) => {
 export const getTrialEndDate = (): Date => {
   // 3 días de prueba
   return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+};
+
+export const toZonedTimeReminder = (
+  date: Date | null,
+  timezone: string,
+): string | null => {
+  if (!date || !timezone) return null;
+  return formatInTimeZone(date, timezone, 'yyyy-MM-dd HH:mm:ssXXX')
 };

@@ -266,9 +266,10 @@ const getRemindersByUser = tool({
   description: "get reminders list by user",
   parameters: z.object({
     phone: z.string().describe("User phone number"),
+    timezone: z.string().describe("User's timezone by phone"),
   }),
-  execute: async ({ phone }) => {
-    const reminders = await getRemindersUserByPhone({ phone });
+  execute: async ({ phone, timezone }) => {
+    const reminders = await getRemindersUserByPhone({ phone, timezone });
     if (reminders.length === 0) {
       return { success: true, error: "No reminders found" };
     }
@@ -340,9 +341,10 @@ const getReminderId = tool({
   parameters: z.object({
     phone: z.string().describe("User phone number"),
     description: z.string().describe("Description of the reminder"),
+    timezone: z.string().describe("User's timezone by phone"),
   }),
-  execute: async ({ phone, description }) => {
-    const reminders = await getRemindersUserByPhone({ phone });
+  execute: async ({ phone, description, timezone }) => {
+    const reminders = await getRemindersUserByPhone({ phone, timezone });
     if (reminders.length === 0) {
       return { success: true, error: "No reminders found" };
     }
