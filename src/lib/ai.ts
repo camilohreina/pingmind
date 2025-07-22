@@ -28,159 +28,6 @@ interface Reminder {
   date: string | null;
 }
 
-export const processUserMessage = async ({
-  timezone,
-  message,
-  phone,
-  reminders,
-}: {
-  timezone: string;
-  message: string;
-  phone: string;
-  reminders: Reminder[];
-}) => {
-  //TODO: code for handle errors for code
-  try {
-    const { object } = await generateObject({
-      output: "object",
-      temperature: 0.5,
-      model: openai("gpt-4o-mini"),
-      schema: z.object({
-        action: z.enum(["CREATE", "UPDATE", "DELETE", "NO ACTION"]),
-        reminderId: z.string().optional().nullable(),
-        message: z.string(),
-        title: z.string(),
-        date: z.string(),
-        reminderDate: z.string(),
-        timezone: z.string(),
-        localDate: z.string(),
-        response: z.string(),
-        alert: z.string(),
-      }),
-      system: `
-          You are an advanced natural language reminder processing assistant. Your task is to extract precise information from reminder messages in any language and return a JSON object with the following properties:
-          - 'action': The action to be performed on the reminder, which can be one of: 'CREATE' (for new reminders), 'UPDATE' (to modify an existing reminder), 'DELETE' (to remove a reminder), or 'NO ACTION'.
-          - 'reminderId': The unique identifier of the reminder to be updated or deleted. This field is CRITICAL and REQUIRED when action is 'UPDATE' or 'DELETE'. You must identify which existing reminder the user is referring to and include its exact ID.
-          - 'title': A concise, descriptive title summarizing the reminder for easy identification.
-          - 'message': The original text of the reminder provided by the user.
-          - 'date': The date and time extracted from the reminder, formatted in ISO 8601 standard in UTC with seconds set to 00.
-          - 'reminderDate': Time to send reminder in ISO 8601 UTC, with seconds set to 00. This should ONLY be different from 'date' if the user explicitly requests an early reminder.
-          - 'timezone': The user's time zone is ${timezone}.
-          - 'localDate': The date and time in the user's local time zone ${timezone}, with seconds set to 00.
-          - 'response': A confirmation message for the action taken on the reminder, in the same language as the user's message.
-          - 'alert': A reminder message to be sent at the specified date and time. This should be a friendly reminder message in present tense, in the same language as the user's message.
-          - 'timeConfirmed': A boolean indicating whether the time has been explicitly confirmed by the user.
-          - the current date and time is ${new Date().toISOString()} in UTC.
-
-          Time Interpretation Rules:
-          1. Relative Time Processing:
-            - Identify and process relative time expressions in any language:
-              * Time units (minutes, hours, days)
-              * Fractions (half hour, quarter hour)
-              * Informal time references (morning, afternoon, evening, night)
-            - Always set seconds to 00 in all calculations
-            - For any relative time expression, calculate from the current moment
-
-          2. Early Reminder Logic:
-            - ONLY set reminderDate different from date when detecting explicit early reminder requests
-            - Common patterns to detect across languages:
-              * Words meaning "remind" + time specification
-              * Words meaning "alert/notify" + "before"
-              * Time period + "before"
-
-          7. Time Defaults (ALL in LOCAL time):
-            - No specific time mentioned → 09:00:00 local time
-            - Time periods in any language:
-              * Morning → 09:00:00 local
-              * Afternoon → 14:00:00 local
-              * Evening → 18:00:00 local
-              * Night → 20:00:00 local
-
-          8. Local Time Interpretation (when AM/PM not specified):
-            - 5:00-11:59 → AM
-            - 12:00-16:59 → PM
-            - 17:00-23:59 → PM
-            - 00:00-4:59 → AM
-
-          9. Date Processing:
-            - Process ALL dates in local timezone first
-            - Default to current local date if unspecified
-            - Next local date if local time has passed
-            - Convert to UTC only after local date/time is confirmed
-            - Handle culture-specific date formats
-
-          10. Validation:
-              - Validate times in LOCAL timezone first
-              - Confirm UTC conversion maintains correct local time
-              - Verify date adjustments during UTC conversion
-              - Ensure all times have seconds set to 00
-              - Validate timezone offset calculations
-
-          11. Error Cases:
-              - Invalid local time formats
-              - Invalid UTC conversions
-              - Timezone calculation errors
-              - Missing timezone information
-              - Ambiguous local times
-              - Daylight saving time edge cases
-
-          12. Response Formatting:
-              - ALWAYS show times to users in their local timezone
-              - Include AM/PM indicators for clarity
-              - Specify "hora local" in responses
-              - Example responses:
-                * "Recordatorio programado para hoy a las 9:00 PM hora local"
-                * "Reminder set for today at 9:00 PM local time"
-
-          13. Reminder Message Format:
-              For immediate reminders (when reminderDate equals date):
-              - Use present tense referring to local time
-              - Examples:
-                * "It's time for your meeting"
-                * "Es hora de tu reunión"
-
-              For early reminders (when reminderDate is before date):
-              - Use future tense with local time reference
-              - Include the remaining time in local timezone
-              - Examples:
-                * "In 10 minutes you have a meeting"
-                * "En 10 minutos tienes una reunión"
-
-          14. JSON Response Construction:
-              Example for 9:00 PM local time in Bogota:
-              {
-                "date": "2025-02-22T02:00:00.000Z",         // UTC time
-                "localDate": "2025-02-21T21:00:00.000-05:00", // Local time
-                "response": "... a las 9:00 PM hora local"
-              }
-
-          15. Time Storage Rules:
-              - Store both UTC and local time versions
-              - ALL comparisons for "next possible time" must use local time
-              - ALL user communication must use local time
-              - Internal processing uses UTC
-              - Maintain timezone information for all conversions
-
-          CRITICAL LANGUAGE DETECTION REQUIREMENT:
-              - You MUST analyze the user's message language for EVERY response
-              - Generate 'response' and 'alert' messages in the SAME language as the user's input
-              - If user writes in Spanish → use Spanish for response and alert
-              - If user writes in English → use English for response and alert
-              - NEVER default to a specific language - always detect from the user's actual message
-                      `,
-
-      prompt: `Current reminders: ${JSON.stringify(reminders)}
-          User message: ${message}`,
-      mode: "json",
-    });
-
-    return object;
-  } catch (error) {
-    console.log(error);
-    throw new AiError("Error processing message with AI");
-  }
-};
-
 export async function getTranscriptionFromAudio(
   filePath: string,
 ): Promise<string> {
@@ -305,12 +152,19 @@ const createReminderUser = tool({
     dueDate: z
       .string()
       .describe(
-        "This property is mandatory in ENGLISH. Natural language due date like 'tomorrow', 'tomorrow at 3pm', 'today at 9am', 'next Monday', 'Jan 23' (optional). ONLY in English.",
+        "This property is mandatory in ENGLISH. Natural language due date for when to SEND the reminder notification like 'tomorrow', 'tomorrow at 3pm', 'today at 9am', 'next Monday', 'Jan 23' (optional). ONLY in English.",
+      ),
+    eventDate: z
+      .string()
+      .optional()
+      .describe(
+        "Optional. Natural language date for the ACTUAL EVENT in ENGLISH. Only provide this if different from dueDate (e.g., when user requests early reminder). If user says 'meeting at 9:30am, remind me 15 minutes before', then dueDate='today at 9:15am' and eventDate='today at 9:30am'",
       ),
   }),
   execute: async ({
     phone,
     dueDate,
+    eventDate,
     message,
     language,
     title,
@@ -323,6 +177,7 @@ if (process.env.DEBUG === "true") {
       phone,
       language,
       dueDate,
+      eventDate,
       message,
       title,
       response,
@@ -331,15 +186,26 @@ if (process.env.DEBUG === "true") {
   });
 }
 
+    // Parse the reminder notification time (when to send the reminder)
     const reminderDate = dateFromHumanWithTimezone(dueDate, timezone);
     if (!reminderDate) {
-      throw new AiError("Error parsing date");
+      throw new AiError("Error parsing reminder date");
     }
+
+    // Parse the actual event time (when the event happens)
+    let actualEventDate = reminderDate; // Default to same as reminder date
+    if (eventDate) {
+      const parsedEventDate = dateFromHumanWithTimezone(eventDate, timezone);
+      if (parsedEventDate) {
+        actualEventDate = parsedEventDate;
+      }
+    }
+
     const reminder_user = {
       message,
       response,
-      reminderDate: reminderDate.toISOString(),
-      localDate: reminderDate.toISOString(),
+      reminderDate: reminderDate.toISOString(), // When to send notification
+      localDate: actualEventDate.toISOString(), // When event actually happens
       alert,
       title,
     };
@@ -413,27 +279,45 @@ const updateReminderUser = tool({
     dueDate: z
       .string()
       .describe(
-        "This property is mandatory in ENGLISH. Natural language due date like 'tomorrow', 'tomorrow at 3pm', 'today at 9am', 'next Monday', 'Jan 23' (optional). ONLY in English.",
+        "This property is mandatory in ENGLISH. Natural language due date for when to SEND the reminder notification like 'tomorrow', 'tomorrow at 3pm', 'today at 9am', 'next Monday', 'Jan 23' (optional). ONLY in English.",
+      ),
+    eventDate: z
+      .string()
+      .optional()
+      .describe(
+        "Optional. Natural language date for the ACTUAL EVENT in ENGLISH. Only provide this if different from dueDate (e.g., when user requests early reminder).",
       ),
   }),
   execute: async ({
     reminderId,
     dueDate,
+    eventDate,
     message,
     title,
     response,
     alert,
     timezone,
   }) => {
+    // Parse the reminder notification time (when to send the reminder)
     const reminderDate = dateFromHumanWithTimezone(dueDate, timezone);
     if (!reminderDate) {
-      throw new AiError("Error parsing date");
+      throw new AiError("Error parsing reminder date");
     }
+
+    // Parse the actual event time (when the event happens)
+    let actualEventDate = reminderDate; // Default to same as reminder date
+    if (eventDate) {
+      const parsedEventDate = dateFromHumanWithTimezone(eventDate, timezone);
+      if (parsedEventDate) {
+        actualEventDate = parsedEventDate;
+      }
+    }
+
     const reminder_user = {
       message,
       response,
-      reminderDate: reminderDate.toISOString(),
-      localDate: reminderDate.toISOString(),
+      reminderDate: reminderDate.toISOString(), // When to send notification
+      localDate: actualEventDate.toISOString(), // When event actually happens
       alert,
       title,
     };
@@ -464,6 +348,74 @@ const deleteReminderUser = tool({
     };
   },
 });
+const createMultipleReminders = tool({
+  description: "create multiple reminders at once - use this when user requests early reminder before an event",
+  parameters: z.object({
+    phone: z.string(),
+    language: z.string().describe("MUST detect language from user's message: 'es' for Spanish messages, 'en' for English messages"),
+    timezone: z.string().describe("User's timezone by phone"),
+    reminders: z.array(z.object({
+      title: z.string().describe("Title of the reminder"),
+      message: z.string().describe("Description of the reminder"),
+      alert: z.string().describe("Alert message to be sent, must be in present tense"),
+      dueDate: z.string().describe("Natural language due date in ENGLISH for when to send this specific reminder"),
+      isEarlyReminder: z.boolean().describe("Whether this is an early reminder before the main event"),
+    })),
+    response: z.string().describe("Response to the user confirming ALL reminders created, must be in present tense"),
+  }),
+  execute: async ({
+    phone,
+    language,
+    timezone,
+    reminders,
+    response,
+  }) => {
+    if (process.env.DEBUG === "true") {
+      console.log({
+        phone,
+        language,
+        timezone,
+        reminders,
+        response,
+      });
+    }
+
+    const createdReminders = [];
+    
+    for (const reminder of reminders) {
+      // Parse the reminder time (when to send the reminder)
+      const reminderDate = dateFromHumanWithTimezone(reminder.dueDate, timezone);
+      if (!reminderDate) {
+        console.error(`Error parsing reminder date: ${reminder.dueDate}`);
+        continue;
+      }
+
+      const reminder_user = {
+        message: reminder.message,
+        response: response,
+        reminderDate: reminderDate.toISOString(), // When to send notification
+        localDate: reminderDate.toISOString(), // Same as reminderDate if not an early reminder
+        alert: reminder.alert,
+        title: reminder.title,
+      };
+
+      const newReminder = await addNewReminder({
+        phone,
+        reminder_user,
+      });
+
+      if (newReminder) {
+        createdReminders.push(newReminder);
+      }
+    }
+
+    return {
+      success: true,
+      reminders: createdReminders,
+      count: createdReminders.length,
+    };
+  },
+});
 async function getTools() {
   return {
     getRemindersByUser,
@@ -471,6 +423,7 @@ async function getTools() {
     getReminderId,
     updateReminderUser,
     deleteReminderUser,
+    createMultipleReminders,
   };
 }
 
@@ -525,6 +478,7 @@ export async function processMessageByUser({
         "createReminderUser",
         "updateReminderUser",
         "deleteReminderUser",
+        "createMultipleReminders",
       ].includes(toolCall.toolName),
     );
 
