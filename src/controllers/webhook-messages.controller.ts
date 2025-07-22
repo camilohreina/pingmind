@@ -90,14 +90,14 @@ export const handleWebhook = async (data: WhatsAppMessage): Promise<any> => {
     const type_message = data.message?.type;
 
     // First verify active subscription for all message types
-/*     if (!hasActiveSubscription(user)) {
+    if (!hasActiveSubscription(user)) {
       await sendReplyReminder({
         phone: from_number,
         message:
           "You need an active subscription to use this feature. Please subscribe to continue.",
       });
       return { status: "error", action: "no_active_subscription" };
-    } */
+    }
 
     // Check quota for all message types
     const hasQuota = await hasQuotaAvailable(user);

@@ -36,7 +36,7 @@ export const sendReplyReminder = async ({
   phone: string;
   message: string;
 }) => {
-  return
+  
   try {
     await client.channels.whatsapp.send({
       type: "text",
