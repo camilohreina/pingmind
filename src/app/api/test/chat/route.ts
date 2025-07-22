@@ -67,16 +67,16 @@ export async function POST(req: Request): Promise<NextResponse> {
   console.log(message);
   //generate response
 
-  const objMessage = await handleWebhook(infoTest);
+  //const objMessage = await handleWebhook(infoTest);
 
-  console.log(objMessage);
+  //console.log(objMessage);
 
   //return response
   return NextResponse.json(
     {
       ok: true,
       status: 200,
-      message: objMessage.message,
+      message:"Message received",
     },
     {status: 200},
   );
