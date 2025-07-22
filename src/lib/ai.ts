@@ -348,6 +348,74 @@ const deleteReminderUser = tool({
     };
   },
 });
+const createMultipleReminders = tool({
+  description: "create multiple reminders at once - use this when user requests early reminder before an event",
+  parameters: z.object({
+    phone: z.string(),
+    language: z.string().describe("MUST detect language from user's message: 'es' for Spanish messages, 'en' for English messages"),
+    timezone: z.string().describe("User's timezone by phone"),
+    reminders: z.array(z.object({
+      title: z.string().describe("Title of the reminder"),
+      message: z.string().describe("Description of the reminder"),
+      alert: z.string().describe("Alert message to be sent, must be in present tense"),
+      dueDate: z.string().describe("Natural language due date in ENGLISH for when to send this specific reminder"),
+      isEarlyReminder: z.boolean().describe("Whether this is an early reminder before the main event"),
+    })),
+    response: z.string().describe("Response to the user confirming ALL reminders created, must be in present tense"),
+  }),
+  execute: async ({
+    phone,
+    language,
+    timezone,
+    reminders,
+    response,
+  }) => {
+    if (process.env.DEBUG === "true") {
+      console.log({
+        phone,
+        language,
+        timezone,
+        reminders,
+        response,
+      });
+    }
+
+    const createdReminders = [];
+    
+    for (const reminder of reminders) {
+      // Parse the reminder time (when to send the reminder)
+      const reminderDate = dateFromHumanWithTimezone(reminder.dueDate, timezone);
+      if (!reminderDate) {
+        console.error(`Error parsing reminder date: ${reminder.dueDate}`);
+        continue;
+      }
+
+      const reminder_user = {
+        message: reminder.message,
+        response: response,
+        reminderDate: reminderDate.toISOString(), // When to send notification
+        localDate: reminderDate.toISOString(), // Same as reminderDate if not an early reminder
+        alert: reminder.alert,
+        title: reminder.title,
+      };
+
+      const newReminder = await addNewReminder({
+        phone,
+        reminder_user,
+      });
+
+      if (newReminder) {
+        createdReminders.push(newReminder);
+      }
+    }
+
+    return {
+      success: true,
+      reminders: createdReminders,
+      count: createdReminders.length,
+    };
+  },
+});
 async function getTools() {
   return {
     getRemindersByUser,
@@ -355,6 +423,7 @@ async function getTools() {
     getReminderId,
     updateReminderUser,
     deleteReminderUser,
+    createMultipleReminders,
   };
 }
 
@@ -409,6 +478,7 @@ export async function processMessageByUser({
         "createReminderUser",
         "updateReminderUser",
         "deleteReminderUser",
+        "createMultipleReminders",
       ].includes(toolCall.toolName),
     );
 

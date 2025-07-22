@@ -43,7 +43,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     messageId: crypto.randomUUID(),
   }); */
 
-  const country = getTimeZoneFromCountryCode('CO')
+/*   const country = getTimeZoneFromCountryCode('CO')
   console.log(country);
 
   return NextResponse.json(
@@ -53,8 +53,8 @@ export async function POST(req: Request): Promise<NextResponse> {
       message: 'bien',
     },
     { status: 200 },
-  );
-  /*   const {message, phone, timezone} = data;
+  ); */
+   // const {message, phone, timezone} = data;
 
   const infoTest = {
     message:{
@@ -62,7 +62,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       type: "TEXT"
     },
     from: phone,
-    messageId: '123456789',
+    messageId:  crypto.randomUUID(),
   }
   console.log(message);
   //generate response
@@ -76,8 +76,8 @@ export async function POST(req: Request): Promise<NextResponse> {
     {
       ok: true,
       status: 200,
-      message: "Hello, world!",
+      message: objMessage.message,
     },
     {status: 200},
-  ); */
+  );
 }
